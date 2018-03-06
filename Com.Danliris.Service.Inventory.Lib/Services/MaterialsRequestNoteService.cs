@@ -66,8 +66,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             Model.Type = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "P" : "F";
             var lastData = await this.DbSet.Where(w => string.Equals(w.Type, Model.Type)).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
 
-            string Year = new DateTime().Year.ToString("yy");
-            string Month = new DateTime().Month.ToString("mm");
+            DateTime Now = DateTime.Now;
+            string Year = Now.ToString("yy");
+            string Month = Now.ToString("MM");
 
             if (lastData == null)
             {
@@ -77,7 +78,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             }
             else
             {
-                if (lastData._CreatedUtc.Year < new DateTime().Year)
+                if (lastData._CreatedUtc.Year < Now.Year)
                 {
                     Model.AutoIncrementNumber = 1;
                     string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
@@ -139,13 +140,18 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                         .Select(s => s.Id));
                     Updated = await this.UpdateAsync(Id, Model);
 
+                    materialsRequestNote_ItemService.Username = this.Username;
+
                     foreach (int materialsRequestNote_Item in materialsRequestNote_Items)
                     {
                         MaterialsRequestNote_Item model = Model.MaterialsRequestNote_Items.FirstOrDefault(prop => prop.Id.Equals(materialsRequestNote_Item));
-
                         if (model == null)
                         {
                             await materialsRequestNote_ItemService.DeleteModel(materialsRequestNote_Item);
+                        }
+                        else
+                        {
+                            await materialsRequestNote_ItemService.UpdateModel(materialsRequestNote_Item, model);
                         }
                     }
 
@@ -182,6 +188,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     HashSet<int> materialsRequestNote_Items = new HashSet<int>(materialsRequestNote_ItemService.DbSet
                         .Where(p => p.MaterialsRequestNoteId.Equals(Id))
                         .Select(p => p.Id));
+
+                    materialsRequestNote_ItemService.Username = this.Username;
+
                     foreach (int materialsRequestNote_Item in materialsRequestNote_Items)
                     {
                         await materialsRequestNote_ItemService.DeleteModel(materialsRequestNote_Item);
