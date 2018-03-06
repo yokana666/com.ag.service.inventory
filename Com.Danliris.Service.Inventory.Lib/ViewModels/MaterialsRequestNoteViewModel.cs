@@ -24,7 +24,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
             string materialsRequestNote_ItemsError = "[";
 
             if (this.MaterialsRequestNote_Items == null || this.MaterialsRequestNote_Items.Count.Equals(0))
-                yield return new ValidationResult("Tabel Cost Calculation Retail Material dibawah harus diisi", new List<string> { "MaterialsRequestNote_Items" });
+                yield return new ValidationResult("Tabel dibawah harus diisi", new List<string> { "MaterialsRequestNote_Items" });
             else
             {
                 foreach (MaterialsRequestNote_ItemViewModel materialsRequestNote_Item in this.MaterialsRequestNote_Items)
@@ -39,6 +39,11 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
                     {
                         Count++;
                         materialsRequestNote_ItemsError += "ProductId: 'Barang harus diisi', ";
+                    }
+                    if (string.IsNullOrWhiteSpace(materialsRequestNote_Item.Grade))
+                    {
+                        Count++;
+                        materialsRequestNote_ItemsError += "Grade: 'Grade harus diisi', ";
                     }
                     if (materialsRequestNote_Item.Length == null)
                     {
@@ -62,6 +67,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 
                         if (count > 1)
                         {
+                            Count++;
                             materialsRequestNote_ItemsError += "ProductionOrderId: 'Surat Perintah Produksi tidak boleh duplikat', ";
                         }
                     }
