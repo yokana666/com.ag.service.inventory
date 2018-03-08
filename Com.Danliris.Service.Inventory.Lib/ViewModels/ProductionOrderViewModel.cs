@@ -5,16 +5,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 {
-    public class ProductionOrderViewModel : BasicViewModel, IValidatableObject
+    public class ProductionOrderViewModel
     {
         public string _id { get; set; }
         public string orderNo { get; set; }
         public double? orderQuantity { get; set; }
         public OrderTypeViewModel orderType { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
