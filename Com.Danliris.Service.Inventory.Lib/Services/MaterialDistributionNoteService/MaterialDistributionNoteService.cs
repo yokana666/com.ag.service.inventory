@@ -272,6 +272,31 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             return Created;
         }
 
+        public bool UpdateIsApprove(List<int> Ids)
+        {
+            bool IsSuccessful = false;
+
+            using (var Transaction = this.DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var mdn = this.DbSet.Where(m => Ids.Contains(m.Id)).ToList();
+                    mdn.ForEach(m => { m.IsApproved = true; m._LastModifiedUtc = DateTime.UtcNow; m._LastModifiedAgent = "Service"; m._LastModifiedBy = this.Username; });
+                    this.DbContext.SaveChanges();
+
+                    IsSuccessful = true;
+                    Transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    Transaction.Rollback();
+                    throw;
+                }
+            }
+
+            return IsSuccessful;
+        }
+
         public override async Task<int> DeleteModel(int Id)
         {
             int Count = 0;
