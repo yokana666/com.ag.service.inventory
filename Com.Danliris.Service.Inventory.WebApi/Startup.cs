@@ -10,6 +10,7 @@ using Com.Danliris.Service.Inventory.Lib.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 
 namespace Com.Danliris.Service.Inventory.WebApi
 {
@@ -38,7 +39,10 @@ namespace Com.Danliris.Service.Inventory.WebApi
 
             services
                 .AddTransient<MaterialsRequestNoteService>()
-                .AddTransient<MaterialsRequestNote_ItemService>();
+                .AddTransient<MaterialsRequestNote_ItemService>()
+                .AddTransient<MaterialDistributionNoteService>()
+                .AddTransient<MaterialDistributionNoteItemService>()
+                .AddTransient<MaterialDistributionNoteDetailService>();
 
             var Secret = Configuration.GetValue<string>("Secret") ?? Configuration["Secret"];
             var Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Secret));
