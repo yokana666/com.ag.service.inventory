@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Com.Moonlay.NetCore.Lib.Service;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryDocumentViewModel;
+using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService
 {
@@ -60,21 +62,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             List<MaterialDistributionNote> Data = pageable.Data.ToList<MaterialDistributionNote>();
             int TotalData = pageable.TotalCount;
 
-
-            //var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRldjIiLCJwcm9maWxlIjp7ImZpcnN0bmFtZSI6IlRlc3QiLCJsYXN0bmFtZSI6IlVuaXQiLCJnZW5kZXIiOiJNIiwiZG9iIjoiMjAxNy0wMi0xN1QxMTozNToyMy4wMDBaIiwiZW1haWwiOiJkZXZAdW5pdC50ZXN0In0sInBlcm1pc3Npb24iOnsiVVQvVU5JVC8wMSI6NywiTEsiOjcsIlAxIjo0LCJQNCI6NCwiUDMiOjQsIlA3Ijo0LCJQNiI6NCwiQzkiOjd9LCJpYXQiOjE1MTk3MTUwNzN9.2kBc-iOxHI3wVIS8djU9Csfmdwr90Ob1P_xNcnYVru4";
-            //HttpClient a = new HttpClient();
-            //Dictionary<string, object> qdw = new Dictionary<string, object>
-            //        {
-            //            { "unit", "MTR" }
-            //        };
-
-            //a.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            //var test = a.GetAsync("https://dl-core-api-dev.mybluemix.net/v1/master/uoms?filter=" + JsonConvert.SerializeObject(qdw)).Result.Content.ReadAsStringAsync();
-            //Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(test.Result);
-            //var UOM = result.Keys;
-            
-
-
             return Tuple.Create(Data, TotalData, OrderDictionary, SelectedFields);
         }
 
@@ -88,7 +75,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             model.UnitName = viewModel.Unit.name;
 
             model.MaterialDistributionNoteItems = new List<MaterialDistributionNoteItem>();
-            foreach(MaterialDistributionNoteItemViewModel mdni in viewModel.MaterialDistributionNoteItems)
+            foreach (MaterialDistributionNoteItemViewModel mdni in viewModel.MaterialDistributionNoteItems)
             {
                 MaterialDistributionNoteItem materialDistributionNoteItem = new MaterialDistributionNoteItem();
                 PropertyCopier<MaterialDistributionNoteItemViewModel, MaterialDistributionNoteItem>.Copy(mdni, materialDistributionNoteItem);
@@ -96,7 +83,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 materialDistributionNoteItem.MaterialDistributionNoteDetails = new List<MaterialDistributionNoteDetail>();
                 foreach (MaterialDistributionNoteDetailViewModel mdnd in mdni.MaterialDistributionNoteDetails)
                 {
-                    MaterialDistributionNoteDetail materialDistributionNoteDetail= new MaterialDistributionNoteDetail();
+                    MaterialDistributionNoteDetail materialDistributionNoteDetail = new MaterialDistributionNoteDetail();
                     PropertyCopier<MaterialDistributionNoteDetailViewModel, MaterialDistributionNoteDetail>.Copy(mdnd, materialDistributionNoteDetail);
 
                     materialDistributionNoteDetail.ProductionOrderId = mdnd.ProductionOrder._id;
@@ -109,7 +96,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     materialDistributionNoteDetail.SupplierId = mdnd.Supplier._id;
                     materialDistributionNoteDetail.SupplierCode = mdnd.Supplier.code;
                     materialDistributionNoteDetail.SupplierName = mdnd.Supplier.name;
-
 
                     materialDistributionNoteItem.MaterialDistributionNoteDetails.Add(materialDistributionNoteDetail);
                 }
@@ -191,6 +177,77 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 .FirstOrDefaultAsync();
         }
 
+        public void CreateInventoryDocument(MaterialDistributionNote Model, string Type)
+        {
+            string inventoryDocumentURI = "inventory-documents";
+            string storageURI = "storages";
+            string uomURI = "uoms";
+
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+            /* Get UOM */
+            Dictionary<string, object> filterUOM = new Dictionary<string, object> { { "unit", "MTR" } };
+            var responseUOM = httpClient.GetAsync($@"{APIEndpoint.Core}{uomURI}?filter=" + JsonConvert.SerializeObject(filterUOM)).Result.Content.ReadAsStringAsync();
+            Dictionary<string, object> resultUOM = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseUOM.Result);
+            var jsonUOM = resultUOM.Single(p => p.Key.Equals("data")).Value;
+            Dictionary<string, object> uom = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonUOM.ToString())[0];
+
+            /* Get Storage */
+            var storageName = Model.UnitName.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
+            Dictionary<string, object> filterStorage = new Dictionary<string, object> { { "name", storageName } };
+            var responseStorage = httpClient.GetAsync($@"{APIEndpoint.Core}{storageURI}?filter=" + JsonConvert.SerializeObject(filterStorage)).Result.Content.ReadAsStringAsync();
+            Dictionary<string, object> resultStorage = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseStorage.Result);
+            var jsonStorage = resultStorage.Single(p => p.Key.Equals("data")).Value;
+            Dictionary<string, object> storage = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonStorage.ToString())[0];
+
+            /* Create Inventory Document */
+            List<InventoryDocumentItemViewModel> inventoryDocumentItems = new List<InventoryDocumentItemViewModel>();
+
+            foreach (MaterialDistributionNoteItem mdni in Model.MaterialDistributionNoteItems)
+            {
+                List<MaterialDistributionNoteDetail> list = mdni.MaterialDistributionNoteDetails
+                    .GroupBy(m => new { m.ProductionOrderNo, m.ProductName, m.MaterialRequestNoteItemLength })
+                    .Select(s => new MaterialDistributionNoteDetail
+                    {
+                        ProductId = s.First().ProductId,
+                        ProductCode = s.First().ProductCode,
+                        ProductName = s.First().ProductName,
+                        ReceivedLength = s.Sum(d => d.ReceivedLength)
+                    }).ToList();
+                
+                foreach (MaterialDistributionNoteDetail mdnd in list)
+                {
+                    InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel
+                    {
+                        productId = mdnd.ProductId,
+                        productCode = mdnd.ProductCode,
+                        productName = mdnd.ProductName,
+                        quantity = mdnd.ReceivedLength,
+                        uomId = uom["_id"].ToString(),
+                        uom = uom["unit"].ToString()
+                    };
+
+                    inventoryDocumentItems.Add(inventoryDocumentItem);
+                }
+            }
+
+            InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
+            {
+                date = DateTime.Now,
+                referenceNo = Model.No,
+                referenceType = "Bon Pengantar Greige",
+                type = Type,
+                storageId = storage["_id"].ToString(),
+                storageCode = storage["code"].ToString(),
+                storageName = storage["name"].ToString(),
+                items = inventoryDocumentItems
+            };
+
+            var response = httpClient.PostAsync($"{APIEndpoint.Inventory}{inventoryDocumentURI}", new StringContent(JsonConvert.SerializeObject(inventoryDocument).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
+            response.EnsureSuccessStatusCode();
+        }
+
         public override async Task<int> CreateModel(MaterialDistributionNote Model)
         {
             int Created = 0;
@@ -199,6 +256,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 try
                 {
                     Created = await this.CreateAsync(Model);
+                    CreateInventoryDocument(Model, "OUT");
 
                     transaction.Commit();
                 }
@@ -206,12 +264,57 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 {
                     throw new ServiceValidationExeption(e.ValidationContext, e.ValidationResults);
                 }
-                finally
+                catch
                 {
                     transaction.Rollback();
                 }
             }
             return Created;
+        }
+
+        public override async Task<int> DeleteModel(int Id)
+        {
+            int Count = 0;
+
+            using (var Transaction = this.DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    MaterialDistributionNote materialDistributionNote = await ReadModelById(Id);
+                    Count = this.Delete(Id);
+
+                    MaterialDistributionNoteItemService materialDistributionNoteItemService = ServiceProvider.GetService<MaterialDistributionNoteItemService>();
+                    MaterialDistributionNoteDetailService materialDistributionNoteDetailService = ServiceProvider.GetService<MaterialDistributionNoteDetailService>();
+                    materialDistributionNoteItemService.Username = this.Username;
+                    materialDistributionNoteDetailService.Username = this.Username;
+
+
+                    HashSet<int> MaterialDistributionNoteItems = new HashSet<int>(this.DbContext.MaterialDistributionNoteItems.Where(p => p.MaterialDistributionNoteId.Equals(Id)).Select(p => p.Id));
+
+                    foreach (int item in MaterialDistributionNoteItems)
+                    {
+                        HashSet<int> MaterialDistributionNoteDetails = new HashSet<int>(this.DbContext.MaterialDistributionNoteDetails.Where(p => p.MaterialDistributionNoteItemId.Equals(item)).Select(p => p.Id));
+
+                        foreach(int detail in MaterialDistributionNoteDetails)
+                        {
+                            await materialDistributionNoteDetailService.DeleteAsync(detail);
+                        }
+
+                        await materialDistributionNoteItemService.DeleteAsync(item);
+                    }
+
+                    CreateInventoryDocument(materialDistributionNote, "IN");
+
+                    Transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    Transaction.Rollback();
+                    throw;
+                }
+            }
+
+            return Count;
         }
 
 
