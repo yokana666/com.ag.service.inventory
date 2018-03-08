@@ -7,6 +7,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Helpers
     {
         public const string ASCENDING = "asc";
         public const string DESCENDING = "desc";
+        public const string JsonMediaType = "application/json";
 
         public static string TransformOrderBy(string Order)
         {

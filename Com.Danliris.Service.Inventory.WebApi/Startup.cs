@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
+using Com.Danliris.Service.Inventory.Lib.Helpers;
 
 namespace Com.Danliris.Service.Inventory.WebApi
 {
@@ -22,6 +23,12 @@ namespace Com.Danliris.Service.Inventory.WebApi
         }
 
         public IConfiguration Configuration { get; }
+
+        public void RegisterEndpoint()
+        {
+            APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+            APIEndpoint.Inventory = Configuration.GetValue<string>("InventoryEndpoint") ?? Configuration["InventoryEndpoint"];
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -72,6 +79,8 @@ namespace Com.Danliris.Service.Inventory.WebApi
                        .AllowAnyHeader()
                        .WithExposedHeaders("Content-Disposition", "api-version", "content-length", "content-md5", "content-type", "date", "request-id", "response-time");
             }));
+
+            RegisterEndpoint();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
