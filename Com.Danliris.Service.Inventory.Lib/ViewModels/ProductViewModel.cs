@@ -5,15 +5,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 {
-    public class ProductViewModel : BasicViewModel, IValidatableObject
+    public class ProductViewModel
     {
         public string _id { get; set; }
         public string code { get; set; }
         public string name { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
