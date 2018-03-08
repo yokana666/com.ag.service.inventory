@@ -179,9 +179,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
         public void CreateInventoryDocument(MaterialDistributionNote Model, string Type)
         {
-            string inventoryDocumentURI = "inventory-documents";
-            string storageURI = "storages";
-            string uomURI = "uoms";
+            string inventoryDocumentURI = "inventory/inventory-documents";
+            string storageURI = "master/storages";
+            string uomURI = "master/uoms";
 
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
