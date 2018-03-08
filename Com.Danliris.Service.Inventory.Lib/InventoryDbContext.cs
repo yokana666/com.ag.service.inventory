@@ -13,6 +13,8 @@ namespace Com.Danliris.Service.Inventory.Lib
 
         public DbSet<MaterialsRequestNote> MaterialsRequestNotes { get; set; }
         public DbSet<MaterialsRequestNote_Item> MaterialsRequestNote_Items { get; set; }
+        public DbSet<FpReturProInvDocsDetails> FpReturProInvDocsDetails { get; set; }
+        public DbSet<FpReturProInvDocs> FpReturProInvDocs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,6 +23,8 @@ namespace Com.Danliris.Service.Inventory.Lib
 
             modelBuilder.ApplyConfiguration(new MaterialsRequestNoteConfig());
             modelBuilder.ApplyConfiguration(new MaterialsRequestNote_ItemConfig());
+            modelBuilder.ApplyConfiguration(new FpReturProInvDocsDetailsConfig());
+            modelBuilder.ApplyConfiguration(new FpReturProInvDocsConfig());
 
         }
     }
