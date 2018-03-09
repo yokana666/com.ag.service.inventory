@@ -248,6 +248,39 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             response.EnsureSuccessStatusCode();
         }
 
+        public async Task<MaterialDistributionNote> CustomCodeGenerator(MaterialDistributionNote Model)
+        {
+            var Type = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "PR" : "FS";
+            var lastData = await this.DbSet.Where(w => string.Equals(w.UnitName, Model.UnitName)).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
+
+            DateTime Now = DateTime.Now;
+            string Year = Now.ToString("yy");
+
+            if (lastData == null)
+            {
+                Model.AutoIncrementNumber = 1;
+                string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+                Model.No = $"P{Type}{Year}{Number}";
+            }
+            else
+            {
+                if (lastData._CreatedUtc.Year < Now.Year)
+                {
+                    Model.AutoIncrementNumber = 1;
+                    string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+                    Model.No = $"P{Type}{Year}{Number}";
+                }
+                else
+                {
+                    Model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
+                    string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+                    Model.No = $"P{Type}{Year}{Number}";
+                }
+            }
+
+            return Model;
+        }
+
         public override async Task<int> CreateModel(MaterialDistributionNote Model)
         {
             int Created = 0;
@@ -255,6 +288,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             {
                 try
                 {
+                    Model = await this.CustomCodeGenerator(Model);
                     Created = await this.CreateAsync(Model);
                     CreateInventoryDocument(Model, "OUT");
 
@@ -262,11 +296,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 }
                 catch (ServiceValidationExeption e)
                 {
+                    transaction.Rollback();
                     throw new ServiceValidationExeption(e.ValidationContext, e.ValidationResults);
                 }
-                catch
+                catch (Exception e)
                 {
                     transaction.Rollback();
+                    throw;
                 }
             }
             return Created;
@@ -342,16 +378,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             return Count;
         }
 
-
         public override void OnCreating(MaterialDistributionNote model)
         {
-            do
-            {
-                model.No = CodeGenerator.GenerateCode();
-            }
-            while (this.DbSet.Any(d => d.No.Equals(model.No)));
-
             base.OnCreating(model);
+
             model._CreatedAgent = "Service";
             model._CreatedBy = this.Username;
             model._LastModifiedAgent = "Service";
