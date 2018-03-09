@@ -203,11 +203,15 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
             /* Create Inventory Document */
             List<InventoryDocumentItemViewModel> inventoryDocumentItems = new List<InventoryDocumentItemViewModel>();
+            List<MaterialDistributionNoteDetail> mdnds = new List<MaterialDistributionNoteDetail>();
 
             foreach (MaterialDistributionNoteItem mdni in Model.MaterialDistributionNoteItems)
             {
-                List<MaterialDistributionNoteDetail> list = mdni.MaterialDistributionNoteDetails
-                    .GroupBy(m => new { m.ProductionOrderNo, m.ProductName, m.MaterialRequestNoteItemLength })
+                mdnds.AddRange(mdni.MaterialDistributionNoteDetails);
+            }
+
+            List <MaterialDistributionNoteDetail> list = mdnds
+                    .GroupBy(m => new { m.ProductId, m.ProductCode, m.ProductName })
                     .Select(s => new MaterialDistributionNoteDetail
                     {
                         ProductId = s.First().ProductId,
@@ -215,21 +219,20 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                         ProductName = s.First().ProductName,
                         ReceivedLength = s.Sum(d => d.ReceivedLength)
                     }).ToList();
-                
-                foreach (MaterialDistributionNoteDetail mdnd in list)
-                {
-                    InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel
-                    {
-                        productId = mdnd.ProductId,
-                        productCode = mdnd.ProductCode,
-                        productName = mdnd.ProductName,
-                        quantity = mdnd.ReceivedLength,
-                        uomId = uom["_id"].ToString(),
-                        uom = uom["unit"].ToString()
-                    };
 
-                    inventoryDocumentItems.Add(inventoryDocumentItem);
-                }
+            foreach (MaterialDistributionNoteDetail mdnd in list)
+            {
+                InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel
+                {
+                    productId = mdnd.ProductId,
+                    productCode = mdnd.ProductCode,
+                    productName = mdnd.ProductName,
+                    quantity = mdnd.ReceivedLength,
+                    uomId = uom["_id"].ToString(),
+                    uom = uom["unit"].ToString()
+                };
+
+                inventoryDocumentItems.Add(inventoryDocumentItem);
             }
 
             InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
@@ -302,7 +305,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 catch (Exception e)
                 {
                     transaction.Rollback();
-                    throw;
+                    throw new ServiceValidationExeption(null, null);
                 }
             }
             return Created;
