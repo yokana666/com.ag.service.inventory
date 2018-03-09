@@ -47,11 +47,14 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Kel. Banaran - Sukoharjo", 100, 520, 0);
 
             cb.SetFontAndSize(bf, 10);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "UNIT", 20, 480, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $": {viewModel.Unit.name}", 55, 480, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "NO", 20, 465, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "UNIT", 20, 495, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $": {viewModel.Unit.name}", 55, 495, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "NO", 20, 480, 0);
             cb.SetFontAndSize(bf_bold, 10);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $": {viewModel.Code}", 55, 465, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $": {viewModel.Code}", 55, 480, 0);
+            cb.SetFontAndSize(bf, 10);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "TIPE", 20, 465, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $": {viewModel.RequestType}", 55, 465, 0);
 
             //RIGHT
             cb.SetFontAndSize(bf_bold, 9);

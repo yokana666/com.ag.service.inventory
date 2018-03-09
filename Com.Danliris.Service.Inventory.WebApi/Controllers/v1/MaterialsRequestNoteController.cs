@@ -40,7 +40,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 
                 return new FileStreamResult(stream, "application/pdf")
                 {
-                    FileDownloadName = $"{viewModel.Code}.pdf"
+                    FileDownloadName = $"Bon Surat Permintaan Barang {viewModel.Code}.pdf"
                 };
             }
             catch (Exception e)
