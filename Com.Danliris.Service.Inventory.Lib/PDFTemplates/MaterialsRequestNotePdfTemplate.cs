@@ -59,7 +59,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             cb.SetFontAndSize(bf, 9);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, $"Sukoharjo, {viewModel._CreatedUtc.Day} {Bulan[viewModel._CreatedUtc.Month - 1]} {viewModel._CreatedUtc.Year}", 275, 535, 0);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Kepada Yth.", 275, 495, 0);
-            cb.SetFontAndSize(bf, 13);
+            cb.SetFontAndSize(bf, 9);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "GUDANG GREIGE", 275, 480, 0);
             cb.SetFontAndSize(bf, 9);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "PT DAN LIRIS - SUKOHARJO", 275, 465, 0);
@@ -81,28 +81,46 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             #region CreateTable
             PdfPTable table = string.Equals(viewModel.RequestType.ToUpper(), "TEST") ? new PdfPTable(4) : new PdfPTable(5);
             table.TotalWidth = 380f;
-            table.DefaultCell.FixedHeight = 15f;
 
             //535 pixels width distribute into 8 rows.
             //string.Equals(viewModel.RequestType.ToUpper(), "TEST") ? new float[] { 2f, 2f, 15f, 5f, 5f, 5f, 5f, 5f } :
-            float[] widths = string.Equals(viewModel.RequestType.ToUpper(), "TEST") ? new float[] { 3f, 10f, 5f, 10f } : new float[] { 3f, 10f, 10f, 5f, 10f };
+            float[] widths = string.Equals(viewModel.RequestType.ToUpper(), "TEST") ? new float[] { 3f, 10f, 5f, 10f } : new float[] { 3f, 5f, 10f, 5f, 10f };
             table.SetWidths(widths);
 
+            var cell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 5 };
+            var rightCell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 5 };
+            var leftCell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 5 };
             //Create cells headers.
             if (string.Equals(viewModel.RequestType.ToUpper(), "TEST"))
             {
-                table.AddCell(new Phrase("No", bold_font));
-                table.AddCell(new Phrase("Nama Barang", bold_font));
-                table.AddCell(new Phrase("Grade", bold_font));
-                table.AddCell(new Phrase("Panjang(Meter)", bold_font));
+                cell.Phrase = new Phrase("No", bold_font);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Nama Barang", bold_font);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Grade", bold_font);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Panjang (Meter)", bold_font);
+                table.AddCell(cell);
             }
             else
             {
-                table.AddCell(new Phrase("No", bold_font));
-                table.AddCell(new Phrase("No. SPP", bold_font));
-                table.AddCell(new Phrase("Nama Barang", bold_font));
-                table.AddCell(new Phrase("Grade", bold_font));
-                table.AddCell(new Phrase("Panjang(Meter)", bold_font));
+                cell.Phrase = new Phrase("No", bold_font);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("No. SPP", bold_font);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Nama Barang", bold_font);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Grade", bold_font);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Panjang (Meter)", bold_font);
+                table.AddCell(cell);
             }
 
 
@@ -112,26 +130,43 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             {
                 if (string.Equals(viewModel.RequestType.ToUpper(), "TEST"))
                 {
-                    table.AddCell(new Phrase(index.ToString(), normal_font));
-                    table.AddCell(new Phrase(item.Product.name, normal_font));
-                    table.AddCell(new Phrase(item.Grade, normal_font));
-                    table.AddCell(new Phrase(item.Length.ToString(), normal_font));
+                    cell.Phrase = new Phrase(index.ToString(), normal_font);
+                    table.AddCell(cell);
+
+                    leftCell.Phrase = new Phrase(item.Product.name, normal_font);
+                    table.AddCell(leftCell);
+
+                    cell.Phrase = new Phrase(item.Grade, normal_font);
+                    table.AddCell(cell);
+
+                    rightCell.Phrase = new Phrase(item.Length.ToString(), normal_font);
+                    table.AddCell(rightCell);
                 }
                 else
                 {
-                    table.AddCell(new Phrase(index.ToString(), normal_font));
-                    table.AddCell(new Phrase(item.ProductionOrder.orderNo, normal_font));
-                    table.AddCell(new Phrase(item.Product.name, normal_font));
-                    table.AddCell(new Phrase(item.Grade, normal_font));
-                    table.AddCell(new Phrase(item.Length.ToString(), normal_font));
+                    cell.Phrase = new Phrase(index.ToString(), normal_font);
+                    table.AddCell(cell);
+
+                    cell.Phrase = new Phrase(item.ProductionOrder.orderNo, normal_font);
+                    table.AddCell(cell);
+
+                    leftCell.Phrase = new Phrase(item.Product.name, normal_font);
+                    table.AddCell(leftCell);
+
+                    cell.Phrase = new Phrase(item.Grade, normal_font);
+                    table.AddCell(cell);
+
+                    rightCell.Phrase = new Phrase(item.Length.ToString(), normal_font);
+                    table.AddCell(rightCell);
                 }
                 index++;
             }
 
-            var cell = new PdfPCell(new Phrase("Atas bantuan Saudara, kami ucapkan terima kasih.", normal_font));
-            cell.Colspan = string.Equals(viewModel.RequestType.ToUpper(), "TEST") ? 4 : 5;
-            cell.Border = Rectangle.NO_BORDER;
-            table.AddCell(cell);
+            var footerCell = new PdfPCell(new Phrase("Atas bantuan Saudara, kami ucapkan terima kasih.", normal_font));
+            footerCell.Colspan = string.Equals(viewModel.RequestType.ToUpper(), "TEST") ? 4 : 5;
+            footerCell.Border = Rectangle.NO_BORDER;
+
+            table.AddCell(footerCell);
             //Save tables.
 
             table.WriteSelectedRows(0, -1, 20, 385, cb);
