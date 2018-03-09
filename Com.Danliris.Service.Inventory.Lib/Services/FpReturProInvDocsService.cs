@@ -24,8 +24,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             FpReturProInvDocs model = new FpReturProInvDocs();
             PropertyCopier<FpReturProInvDocsViewModel, FpReturProInvDocs>.Copy(viewModel, model);
 
-            model.SupplierId = viewModel.Supplier.Id;
             model.SupplierName = viewModel.Supplier.Name;
+
+            model.NoBon = viewModel.Bon.Code;
+            model.NoBonId = viewModel.Bon.Id;
 
             model.Details = new List<FpReturProInvDocsDetails>();
 
@@ -53,6 +55,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             viewModel.Details = new List<FpReturProInvDocsDetailsViewModel>();
 
+            viewModel.Bon.Id = model.NoBonId;
+            viewModel.Bon.Code = model.NoBon;
+
+            viewModel.Supplier.Name = model.SupplierName;
+
             foreach (FpReturProInvDocsDetails data in model.Details)
             {
                 FpReturProInvDocsDetailsViewModel detail = new FpReturProInvDocsDetailsViewModel();
@@ -65,7 +72,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 detail.Remark = data.Remark;
                 detail.Length = data.Length;
             }
-
             return viewModel;
         }
 
@@ -76,20 +82,20 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             List<string> SearchAttributes = new List<string>()
                 {
-                    "Code", "No", "SupplierName"
+                    "Code", "NoBon", "SupplierName"
                 };
             Query = ConfigureSearch(Query, SearchAttributes, Keyword);
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "No", "Supplier"
+                    "Id", "Code", "Bon", "Supplier","Details"
                 };
             Query = Query
                 .Select(o => new FpReturProInvDocs
                 {
                     Id = o.Id,
                     Code = o.Code,
-                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { ProductName = p.ProductName }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
+                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId,ProductName = p.ProductName }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);

@@ -11,9 +11,16 @@ namespace Com.Danliris.Service.Inventory.Lib.Configs
     {
         public void Configure(EntityTypeBuilder<FpReturProInvDocs> builder)
         {
-            builder.Property(p => p.Code).HasMaxLength(100);
+            builder.Property(p => p.Code).HasMaxLength(255);
+            builder.Property(p => p.NoBonId).HasMaxLength(128);
+            builder.Property(p => p.NoBon).HasMaxLength(255);
+            builder.Property(p => p.SupplierId).HasMaxLength(128);
+            builder.Property(p => p.SupplierName).HasMaxLength(255);
             builder
-                .HasMany(h => h.Details);
+                .HasMany(h => h.Details)
+                .WithOne(w => w.FpReturProInvDocs)
+                .HasForeignKey(f => f.FpReturProInvDocsId)
+                .IsRequired();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Configs
     {
         public void Configure(EntityTypeBuilder<FpReturProInvDocsDetails> builder)
         {
-            builder.Property(p => p.Code).HasMaxLength(100);
+            builder.Property(p => p.Code).HasMaxLength(255);
         }
     }
 }

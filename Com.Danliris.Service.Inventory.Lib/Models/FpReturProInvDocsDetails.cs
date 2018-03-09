@@ -15,6 +15,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public double Quantity { get; set; }
         public double Length { get; set; }
         public string Remark { get; set; }
+        public virtual FpReturProInvDocs FpReturProInvDocs { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
