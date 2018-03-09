@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
+using System.IO;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
@@ -39,9 +41,34 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
                     return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
+            }
+        }
+
+        [HttpGet("pdf/{id}")]
+        public IActionResult GetPDF([FromRoute]int Id)
+        {
+            try
+            {
+                var model = Service.ReadModelById(Id).Result;
+                var viewModel = Service.MapToViewModel(model);
+
+                MaterialDistributionNotePdfTemplate PdfTemplate = new MaterialDistributionNotePdfTemplate();
+                MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel);
+
+                return new FileStreamResult(stream, "application/pdf")
+                {
+                    FileDownloadName = "Bon Pengantar Greige - " + model.No + ".pdf"
+                };
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
     }
