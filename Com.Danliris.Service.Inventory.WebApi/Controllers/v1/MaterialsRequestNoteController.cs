@@ -5,6 +5,14 @@ using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System;
+using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
+//using System.Reflection.Metadata;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using System.IO;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
@@ -17,6 +25,31 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
         private static readonly string ApiVersion = "1.0";
         public MaterialsRequestNoteController(MaterialsRequestNoteService service) : base(service, ApiVersion)
         {
+        }
+
+        [HttpGet("pdf/{Id}")]
+        public async Task<IActionResult> GetPdfById([FromRoute] int Id)
+        {
+            try
+            {
+                var model = await Service.ReadModelById(Id);
+                var viewModel = Service.MapToViewModel(model);
+
+                MaterialsRequestNotePdfTemplate PdfTemplate = new MaterialsRequestNotePdfTemplate();
+                MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel);
+
+                return new FileStreamResult(stream, "application/pdf")
+                {
+                    FileDownloadName = $"Bon Surat Permintaan Barang {viewModel.Code}.pdf"
+                };
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
         }
     }
 }
