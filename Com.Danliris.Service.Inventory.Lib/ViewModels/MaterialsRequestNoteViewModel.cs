@@ -30,11 +30,6 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
                 foreach (MaterialsRequestNote_ItemViewModel materialsRequestNote_Item in this.MaterialsRequestNote_Items)
                 {
                     materialsRequestNote_ItemsError += "{";
-                    if (materialsRequestNote_Item.ProductionOrder == null || string.IsNullOrWhiteSpace(materialsRequestNote_Item.ProductionOrder._id))
-                    {
-                        Count++;
-                        materialsRequestNote_ItemsError += "ProductionOrderId: 'Surat Perintah Produksi harus diisi', ";
-                    }
                     if (materialsRequestNote_Item.Product == null || string.IsNullOrWhiteSpace(materialsRequestNote_Item.Product._id))
                     {
                         Count++;
@@ -55,20 +50,28 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
                         Count++;
                         materialsRequestNote_ItemsError += "Length: 'Panjang harus lebih besar dari 0', ";
                     }
-                    else if (materialsRequestNote_Item.Length > (materialsRequestNote_Item.ProductionOrder.orderQuantity * 1.05))
+                    else if (materialsRequestNote_Item.ProductionOrder != null && materialsRequestNote_Item.Length > (materialsRequestNote_Item.ProductionOrder.orderQuantity * 1.05))
                     {
                         Count++;
                         materialsRequestNote_ItemsError += "Length: 'Panjang total tidak boleh lebih dari 105% toleransi', ";
                     }
-                    if (materialsRequestNote_Item.ProductionOrder != null)
+                    if (!string.Equals(this.RequestType.ToUpper(), "TEST"))
                     {
-                        int count = MaterialsRequestNote_Items
-                            .Count(c => string.Equals(c.ProductionOrder._id, materialsRequestNote_Item.ProductionOrder._id));
-
-                        if (count > 1)
+                        if (materialsRequestNote_Item.ProductionOrder == null || string.IsNullOrWhiteSpace(materialsRequestNote_Item.ProductionOrder._id))
                         {
                             Count++;
-                            materialsRequestNote_ItemsError += "ProductionOrderId: 'Surat Perintah Produksi tidak boleh duplikat', ";
+                            materialsRequestNote_ItemsError += "ProductionOrderId: 'Surat Perintah Produksi harus diisi', ";
+                        }
+                        if (materialsRequestNote_Item.ProductionOrder != null)
+                        {
+                            int count = MaterialsRequestNote_Items
+                                .Count(c => string.Equals(c.ProductionOrder._id, materialsRequestNote_Item.ProductionOrder._id));
+
+                            if (count > 1)
+                            {
+                                Count++;
+                                materialsRequestNote_ItemsError += "ProductionOrderId: 'Surat Perintah Produksi tidak boleh duplikat', ";
+                            }
                         }
                     }
                     materialsRequestNote_ItemsError += "}, ";

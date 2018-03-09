@@ -16,6 +16,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Helpers
         where TModel : StandardEntity, IValidatableObject
     {
         public string Username { get; set; }
+        public string Token { get; set; }
+
         public BasicService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }

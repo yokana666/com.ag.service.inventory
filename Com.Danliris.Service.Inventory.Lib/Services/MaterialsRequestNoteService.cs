@@ -320,12 +320,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
                 PropertyCopier<MaterialsRequestNote_ItemViewModel, MaterialsRequestNote_Item>.Copy(materialsRequestNote_ItemViewModel, materialsRequestNote_Item);
 
-                materialsRequestNote_Item.ProductionOrderId = materialsRequestNote_ItemViewModel.ProductionOrder._id;
-                materialsRequestNote_Item.ProductionOrderNo = materialsRequestNote_ItemViewModel.ProductionOrder.orderNo;
-                materialsRequestNote_Item.OrderQuantity = materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity != null ? (double)materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity : 0;
-                materialsRequestNote_Item.OrderTypeId = materialsRequestNote_ItemViewModel.ProductionOrder.orderType._id;
-                materialsRequestNote_Item.OrderTypeCode = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.code;
-                materialsRequestNote_Item.OrderTypeName = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.name;
+                materialsRequestNote_Item.ProductionOrderId = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder._id : "";
+                materialsRequestNote_Item.ProductionOrderNo = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderNo : "";
+                materialsRequestNote_Item.OrderQuantity = materialsRequestNote_ItemViewModel.ProductionOrder != null && materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity != null ? (double)materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity : 0;
+                materialsRequestNote_Item.OrderTypeId = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderType._id : "";
+                materialsRequestNote_Item.OrderTypeCode = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderType.code : "";
+                materialsRequestNote_Item.OrderTypeName = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderType.name : "";
                 materialsRequestNote_Item.ProductId = materialsRequestNote_ItemViewModel.Product._id;
                 materialsRequestNote_Item.ProductCode = materialsRequestNote_ItemViewModel.Product.code;
                 materialsRequestNote_Item.ProductName = materialsRequestNote_ItemViewModel.Product.name;
