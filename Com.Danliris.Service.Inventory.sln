@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2006
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Danliris.Service.Inventory.WebApi", "Com.Danliris.Service.Inventory.WebApi\Com.Danliris.Service.Inventory.WebApi.csproj", "{1D581FCB-2086-4F41-88F4-5800BBD96D89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Danliris.Service.Inventory.Lib", "Com.Danliris.Service.Inventory.Lib\Com.Danliris.Service.Inventory.Lib.csproj", "{FA210F3B-8E1A-487A-AC20-E8A119E0185D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D581FCB-2086-4F41-88F4-5800BBD96D89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D581FCB-2086-4F41-88F4-5800BBD96D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D581FCB-2086-4F41-88F4-5800BBD96D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D581FCB-2086-4F41-88F4-5800BBD96D89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA210F3B-8E1A-487A-AC20-E8A119E0185D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA210F3B-8E1A-487A-AC20-E8A119E0185D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA210F3B-8E1A-487A-AC20-E8A119E0185D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA210F3B-8E1A-487A-AC20-E8A119E0185D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {674649B4-727F-4ECB-A43E-5FB293554E36}
+	EndGlobalSection
+EndGlobal
