@@ -49,7 +49,9 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<MaterialsRequestNote_ItemService>()
                 .AddTransient<MaterialDistributionNoteService>()
                 .AddTransient<MaterialDistributionNoteItemService>()
-                .AddTransient<MaterialDistributionNoteDetailService>();
+                .AddTransient<MaterialDistributionNoteDetailService>()
+                .AddTransient<FpReturProInvDocsDetailsService>()
+                .AddTransient<FpReturProInvDocsService>();
 
             var Secret = Configuration.GetValue<string>("Secret") ?? Configuration["Secret"];
             var Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Secret));
