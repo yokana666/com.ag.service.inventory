@@ -2,14 +2,21 @@
 using Com.Danliris.Service.Inventory.Lib.Interfaces;
 using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryDocumentViewModel;
 using Com.Moonlay.NetCore.Lib;
+using Com.Moonlay.NetCore.Lib.Service;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+
 
 namespace Com.Danliris.Service.Inventory.Lib.Services
 {
@@ -24,23 +31,25 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             FpReturProInvDocs model = new FpReturProInvDocs();
             PropertyCopier<FpReturProInvDocsViewModel, FpReturProInvDocs>.Copy(viewModel, model);
 
-            model.SupplierName = viewModel.Supplier.Name;
-
-            model.NoBon = viewModel.Bon.Code;
+            model.NoBon = viewModel.Bon.No;
             model.NoBonId = viewModel.Bon.Id;
+            model.UnitName = viewModel.Bon.UnitName;
+            model.SupplierId = viewModel.Supplier._id;
+            model.SupplierName = viewModel.Supplier.name;
 
             model.Details = new List<FpReturProInvDocsDetails>();
 
             foreach (FpReturProInvDocsDetailsViewModel data in viewModel.Details)
             {
                 FpReturProInvDocsDetails detail = new FpReturProInvDocsDetails();
-
-                detail.SupplierId = data.Supplier.Id;
-                detail.ProductName = data.ProductName;
+                detail.SupplierId = viewModel.Supplier._id;
+                detail.ProductId = data.Product.Id;
+                detail.ProductCode = data.Product.Code;
+                detail.ProductName = data.Product.Name;
                 detail.Quantity = data.Quantity;
                 detail.Length = data.Length;
                 detail.Remark = data.Remark;
-        
+
                 model.Details.Add(detail);
 
             }
@@ -54,23 +63,28 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             PropertyCopier<FpReturProInvDocs, FpReturProInvDocsViewModel>.Copy(model, viewModel);
 
             viewModel.Details = new List<FpReturProInvDocsDetailsViewModel>();
-
+            viewModel.Bon = new FpReturProInvDocsViewModel.noBon();
             viewModel.Bon.Id = model.NoBonId;
-            viewModel.Bon.Code = model.NoBon;
+            viewModel.Bon.No = model.NoBon;
+            viewModel.Bon.UnitName = model.UnitName;
 
-            viewModel.Supplier.Name = model.SupplierName;
+            viewModel.Supplier = new FpReturProInvDocsViewModel.supplier();
+            viewModel.Supplier.name = model.SupplierName;
+            viewModel.Supplier._id = model.SupplierId;
+            viewModel._CreatedUtc = model._CreatedUtc;
 
             foreach (FpReturProInvDocsDetails data in model.Details)
             {
                 FpReturProInvDocsDetailsViewModel detail = new FpReturProInvDocsDetailsViewModel();
-                detail.Supplier.Id = data.Id;
-                detail.Supplier.Name = data.ProductName;
-                detail.Supplier.Length = data.Length;
-                detail.Supplier.Quantity = data.Quantity;
-                detail.ProductName = data.ProductName;
+                detail.Product = new FpReturProInvDocsDetailsViewModel.product();
+                detail.Product.Id = data.ProductId;
+                detail.Product.Name = data.ProductName;
+                detail.Product.Length = data.Length;
+                detail.Product.Quantity = data.Quantity;
                 detail.Quantity = data.Quantity;
                 detail.Remark = data.Remark;
                 detail.Length = data.Length;
+                viewModel.Details.Add(detail);
             }
             return viewModel;
         }
@@ -95,7 +109,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 {
                     Id = o.Id,
                     Code = o.Code,
-                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId,ProductName = p.ProductName }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
+                    NoBon = o.NoBon,
+                    NoBonId = o.NoBonId,
+                    UnitName = o.UnitName,
+                    SupplierId = o.SupplierId,
+                    SupplierName = o.SupplierName,
+                    _CreatedUtc = o._CreatedUtc,
+                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, SupplierId = p.SupplierId, Id = o.Id, Length = p.Length, Quantity = p.Quantity, Remark = p.Remark, Code = p.Code }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
@@ -117,6 +137,127 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 .Include(d => d.Details)
                 .FirstOrDefaultAsync();
         }
+
+        public void CreateInventoryDocument(FpReturProInvDocs Model, string Type)
+        {
+            string inventoryDocumentURI = "inventory/inventory-documents";
+            string storageURI = "master/storages";
+            string uomURI = "master/uoms";
+
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+            /* Get UOM */
+            Dictionary<string, object> filterUOM = new Dictionary<string, object> { { "unit", "MTR" } };
+            var responseUOM = httpClient.GetAsync($@"{APIEndpoint.Core}{uomURI}?filter=" + JsonConvert.SerializeObject(filterUOM)).Result.Content.ReadAsStringAsync();
+            Dictionary<string, object> resultUOM = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseUOM.Result);
+            var jsonUOM = resultUOM.Single(p => p.Key.Equals("data")).Value;
+            Dictionary<string, object> uom = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonUOM.ToString())[0];
+
+            /* Get Storage */
+            var storageName = Model.UnitName.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
+            Dictionary<string, object> filterStorage = new Dictionary<string, object> { { "name", storageName } };
+            var responseStorage = httpClient.GetAsync($@"{APIEndpoint.Core}{storageURI}?filter=" + JsonConvert.SerializeObject(filterStorage)).Result.Content.ReadAsStringAsync();
+            Dictionary<string, object> resultStorage = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseStorage.Result);
+            var jsonStorage = resultStorage.Single(p => p.Key.Equals("data")).Value;
+            Dictionary<string, object> storage = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonStorage.ToString())[0];
+
+            /* Create Inventory Document */
+            List<InventoryDocumentItemViewModel> inventoryDocumentItems = new List<InventoryDocumentItemViewModel>();
+
+            foreach (FpReturProInvDocsDetails o in Model.Details)
+            {
+                InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel
+                {
+                    productId = o.ProductId,
+                    productCode = o.ProductCode,
+                    productName = o.ProductName,
+                    quantity = o.Quantity,
+                    uomId = uom["_id"].ToString(),
+                    uom = uom["unit"].ToString()
+                };
+
+                inventoryDocumentItems.Add(inventoryDocumentItem);
+            }
+
+
+            InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
+            {
+                date = DateTime.Now,
+                referenceNo = Model.NoBon,
+                referenceType = "Bon Pengantar Greige",
+                type = Type,
+                storageId = storage["_id"].ToString(),
+                storageCode = storage["code"].ToString(),
+                storageName = storage["name"].ToString(),
+                items = inventoryDocumentItems
+            };
+
+            var response = httpClient.PostAsync($"{APIEndpoint.Inventory}{inventoryDocumentURI}", new StringContent(JsonConvert.SerializeObject(inventoryDocument).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
+            response.EnsureSuccessStatusCode();
+        }
+
+        public override async Task<int> CreateModel(FpReturProInvDocs Model)
+        {
+            int Created = 0;
+            using (var transaction = this.DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    Created = await this.CreateAsync(Model);
+                    CreateInventoryDocument(Model, "IN");
+
+                    transaction.Commit();
+                }
+                catch (ServiceValidationExeption e)
+                {
+                    throw new ServiceValidationExeption(e.ValidationContext, e.ValidationResults);
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return Created;
+        }
+
+        public override void OnCreating(FpReturProInvDocs model)
+        {
+            do
+            {
+                model.Code = CodeGenerator.GenerateCode();
+            }
+            while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
+
+            base.OnCreating(model);
+            model._CreatedAgent = "Service";
+            model._CreatedBy = this.Username;
+            model._LastModifiedAgent = "Service";
+            model._LastModifiedBy = this.Username;
+
+            FpReturProInvDocsDetailsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpReturProInvDocsDetailsService>();
+            fpReturProInvDocsDetailsService.Username = this.Username;
+            foreach (FpReturProInvDocsDetails data in model.Details)
+            {
+
+                fpReturProInvDocsDetailsService.OnCreating(data);
+            }
+        }
+
+        public override void OnUpdating(int id, FpReturProInvDocs model)
+        {
+            base.OnUpdating(id, model);
+            model._LastModifiedAgent = "Service";
+            model._LastModifiedBy = this.Username;
+        }
+
+        public override void OnDeleting(FpReturProInvDocs model)
+        {
+            base.OnDeleting(model);
+            model._DeletedAgent = "Service";
+            model._DeletedBy = this.Username;
+        }
+
 
     }
 }

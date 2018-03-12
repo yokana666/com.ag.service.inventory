@@ -11,7 +11,7 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20180308140448_AddFpReturProInvDocs")]
+    [Migration("20180309092056_AddFpReturProInvDocs")]
     partial class AddFpReturProInvDocs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,11 +37,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<int>("NoBonId")
                         .HasMaxLength(128);
 
-                    b.Property<int>("SupplierId")
+                    b.Property<string>("SupplierId")
                         .HasMaxLength(128);
 
                     b.Property<string>("SupplierName")
                         .HasMaxLength(255);
+
+                    b.Property<string>("UnitName");
 
                     b.Property<string>("_CreatedAgent")
                         .IsRequired()
@@ -94,13 +96,17 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<double>("Length");
 
+                    b.Property<string>("ProductCode");
+
+                    b.Property<string>("ProductId");
+
                     b.Property<string>("ProductName");
 
                     b.Property<double>("Quantity");
 
                     b.Property<string>("Remark");
 
-                    b.Property<int>("SupplierId");
+                    b.Property<string>("SupplierId");
 
                     b.Property<string>("_CreatedAgent")
                         .IsRequired()

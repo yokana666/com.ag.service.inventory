@@ -8,16 +8,16 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 {
     public class FpReturProInvDocsDetailsViewModel : BasicViewModel, IValidatableObject
     {
-        public supplier Supplier { get; set; }
-        public string ProductName { get; set; }
+        public product Product { get; set; }
         public double Quantity { get; set; }
         public double Length { get; set; }
         public string Remark { get; set; }
 
-        public class supplier
+        public class product
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
             public string Name { get; set; }
+            public string Code { get; set; }
             public double Length { get; set; }
             public double Quantity { get; set; }
         }
