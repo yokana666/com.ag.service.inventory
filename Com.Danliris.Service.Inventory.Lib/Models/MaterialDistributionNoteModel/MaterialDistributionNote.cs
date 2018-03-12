@@ -15,6 +15,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteMode
         public string Type { get; set; }
         public bool IsApproved { get; set; }
         public bool IsDisposition { get; set; }
+        public int AutoIncrementNumber { get; set; }
         public virtual ICollection<MaterialDistributionNoteItem> MaterialDistributionNoteItems { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
