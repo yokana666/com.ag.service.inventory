@@ -97,13 +97,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Helpers
             {
                 string Key = OrderDictionary.Keys.First();
                 string OrderType = OrderDictionary[Key];
-                string TransformKey = General.TransformOrderBy(Key);
 
-                BindingFlags IgnoreCase = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance;
-
-                Query = OrderType.Equals(General.ASCENDING) ?
-                    Query.OrderBy(b => b.GetType().GetProperty(TransformKey, IgnoreCase).GetValue(b)) :
-                    Query.OrderByDescending(b => b.GetType().GetProperty(TransformKey, IgnoreCase).GetValue(b));
+                Query = Query.OrderBy(string.Concat(Key, " ", OrderType));
             }
             return Query;
         }

@@ -49,7 +49,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     _CreatedUtc = mdn._CreatedUtc,
                     Type = mdn.Type,
                     IsDisposition = mdn.IsDisposition,
-                    IsApproved = mdn.IsApproved
+                    IsApproved = mdn.IsApproved,
+                    _LastModifiedUtc = mdn._LastModifiedUtc
                 });
 
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
@@ -238,6 +239,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
             {
                 date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:Ss.fffZ"),
+
                 referenceNo = Model.No,
                 referenceType = "Bon Pengantar Greige",
                 type = Type,
@@ -351,7 +353,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     MaterialDistributionNoteDetailService materialDistributionNoteDetailService = ServiceProvider.GetService<MaterialDistributionNoteDetailService>();
                     materialDistributionNoteItemService.Username = this.Username;
                     materialDistributionNoteDetailService.Username = this.Username;
-
 
                     HashSet<int> MaterialDistributionNoteItems = new HashSet<int>(this.DbContext.MaterialDistributionNoteItems.Where(p => p.MaterialDistributionNoteId.Equals(Id)).Select(p => p.Id));
 
