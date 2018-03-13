@@ -7,7 +7,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryDocumentViewMod
     public class InventoryDocumentViewModel
     {
         public string code { get; set; }
-        public DateTime date { get; set; }
+        public string date { get; set; }
         public string referenceNo { get; set; }
         public string referenceType { get; set; }
         public string type { get; set; }

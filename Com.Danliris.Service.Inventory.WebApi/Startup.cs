@@ -47,7 +47,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
             services
                 .AddTransient<MaterialsRequestNoteService>()
                 .AddTransient<MaterialsRequestNote_ItemService>()
-                .AddTransient<MaterialDistributionNoteService>()
+                .AddScoped<MaterialDistributionNoteService>()
                 .AddTransient<MaterialDistributionNoteItemService>()
                 .AddTransient<MaterialDistributionNoteDetailService>()
                 .AddTransient<FpReturProInvDocsDetailsService>()
