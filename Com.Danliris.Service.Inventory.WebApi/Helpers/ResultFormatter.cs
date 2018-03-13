@@ -113,6 +113,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
 
         public Dictionary<string, object> Fail()
         {
+            Result.Add("error", "Internal Server Error");
             return Result;
         }
 
