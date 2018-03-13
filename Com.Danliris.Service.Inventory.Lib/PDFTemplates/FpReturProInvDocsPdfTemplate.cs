@@ -110,10 +110,10 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
                 index++;
             }
 
-            var footerCell = new PdfPCell(new Phrase("Sukoharjo : " + viewModel._CreatedUtc, normal_font));
+            var footerCell = new PdfPCell(new Phrase("Sukoharjo : " + viewModel._CreatedUtc.ToString("MM-dd-yyyy"), normal_font));
             footerCell.Colspan = 5;
             footerCell.Border = Rectangle.NO_BORDER;
-
+            footerCell.HorizontalAlignment = Element.ALIGN_RIGHT;
             table.AddCell(footerCell);
             //Save tables.
 

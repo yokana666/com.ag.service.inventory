@@ -15,6 +15,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public string UnitName { get; set; }
         public string SupplierId { get; set; }
         public string SupplierName { get; set; }
+        public int AutoIncrementNumber { get; set; }
         public ICollection<FpReturProInvDocsDetails> Details { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

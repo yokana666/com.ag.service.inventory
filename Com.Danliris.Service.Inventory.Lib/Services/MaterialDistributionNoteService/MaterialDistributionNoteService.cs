@@ -237,7 +237,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
             InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
             {
-                date = DateTime.Now,
+                date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:Ss.fffZ"),
                 referenceNo = Model.No,
                 referenceType = "Bon Pengantar Greige",
                 type = Type,
