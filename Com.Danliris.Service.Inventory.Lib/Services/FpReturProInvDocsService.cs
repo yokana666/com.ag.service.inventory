@@ -172,7 +172,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     productId = o.ProductId,
                     productCode = o.ProductCode,
                     productName = o.ProductName,
-                    quantity = o.Quantity,
+                    quantity = o.Length,
                     uomId = uom["_id"].ToString(),
                     uom = uom["unit"].ToString()
                 };
@@ -183,9 +183,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
             {
-                date = DateTime.Now,
+                date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:Ss.fffZ"),
                 referenceNo = Model.NoBon,
-                referenceType = "Bon Pengantar Greige",
+                referenceType = "Bon Retur Barang",
                 type = Type,
                 storageId = storage["_id"].ToString(),
                 storageCode = storage["code"].ToString(),
@@ -197,6 +197,40 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             response.EnsureSuccessStatusCode();
         }
 
+        public async Task<FpReturProInvDocs> CustomCodeGenerator(FpReturProInvDocs Model)
+        {
+            Model.UnitName = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "PR" : "FS";
+            var lastData = await this.DbSet.Where(w => string.Equals(w.UnitName, Model.UnitName)).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
+
+            DateTime Now = DateTime.Now;
+            string Year = Now.ToString("yy");
+            string Month = Now.ToString("MM");
+
+            if (lastData == null)
+            {
+                Model.AutoIncrementNumber = 1;
+                string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+                Model.Code = $"BL{Model.UnitName}{Month}{Year}{Number}";
+            }
+            else
+            {
+                if (lastData._CreatedUtc.Year < Now.Year)
+                {
+                    Model.AutoIncrementNumber = 1;
+                    string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+                    Model.Code = $"BL{Model.UnitName}{Month}{Year}{Number}";
+                }
+                else
+                {
+                    Model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
+                    string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+                    Model.Code = $"BL{Model.UnitName}{Month}{Year}{Number}";
+                }
+            }
+
+            return Model;
+        }
+
         public override async Task<int> CreateModel(FpReturProInvDocs Model)
         {
             int Created = 0;
@@ -204,6 +238,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             {
                 try
                 {
+                    Model = await this.CustomCodeGenerator(Model);
                     Created = await this.CreateAsync(Model);
                     CreateInventoryDocument(Model, "IN");
 
@@ -223,11 +258,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
         public override void OnCreating(FpReturProInvDocs model)
         {
-            do
-            {
-                model.Code = CodeGenerator.GenerateCode();
-            }
-            while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
+            //do
+            //{
+            //    model.Code = CodeGenerator.GenerateCode();
+            //}
+            //while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
 
             base.OnCreating(model);
             model._CreatedAgent = "Service";
@@ -244,6 +279,43 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             }
         }
 
+        public override async Task<int> DeleteModel(int Id)
+        {
+            int Count = 0;
+
+            using (var Transaction = this.DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    FpReturProInvDocs fpReturProInvDocs = await ReadModelById(Id);
+                    Count = this.Delete(Id);
+
+
+                    FpReturProInvDocsDetailsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpReturProInvDocsDetailsService>();
+                    fpReturProInvDocsDetailsService.Username = this.Username;
+
+
+                    HashSet<int> fpReturProInvDocsDetails = new HashSet<int>(this.DbContext.FpReturProInvDocsDetails.Where(p => p.FpReturProInvDocsId.Equals(Id)).Select(p => p.Id));
+
+                    foreach (int detail in fpReturProInvDocsDetails)
+                    {
+                        await fpReturProInvDocsDetailsService.DeleteAsync(detail);
+                    }
+
+                    CreateInventoryDocument(fpReturProInvDocs, "OUT");
+
+                    Transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    Transaction.Rollback();
+                    throw;
+                }
+            }
+
+            return Count;
+        }
+
         public override void OnUpdating(int id, FpReturProInvDocs model)
         {
             base.OnUpdating(id, model);
@@ -257,7 +329,5 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             model._DeletedAgent = "Service";
             model._DeletedBy = this.Username;
         }
-
-
     }
 }
