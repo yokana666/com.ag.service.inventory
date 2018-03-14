@@ -184,7 +184,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
             {
                 date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
-                referenceNo = Model.NoBon,
+                referenceNo = Model.Code,
                 referenceType = "Bon Retur Barang",
                 type = Type,
                 storageId = storage["_id"].ToString(),
