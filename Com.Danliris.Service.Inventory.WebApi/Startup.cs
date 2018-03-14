@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
+using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 
 namespace Com.Danliris.Service.Inventory.WebApi
@@ -49,6 +50,8 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<MaterialsRequestNote_ItemService>()
                 .AddScoped<MaterialDistributionNoteService>()
                 .AddTransient<MaterialDistributionNoteItemService>()
+                .AddTransient<StockTransferNoteService>()
+                .AddTransient<StockTransferNote_ItemService>()
                 .AddTransient<MaterialDistributionNoteDetailService>()
                 .AddTransient<FpReturProInvDocsDetailsService>()
                 .AddTransient<FpReturProInvDocsService>();
