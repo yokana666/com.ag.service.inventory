@@ -45,6 +45,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     UnitCode = mrn.UnitCode,
                     UnitName = mrn.UnitName,
                     RequestType = mrn.RequestType,
+                    _LastModifiedUtc = mrn._LastModifiedUtc,
                     MaterialsRequestNote_Items = mrn.MaterialsRequestNote_Items.Select(p => new MaterialsRequestNote_Item { MaterialsRequestNoteId = p.MaterialsRequestNoteId, ProductionOrderNo = p.ProductionOrderNo}).Where(i => i.MaterialsRequestNoteId.Equals(mrn.Id)).ToList()
                 });
 
