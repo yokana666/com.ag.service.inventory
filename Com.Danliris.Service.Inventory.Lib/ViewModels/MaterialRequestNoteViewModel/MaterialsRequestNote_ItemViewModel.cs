@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
-namespace Com.Danliris.Service.Inventory.Lib.ViewModels
+namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel
 {
     public class MaterialsRequestNote_ItemViewModel : BasicViewModel, IValidatableObject
     {

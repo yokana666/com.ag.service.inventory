@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Com.Danliris.Service.Inventory.Lib.Models
+namespace Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel
 {
     public class MaterialsRequestNote_Item : StandardEntity, IValidatableObject
     {

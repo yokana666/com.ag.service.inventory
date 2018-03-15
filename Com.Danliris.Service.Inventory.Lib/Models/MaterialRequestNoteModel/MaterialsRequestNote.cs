@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Com.Danliris.Service.Inventory.Lib.Models
+namespace Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel
 {
     public class MaterialsRequestNote : StandardEntity, IValidatableObject
     {
@@ -17,6 +17,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public string Remark { get; set; }
         public string RequestType { get; set; }
         public string Type { get; set; }
+        public bool IsDistributed { get; set; }
         public int AutoIncrementNumber { get; set; }
         public ICollection<MaterialsRequestNote_Item> MaterialsRequestNote_Items { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

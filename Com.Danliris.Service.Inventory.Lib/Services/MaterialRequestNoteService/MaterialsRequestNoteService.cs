@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Models;
+﻿using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,13 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Com.Danliris.Service.Inventory.Lib.Interfaces;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
 using Com.Moonlay.NetCore.Lib.Service;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 
-namespace Com.Danliris.Service.Inventory.Lib.Services
+namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService
 {
     public class MaterialsRequestNoteService : BasicService<InventoryDbContext, MaterialsRequestNote>, IMap<MaterialsRequestNote, MaterialsRequestNoteViewModel>
     {
@@ -34,7 +38,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "Unit", "RequestType", "Remark", "MaterialsRequestNote_Items"
+                    "Id", "Code", "Unit", "RequestType", "Remark", "MaterialsRequestNote_Items", "_LastModifiedUtc"
                 };
             Query = Query
                 .Select(mrn => new MaterialsRequestNote
@@ -44,6 +48,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     UnitId = mrn.UnitId,
                     UnitCode = mrn.UnitCode,
                     UnitName = mrn.UnitName,
+                    IsDistributed = mrn.IsDistributed,
                     RequestType = mrn.RequestType,
                     _LastModifiedUtc = mrn._LastModifiedUtc,
                     MaterialsRequestNote_Items = mrn.MaterialsRequestNote_Items.Select(p => new MaterialsRequestNote_Item { MaterialsRequestNoteId = p.MaterialsRequestNoteId, ProductionOrderNo = p.ProductionOrderNo}).Where(i => i.MaterialsRequestNoteId.Equals(mrn.Id)).ToList()
@@ -96,6 +101,28 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             return Model;
         }
 
+        public void UpdateProductionOrder(MaterialsRequestNote Model, string Context)
+        {
+            foreach (MaterialsRequestNote_Item item in Model.MaterialsRequestNote_Items)
+            {
+                string productionOrderUri = "sales/production-orders";
+
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+                /* Get ProductionOrder */
+                var responseProductionOrder = httpClient.GetAsync($@"{APIEndpoint.Production}{productionOrderUri}/{item.ProductionOrderId}").Result.Content.ReadAsStringAsync();
+                Dictionary<string, object> resultProductionOrder = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseProductionOrder.Result);
+                var jsonProductionOrder = resultProductionOrder.Single(p => p.Key.Equals("data")).Value;
+                Dictionary<string, object> productionOrder = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonProductionOrder.ToString());
+
+                productionOrder["isRequested"] = Context.Equals("CREATE") ? true : false;
+
+                var response = httpClient.PutAsync($"{APIEndpoint.Production}{productionOrderUri}/{item.ProductionOrderId}", new StringContent(JsonConvert.SerializeObject(productionOrder).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
+                response.EnsureSuccessStatusCode();
+            }
+        }
+
         public override async Task<int> CreateModel(MaterialsRequestNote Model)
         {
             int Created = 0;
@@ -105,13 +132,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 {
                     Model = await this.CustomCodeGenerator(Model);
                     Created = await this.CreateAsync(Model);
+                    UpdateProductionOrder(Model, "CREATE");
                     transaction.Commit();
                 }
                 catch (ServiceValidationExeption e)
                 {
                     throw new ServiceValidationExeption(e.ValidationContext, e.ValidationResults);
                 }
-                catch
+                catch (Exception e)
                 {
                     transaction.Rollback();
                 }
@@ -184,6 +212,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             {
                 try
                 {
+                    MaterialsRequestNote Model = await this.ReadModelById(Id);
                     Deleted = await this.DeleteAsync(Id);
 
                     HashSet<int> materialsRequestNote_Items = new HashSet<int>(materialsRequestNote_ItemService.DbSet
@@ -197,6 +226,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                         await materialsRequestNote_ItemService.DeleteModel(materialsRequestNote_Item);
                     }
 
+                    UpdateProductionOrder(Model, "DELETE");
                     transaction.Commit();
                 }
                 catch (Exception)
