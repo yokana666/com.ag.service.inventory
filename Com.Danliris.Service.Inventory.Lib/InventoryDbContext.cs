@@ -6,6 +6,8 @@ using Com.Danliris.Service.Inventory.Lib.Configs.MaterialDistributionNoteConfig;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Configs.StockTransferNoteConfig;
+using Com.Danliris.Service.Inventory.Lib.Configs.MaterialsRequestNoteConfig;
+using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 
 namespace Com.Danliris.Service.Inventory.Lib
 {
