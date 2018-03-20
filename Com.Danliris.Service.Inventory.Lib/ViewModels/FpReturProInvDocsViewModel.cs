@@ -30,43 +30,57 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             int Count = 0;
+            string detailsError = "[";
 
-            if (this.Bon == null || (this.Bon.Id)==0)
-                yield return new ValidationResult("Bon is required", new List<string> { "Bon" });
+            if (this.Bon == null || (this.Bon.Id) == 0)
+                yield return new ValidationResult("Bon harus di isi", new List<string> { "Bon" });
 
             if (this.Supplier == null || string.IsNullOrWhiteSpace(this.Supplier.name))
-                yield return new ValidationResult("Supplier is required", new List<string> { "Supplier" });
+                yield return new ValidationResult("Supplier harus di isi", new List<string> { "Supplier" });
 
-            if (this.Details.Count.Equals(0))
+            if (this.Details.Count.Equals(0) || this.Details == null)
             {
-                yield return new ValidationResult("Detail Distribution Note Item is required", new List<string> { "Details" });
+                yield return new ValidationResult("Details is required", new List<string> { "Details" });
             }
             else
             {
-                string detailsError = "[";
-
                 foreach (FpReturProInvDocsDetailsViewModel data in this.Details)
                 {
-
-                    if (data.Product==null || string.IsNullOrWhiteSpace(data.Product.Name))
+                    detailsError += "{";
+                    if (data.Product == null || string.IsNullOrWhiteSpace(data.Product.Name))
                     {
                         Count++;
-                        detailsError += "{ Supplier: 'Supplier is required' }, ";
+                        detailsError += "Product: 'Barang harus di isi',";
                     }
 
-                    if ((data.Length > data.Product.Length ))
+                    if (data.Quantity.Equals(0))
                     {
                         Count++;
-                        detailsError += "{ Length: 'Length is incorrect' }, ";
+                        detailsError += "Quantity: '(Piece) harus di isi',";
                     }
+                    if (data.Product != null)
+                    {
+                        if ((data.Length > data.Product.Length) || data.Length.Equals(0))
+                        {
+                            Count++;
+                            detailsError += "Length: 'Panjang harus lebih kecil',";
+                        }
+
+                    }
+                    else if (data.Length.Equals(0))
+                    {
+                        Count++;
+                        detailsError += "Length: 'Panjang harus di isi',";
+                    }
+                    detailsError += "}";
+
                 }
 
                 detailsError += "]";
-
-                if (Count > 0)
-                {
-                    yield return new ValidationResult(detailsError, new List<string> { "Details" });
-                }
+            }
+            if (Count > 0)
+            {
+                yield return new ValidationResult(detailsError, new List<string> { "Details" });
             }
         }
     }

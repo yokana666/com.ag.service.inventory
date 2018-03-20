@@ -1,7 +1,12 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel
@@ -40,7 +45,33 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                         Count++;
                         materialDistributionNoteItemError += "{ MaterialRequestNote: 'SPB is required' }, ";
                     }
-                    else
+                }
+
+                if (Count.Equals(0))
+                {
+                    /* Get Inventory Summaries */
+                    string inventorySummaryURI = "inventory/inventory-summary?order=%7B%7D&page=1&size=1000000000&";
+
+                    MaterialDistributionNoteService Service = (MaterialDistributionNoteService)validationContext.GetService(typeof(MaterialDistributionNoteService));
+                    HttpClient httpClient = new HttpClient();
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Service.Token);
+
+                    List<string> products = new List<string>();
+                    foreach (MaterialDistributionNoteItemViewModel mdni in this.MaterialDistributionNoteItems)
+                    {
+                        products.AddRange(mdni.MaterialDistributionNoteDetails.Select(p => p.Product.code).ToList());
+                    }
+
+                    var storageName = this.Unit.name.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
+
+                    Dictionary<string, object> filter = new Dictionary<string, object> { { "storageName", storageName }, { "productCode", new Dictionary<string, object> { { "$in", products.ToArray() } } } };
+                    var response = httpClient.GetAsync($@"{APIEndpoint.Inventory}{inventorySummaryURI}filter=" + JsonConvert.SerializeObject(filter)).Result.Content.ReadAsStringAsync();
+                    Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
+                    
+                    var json = result.Single(p => p.Key.Equals("data")).Value;
+                    List<InventorySummaryViewModel> inventorySummaries = JsonConvert.DeserializeObject<List<InventorySummaryViewModel>>(json.ToString());
+
+                    foreach (MaterialDistributionNoteItemViewModel mdni in this.MaterialDistributionNoteItems)
                     {
                         int CountDetail = 0;
 
@@ -48,34 +79,51 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
 
                         foreach (MaterialDistributionNoteDetailViewModel mdnd in mdni.MaterialDistributionNoteDetails)
                         {
+                            InventorySummaryViewModel inventorySummary = inventorySummaries.SingleOrDefault(p => p.productCode.Equals(mdnd.Product.code) && p.uom.Equals("MTR"));
+
                             materialDistributionNoteDetailError += "{";
 
-                            if(mdnd.Quantity == null)
+                            if (inventorySummary == null)
                             {
                                 CountDetail++;
-                                materialDistributionNoteDetailError += "Quantity: 'Quantity is required', ";
+                                materialDistributionNoteDetailError += "Product: 'Product is not exists in the storage', ";
                             }
-                            else if(mdnd.Quantity <= 0)
+                            else
                             {
-                                CountDetail++;
-                                materialDistributionNoteDetailError += "Quantity: 'Quantity must be greater than zero', ";
-                            }
+                                if (mdnd.Quantity == null)
+                                {
+                                    CountDetail++;
+                                    materialDistributionNoteDetailError += "Quantity: 'Quantity is required', ";
+                                }
+                                else if (mdnd.Quantity <= 0)
+                                {
+                                    CountDetail++;
+                                    materialDistributionNoteDetailError += "Quantity: 'Quantity must be greater than zero', ";
+                                }
 
-                            if (mdnd.ReceivedLength == null)
-                            {
-                                CountDetail++;
-                                materialDistributionNoteDetailError += "ReceivedLength: 'Received Length is required', ";
-                            }
-                            else if (mdnd.ReceivedLength <= 0)
-                            {
-                                CountDetail++;
-                                materialDistributionNoteDetailError += "ReceivedLength: 'Received Length must be greater than zero', ";
-                            }
+                                if (mdnd.ReceivedLength == null)
+                                {
+                                    CountDetail++;
+                                    materialDistributionNoteDetailError += "ReceivedLength: 'Length is required', ";
+                                }
+                                else if (mdnd.ReceivedLength <= 0)
+                                {
+                                    CountDetail++;
+                                    materialDistributionNoteDetailError += "ReceivedLength: 'Length must be greater than zero', ";
+                                }
+                                else if (mdnd.ReceivedLength > inventorySummary.quantity)
+                                {
+                                    CountDetail++;
+                                    materialDistributionNoteDetailError += "ReceivedLength: 'Length must be less than or equal than stock', ";
+                                }
 
-                            if (mdnd.Supplier == null || string.IsNullOrWhiteSpace(mdnd.Supplier._id))
-                            {
-                                CountDetail++;
-                                materialDistributionNoteDetailError += "Supplier: 'Supplier is required', ";
+                                if (mdnd.Supplier == null || string.IsNullOrWhiteSpace(mdnd.Supplier._id))
+                                {
+                                    CountDetail++;
+                                    materialDistributionNoteDetailError += "Supplier: 'Supplier is required', ";
+                                }
+
+                                inventorySummary.quantity -= (double)mdnd.ReceivedLength;
                             }
 
                             materialDistributionNoteDetailError += "}, ";

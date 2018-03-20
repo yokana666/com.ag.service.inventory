@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
+using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService;
 
 namespace Com.Danliris.Service.Inventory.WebApi
 {
@@ -28,6 +30,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
         {
             APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
             APIEndpoint.Inventory = Configuration.GetValue<string>("InventoryEndpoint") ?? Configuration["InventoryEndpoint"];
+            APIEndpoint.Production = Configuration.GetValue<string>("ProductionEndpoint") ?? Configuration["ProductionEndpoint"];
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -47,8 +50,10 @@ namespace Com.Danliris.Service.Inventory.WebApi
             services
                 .AddTransient<MaterialsRequestNoteService>()
                 .AddTransient<MaterialsRequestNote_ItemService>()
-                .AddTransient<MaterialDistributionNoteService>()
+                .AddScoped<MaterialDistributionNoteService>()
                 .AddTransient<MaterialDistributionNoteItemService>()
+                .AddTransient<StockTransferNoteService>()
+                .AddTransient<StockTransferNote_ItemService>()
                 .AddTransient<MaterialDistributionNoteDetailService>()
                 .AddTransient<FpReturProInvDocsDetailsService>()
                 .AddTransient<FpReturProInvDocsService>();

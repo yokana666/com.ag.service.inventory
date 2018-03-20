@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace Com.Danliris.Service.Inventory.Lib.ViewModels
+namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel
 {
     public class MaterialsRequestNoteViewModel : BasicViewModel, IValidatableObject
     {
@@ -12,6 +12,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public UnitViewModel Unit { get; set; }
         public string RequestType { get; set; }
         public string Remark { get; set; }
+        public bool IsDistributed { get; set; }
         public List<MaterialsRequestNote_ItemViewModel> MaterialsRequestNote_Items { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

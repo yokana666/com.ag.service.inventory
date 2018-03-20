@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Com.Danliris.Service.Inventory.WebApi.Helpers;
-using Com.Danliris.Service.Inventory.Lib.Services;
-using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib;
-using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
+
 //using System.Reflection.Metadata;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
 using System.IO;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
+using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
