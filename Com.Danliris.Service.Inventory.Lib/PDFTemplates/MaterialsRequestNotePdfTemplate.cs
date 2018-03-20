@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Inventory.Lib.ViewModels;
+﻿using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;

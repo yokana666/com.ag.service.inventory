@@ -1,8 +1,8 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Models;
+﻿using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Com.Danliris.Service.Inventory.Lib.Configs
+namespace Com.Danliris.Service.Inventory.Lib.Configs.MaterialsRequestNoteConfig
 {
     public class MaterialsRequestNote_ItemConfig : IEntityTypeConfiguration<MaterialsRequestNote_Item>
     {

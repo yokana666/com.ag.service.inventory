@@ -149,9 +149,10 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
         {
             try
             {
-                this.Validate(ViewModel);
-                Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
                 Service.Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
+                this.Validate(ViewModel);
+                
+                Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
 
                 TModel model = Service.MapToModel(ViewModel);
 

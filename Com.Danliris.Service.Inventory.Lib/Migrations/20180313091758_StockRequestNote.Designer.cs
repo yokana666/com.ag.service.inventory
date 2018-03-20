@@ -11,9 +11,10 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180313091758_StockRequestNote")]
+    partial class StockRequestNote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -350,7 +351,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.ToTable("MaterialDistributionNoteItems");
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote", b =>
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -361,8 +362,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("Code")
                         .HasMaxLength(100);
-
-                    b.Property<bool>("IsDistributed");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(1000);
@@ -418,7 +417,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.ToTable("MaterialsRequestNotes");
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote_Item", b =>
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote_Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -668,9 +667,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote_Item", b =>
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote_Item", b =>
                 {
-                    b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote", "MaterialsRequestNote")
+                    b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote", "MaterialsRequestNote")
                         .WithMany("MaterialsRequestNote_Items")
                         .HasForeignKey("MaterialsRequestNoteId")
                         .OnDelete(DeleteBehavior.Cascade);

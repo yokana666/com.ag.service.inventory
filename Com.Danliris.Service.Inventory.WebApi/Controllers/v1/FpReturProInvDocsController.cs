@@ -1,28 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Com.Danliris.Service.Inventory.Lib;
+using Com.Danliris.Service.Inventory.Lib.Models;
+using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.WebApi.Helpers;
-using Com.Danliris.Service.Inventory.Lib;
 using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
+using Microsoft.AspNetCore.Mvc;
 using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
-
-//using System.Reflection.Metadata;
 using System.IO;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService;
-using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
-using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/materials-request-notes")]
+    [Route("v{version:apiVersion}/fp-retur-pro-inv-docs")]
     [Authorize]
-    public class MaterialsRequestNoteController : BasicController<InventoryDbContext, MaterialsRequestNoteService, MaterialsRequestNoteViewModel, MaterialsRequestNote>
+    public class FpReturProInvDocsController : BasicController<InventoryDbContext, FpReturProInvDocsService, FpReturProInvDocsViewModel, FpReturProInvDocs>
     {
         private static readonly string ApiVersion = "1.0";
-        public MaterialsRequestNoteController(MaterialsRequestNoteService service) : base(service, ApiVersion)
+        public FpReturProInvDocsController(FpReturProInvDocsService service) : base(service, ApiVersion)
         {
         }
 
@@ -34,12 +32,12 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
                 var model = await Service.ReadModelById(Id);
                 var viewModel = Service.MapToViewModel(model);
 
-                MaterialsRequestNotePdfTemplate PdfTemplate = new MaterialsRequestNotePdfTemplate();
+                FpReturProInvDocsPdfTemplate PdfTemplate = new FpReturProInvDocsPdfTemplate();
                 MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel);
 
                 return new FileStreamResult(stream, "application/pdf")
                 {
-                    FileDownloadName = $"Bon Surat Permintaan Barang {viewModel.Code}.pdf"
+                    FileDownloadName = $"Bon Retur Barang {viewModel.Code}.pdf"
                 };
             }
             catch (Exception e)

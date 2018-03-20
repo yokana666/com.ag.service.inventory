@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Models;
+﻿using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection;
 using Com.Moonlay.NetCore.Lib;
 
-namespace Com.Danliris.Service.Inventory.Lib.Services
+namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService
 {
     public class MaterialsRequestNote_ItemService : BasicService<InventoryDbContext, MaterialsRequestNote_Item>
     {
