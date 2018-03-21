@@ -10,6 +10,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public string _id { get; set; }
         public string orderNo { get; set; }
         public double? orderQuantity { get; set; }
+        public bool isCompleted { get; set; }
         public OrderTypeViewModel orderType { get; set; }
     }
 }
