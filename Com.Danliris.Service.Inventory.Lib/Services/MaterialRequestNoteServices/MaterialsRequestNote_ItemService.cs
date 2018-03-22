@@ -8,7 +8,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection;
 using Com.Moonlay.NetCore.Lib;
 
-namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService
+namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices
 {
     public class MaterialsRequestNote_ItemService : BasicService<InventoryDbContext, MaterialsRequestNote_Item>
     {

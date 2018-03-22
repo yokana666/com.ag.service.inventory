@@ -47,6 +47,31 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
             }
         }
 
+        [HttpPut("update/is-complete/{Id}")]
+        public async Task<IActionResult> PutIsCompleted([FromRoute] int Id, [FromBody] MaterialDistributionNoteViewModel ViewModel)
+        {
+            try
+            {
+                Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+                MaterialDistributionNote Model = Service.MapToModel(ViewModel);
+
+
+                int Result = await this.Service.UpdateIsCompleted(Id, Model);
+                if (Result > 0)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
+            }
+        }
+
         [HttpGet("pdf/{id}")]
         public IActionResult GetPDF([FromRoute]int Id)
         {

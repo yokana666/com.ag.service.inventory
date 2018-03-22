@@ -13,6 +13,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel
         public string Code { get; set; }
         public string ProductionOrderId { get; set; }
         public string ProductionOrderNo { get; set; }
+        public bool ProductionOrderIsCompleted { get; set; }
         public double OrderQuantity { get; set; }
         public string OrderTypeId { get; set; }
         public string OrderTypeCode { get; set; }
@@ -21,6 +22,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
         public string Grade { get; set; }
+        public double DistributedLength { get; set; }
         public double Length { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

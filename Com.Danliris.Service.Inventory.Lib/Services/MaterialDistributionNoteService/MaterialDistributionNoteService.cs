@@ -3,6 +3,7 @@ using Com.Danliris.Service.Inventory.Lib.Interfaces;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using Com.Moonlay.NetCore.Lib;
 using Newtonsoft.Json;
 using System;
@@ -16,6 +17,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryDocumentViewModel;
 using System.Text;
+using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 
 namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService
 {
@@ -89,6 +91,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
                     materialDistributionNoteDetail.ProductionOrderId = mdnd.ProductionOrder._id;
                     materialDistributionNoteDetail.ProductionOrderNo = mdnd.ProductionOrder.orderNo;
+                    materialDistributionNoteDetail.ProductionOrderIsCompleted = mdnd.ProductionOrder.isCompleted;
 
                     materialDistributionNoteDetail.ProductId = mdnd.Product._id;
                     materialDistributionNoteDetail.ProductCode = mdnd.Product.code;
@@ -138,7 +141,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                         ProductionOrderViewModel productionOrder = new ProductionOrderViewModel
                         {
                             _id = mdnd.ProductionOrderId,
-                            orderNo = mdnd.ProductionOrderNo
+                            orderNo = mdnd.ProductionOrderNo,
+                            isCompleted = mdnd.ProductionOrderIsCompleted
                         };
 
                         ProductViewModel product = new ProductViewModel
@@ -211,14 +215,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 mdnds.AddRange(mdni.MaterialDistributionNoteDetails);
             }
 
-            List <MaterialDistributionNoteDetail> list = mdnds
+            List<MaterialDistributionNoteDetail> list = mdnds
                     .GroupBy(m => new { m.ProductId, m.ProductCode, m.ProductName })
                     .Select(s => new MaterialDistributionNoteDetail
                     {
                         ProductId = s.First().ProductId,
                         ProductCode = s.First().ProductCode,
                         ProductName = s.First().ProductName,
-                        ReceivedLength = s.Sum(d => d.ReceivedLength)
+                        DistributedLength = s.Sum(d => d.DistributedLength)
                     }).ToList();
 
             foreach (MaterialDistributionNoteDetail mdnd in list)
@@ -228,7 +232,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     productId = mdnd.ProductId,
                     productCode = mdnd.ProductCode,
                     productName = mdnd.ProductName,
-                    quantity = mdnd.ReceivedLength,
+                    quantity = mdnd.DistributedLength,
                     uomId = uom["_id"].ToString(),
                     uom = uom["unit"].ToString()
                 };
@@ -296,6 +300,24 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     Created = await this.CreateAsync(Model);
                     CreateInventoryDocument(Model, "OUT");
 
+                    MaterialsRequestNoteService materialsRequestNoteService = ServiceProvider.GetService<MaterialsRequestNoteService>();
+                    materialsRequestNoteService.Username = Username;
+                    materialsRequestNoteService.Token = Token;
+
+                    foreach (MaterialDistributionNoteItem materialDistributionNoteItem in Model.MaterialDistributionNoteItems)
+                    {
+                        MaterialsRequestNote materialsRequestNote = new MaterialsRequestNote();
+
+                        materialsRequestNote.IsDistributed = true;
+                        foreach (MaterialDistributionNoteDetail materialDistributionNoteDetail in materialDistributionNoteItem.MaterialDistributionNoteDetails)
+                        {
+                            materialsRequestNote.MaterialsRequestNote_Items.Select(s => { s.DistributedLength += materialDistributionNoteDetail.Quantity;  return s; }).ToList();
+                            materialDistributionNoteItem.MaterialDistributionNoteDetails.Where(w => w.Id.Equals(materialDistributionNoteDetail.Id)).Select(s => { s.DistributedLength += s.Quantity; return s; }).ToList();
+                        }
+
+                        await materialsRequestNoteService.UpdateDistributedQuantity(materialsRequestNote.Id, materialsRequestNote);
+                    }
+
                     transaction.Commit();
                 }
                 catch (ServiceValidationExeption e)
@@ -337,6 +359,53 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             return IsSuccessful;
         }
 
+        public async Task<int> UpdateIsCompleted(int Id, MaterialDistributionNote Model)
+        {
+            int IsSucceed = 0;
+
+            using (var Transaction = this.DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    IsSucceed = await UpdateModel(Id, Model);
+                    MaterialDistributionNoteItemService materialDistributionNoteItemService = ServiceProvider.GetService<MaterialDistributionNoteItemService>();
+                    MaterialDistributionNoteDetailService materialDistributionNoteDetailService = ServiceProvider.GetService<MaterialDistributionNoteDetailService>();
+                    MaterialsRequestNoteService materialsRequestNoteService = ServiceProvider.GetService<MaterialsRequestNoteService>();
+
+                    materialDistributionNoteItemService.Username = this.Username;
+                    materialDistributionNoteDetailService.Username = this.Username;
+                    materialsRequestNoteService.Username = Username;
+                    materialsRequestNoteService.Token = Token;
+
+                    foreach (MaterialDistributionNoteItem materialDistributionNoteItem in Model.MaterialDistributionNoteItems)
+                    {
+                        MaterialsRequestNote materialsRequestNote = await materialsRequestNoteService.ReadModelById(materialDistributionNoteItem.MaterialRequestNoteId);
+                        await materialDistributionNoteItemService.UpdateModel(materialDistributionNoteItem.Id, materialDistributionNoteItem);
+
+                        foreach (MaterialDistributionNoteDetail materialDistributionNoteDetail in materialDistributionNoteItem.MaterialDistributionNoteDetails)
+                        {
+                            await materialDistributionNoteDetailService.UpdateModel(materialDistributionNoteDetail.Id, materialDistributionNoteDetail);
+                            if (materialDistributionNoteDetail.IsCompleted)
+                            {
+                                materialsRequestNote.MaterialsRequestNote_Items.Where(w => w.ProductionOrderId.Equals(materialDistributionNoteDetail.ProductionOrderId)).Select(s => { s.ProductionOrderIsCompleted = true; return s; }).ToList();
+                            }
+                        }
+
+                        await materialsRequestNoteService.UpdateIsComplete(materialsRequestNote.Id, materialsRequestNote);
+
+                    }
+
+                    Transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    Transaction.Rollback();
+                }
+            }
+
+            return IsSucceed;
+        }
+
         public override async Task<int> DeleteModel(int Id)
         {
             int Count = 0;
@@ -347,6 +416,19 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 {
                     MaterialDistributionNote materialDistributionNote = await ReadModelById(Id);
                     Count = this.Delete(Id);
+
+                    foreach (MaterialDistributionNoteItem materialDistributionNoteItem in materialDistributionNote.MaterialDistributionNoteItems)
+                    {
+                        MaterialsRequestNoteService materialsRequestNoteService = ServiceProvider.GetService<MaterialsRequestNoteService>();
+
+                        materialsRequestNoteService.Username = this.Username;
+                        MaterialsRequestNote materialsRequestNote = await materialsRequestNoteService.ReadModelById(materialDistributionNoteItem.MaterialRequestNoteId);
+
+                        materialsRequestNote.IsDistributed = false;
+                        materialsRequestNote.MaterialsRequestNote_Items.Select(s => { s.ProductionOrderIsCompleted = false; s.DistributedLength = 0; return s; }).ToList();
+                        await materialsRequestNoteService.UpdateIsComplete(materialsRequestNote.Id, materialsRequestNote);
+                        await materialsRequestNoteService.UpdateDistributedQuantity(materialsRequestNote.Id, materialsRequestNote);
+                    }
 
                     MaterialDistributionNoteItemService materialDistributionNoteItemService = ServiceProvider.GetService<MaterialDistributionNoteItemService>();
                     MaterialDistributionNoteDetailService materialDistributionNoteDetailService = ServiceProvider.GetService<MaterialDistributionNoteDetailService>();
@@ -359,7 +441,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     {
                         HashSet<int> MaterialDistributionNoteDetails = new HashSet<int>(this.DbContext.MaterialDistributionNoteDetails.Where(p => p.MaterialDistributionNoteItemId.Equals(item)).Select(p => p.Id));
 
-                        foreach(int detail in MaterialDistributionNoteDetails)
+                        foreach (int detail in MaterialDistributionNoteDetails)
                         {
                             await materialDistributionNoteDetailService.DeleteAsync(detail);
                         }

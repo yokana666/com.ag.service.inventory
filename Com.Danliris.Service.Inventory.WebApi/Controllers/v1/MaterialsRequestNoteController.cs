@@ -9,7 +9,7 @@ using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
 
 //using System.Reflection.Metadata;
 using System.IO;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 
