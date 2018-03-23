@@ -15,6 +15,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
         public string Grade { get; set; }
         public double? Quantity { get; set; }
         public double? MaterialRequestNoteItemLength { get; set; }
+        public double? DistributedLength { get; set; }
         public double? ReceivedLength { get; set; }
         public bool IsDisposition { get; set; }
         public SupplierViewModel Supplier { get; set; }

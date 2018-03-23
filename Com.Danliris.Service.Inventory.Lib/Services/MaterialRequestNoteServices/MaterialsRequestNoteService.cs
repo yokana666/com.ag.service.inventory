@@ -135,7 +135,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
             response.EnsureSuccessStatusCode();
         }
 
-        public void UpdateDistributedQuantityProductionOrder(List<object> contextAndIds)
+        public void UpdateDistributedQuantityProductionOrder(List<SppParams> contextAndIds)
         {
             string productionOrderUri = "sales/production-orders/update/distributed-quantity";
 
@@ -197,10 +197,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
             public double distributedQuantity { get; set; }
         }
 
-        public async Task<int> UpdateIsComplete(int Id, MaterialsRequestNote Model)
+        public async void UpdateIsCompleted(int Id, MaterialsRequestNote Model)
         {
-            int IsSucceed = 0;
-            using (var transaction = this.DbContext.Database.BeginTransaction())
             {
                 try
                 {
@@ -230,22 +228,17 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                         Model.IsCompleted = true;
                     }
 
-                    IsSucceed = await UpdateModel(Id, Model);
+                    await UpdateModel(Id, Model);
 
-                    transaction.Commit();
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback();
                 }
             }
-            return IsSucceed;
         }
 
-        public async Task<int> UpdateDistributedQuantity(int Id, MaterialsRequestNote Model)
+        public void UpdateDistributedQuantity(int Id, MaterialsRequestNote Model)
         {
-            int IsSucceed = 0;
-            using (var transaction = this.DbContext.Database.BeginTransaction())
             {
                 try
                 {
@@ -260,18 +253,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                         contextQuantityAndIds.Add(sppParams);
                     }
-                    UpdateIsCompletedProductionOrder(contextQuantityAndIds);
-
-                    IsSucceed = await UpdateModel(Id, Model);
-
-                    transaction.Commit();
+                    UpdateDistributedQuantityProductionOrder(contextQuantityAndIds);
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback();
                 }
             }
-            return IsSucceed;
         }
 
         public override async Task<int> UpdateModel(int Id, MaterialsRequestNote Model)
@@ -436,6 +423,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                         orderNo = materialsRequestNote_Item.ProductionOrderNo,
                         orderQuantity = materialsRequestNote_Item.OrderQuantity,
                         isCompleted = materialsRequestNote_Item.ProductionOrderIsCompleted,
+                        distributedQuantity = materialsRequestNote_Item.DistributedLength,
                         orderType = OrderType
                     };
                     materialsRequestNote_ItemViewModel.ProductionOrder = ProductionOrder;
@@ -478,13 +466,18 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                 PropertyCopier<MaterialsRequestNote_ItemViewModel, MaterialsRequestNote_Item>.Copy(materialsRequestNote_ItemViewModel, materialsRequestNote_Item);
 
-                materialsRequestNote_Item.ProductionOrderId = materialsRequestNote_ItemViewModel.ProductionOrder._id;
-                materialsRequestNote_Item.ProductionOrderNo = materialsRequestNote_ItemViewModel.ProductionOrder.orderNo;
-                materialsRequestNote_Item.ProductionOrderIsCompleted = materialsRequestNote_ItemViewModel.ProductionOrder.isCompleted;
-                materialsRequestNote_Item.OrderQuantity = materialsRequestNote_ItemViewModel.ProductionOrder != null && materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity != null ? (double)materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity : 0;
-                materialsRequestNote_Item.OrderTypeId = materialsRequestNote_ItemViewModel.ProductionOrder.orderType._id;
-                materialsRequestNote_Item.OrderTypeCode = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.code;
-                materialsRequestNote_Item.OrderTypeName = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.name;
+                if (!viewModel.RequestType.Equals("PEMBELIAN") && !viewModel.RequestType.Equals("TEST"))
+                {
+
+                    materialsRequestNote_Item.ProductionOrderId = materialsRequestNote_ItemViewModel.ProductionOrder._id;
+                    materialsRequestNote_Item.ProductionOrderNo = materialsRequestNote_ItemViewModel.ProductionOrder.orderNo;
+                    materialsRequestNote_Item.ProductionOrderIsCompleted = materialsRequestNote_ItemViewModel.ProductionOrder.isCompleted;
+                    materialsRequestNote_Item.OrderQuantity = (double)materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity;
+                    materialsRequestNote_Item.OrderTypeId = materialsRequestNote_ItemViewModel.ProductionOrder.orderType._id;
+                    materialsRequestNote_Item.OrderTypeCode = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.code;
+                    materialsRequestNote_Item.OrderTypeName = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.name;
+                }
+
                 materialsRequestNote_Item.ProductId = materialsRequestNote_ItemViewModel.Product._id;
                 materialsRequestNote_Item.ProductCode = materialsRequestNote_ItemViewModel.Product.code;
                 materialsRequestNote_Item.ProductName = materialsRequestNote_ItemViewModel.Product.name;
