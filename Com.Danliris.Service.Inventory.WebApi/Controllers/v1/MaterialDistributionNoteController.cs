@@ -11,6 +11,11 @@ using System;
 using System.Linq;
 using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
 using System.IO;
+using Com.Moonlay.NetCore.Lib.Service;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
+using Microsoft.Extensions.DependencyInjection;
+using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
@@ -33,31 +38,6 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
                 Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
 
                 if (this.Service.UpdateIsApprove(Ids))
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
-            }
-        }
-
-        [HttpPut("update/is-complete/{Id}")]
-        public async Task<IActionResult> PutIsCompleted([FromRoute] int Id, [FromBody] MaterialDistributionNoteViewModel ViewModel)
-        {
-            try
-            {
-                Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
-                MaterialDistributionNote Model = Service.MapToModel(ViewModel);
-
-
-                int Result = await this.Service.UpdateIsCompleted(Id, Model);
-                if (Result > 0)
                 {
                     return NoContent();
                 }

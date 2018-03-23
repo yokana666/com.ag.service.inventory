@@ -116,6 +116,10 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                                     CountDetail++;
                                     materialDistributionNoteDetailError += "ReceivedLength: 'Length must be less than or equal than stock', ";
                                 }
+                                else
+                                {
+                                    inventorySummary.quantity -= (double)mdnd.ReceivedLength;
+                                }
 
                                 if (mdnd.Supplier == null || string.IsNullOrWhiteSpace(mdnd.Supplier._id))
                                 {
@@ -123,7 +127,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                                     materialDistributionNoteDetailError += "Supplier: 'Supplier is required', ";
                                 }
 
-                                inventorySummary.quantity -= (double)mdnd.ReceivedLength;
+                                
                             }
 
                             materialDistributionNoteDetailError += "}, ";

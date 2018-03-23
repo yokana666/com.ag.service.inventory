@@ -11,6 +11,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteMode
         public int MaterialDistributionNoteId { get; set; }
         public int MaterialRequestNoteId { get; set; }
         public string MaterialRequestNoteCode { get; set; }
+        public DateTime MaterialRequestNoteCreatedDateUtc { get; set; }
         public virtual ICollection<MaterialDistributionNoteDetail> MaterialDistributionNoteDetails { get; set; }
         public virtual MaterialDistributionNote MaterialDistributionNote { get; set; }
 

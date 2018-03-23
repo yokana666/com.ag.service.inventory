@@ -11,9 +11,10 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180322081101_DistributedQuantityMDN")]
+    partial class DistributedQuantityMDN
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,8 +221,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<double>("DistributedLength");
-
                     b.Property<string>("Grade")
                         .HasMaxLength(255);
 
@@ -243,6 +242,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("ProductName")
                         .HasMaxLength(255);
+
+                    b.Property<double>("ProductionOrderDistributedLength");
 
                     b.Property<string>("ProductionOrderId");
 
