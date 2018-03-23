@@ -11,9 +11,10 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180321163000_DistributedQuantity")]
+    partial class DistributedQuantity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,8 +254,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<double>("Quantity");
 
-                    b.Property<double>("ReceivedLength");
-
                     b.Property<string>("SupplierCode")
                         .HasMaxLength(255);
 
@@ -314,8 +313,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("MaterialRequestNoteCode")
                         .HasMaxLength(100);
-
-                    b.Property<DateTime>("MaterialRequestNoteCreatedDateUtc");
 
                     b.Property<int>("MaterialRequestNoteId");
 

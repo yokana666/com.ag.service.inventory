@@ -9,9 +9,10 @@ using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
 
 //using System.Reflection.Metadata;
 using System.IO;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using System.Linq;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
@@ -48,6 +49,25 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
                     new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
                     .Fail();
                 return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("update/is-complete/{Id}")]
+        public IActionResult PutIsCompleted([FromRoute] int Id, [FromBody] MaterialsRequestNoteViewModel ViewModel)
+        {
+            try
+            {
+                Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+                Service.Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
+                MaterialsRequestNote Model = Service.MapToModel(ViewModel);
+
+
+                Service.UpdateIsCompleted(Id, Model);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
             }
         }
     }

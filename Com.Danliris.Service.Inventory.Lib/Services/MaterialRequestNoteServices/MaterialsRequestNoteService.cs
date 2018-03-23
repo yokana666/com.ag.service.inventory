@@ -18,7 +18,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService
+namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices
 {
     public class MaterialsRequestNoteService : BasicService<InventoryDbContext, MaterialsRequestNote>, IMap<MaterialsRequestNote, MaterialsRequestNoteViewModel>
     {
@@ -49,9 +49,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                     UnitCode = mrn.UnitCode,
                     UnitName = mrn.UnitName,
                     IsDistributed = mrn.IsDistributed,
+                    IsCompleted = mrn.IsCompleted,
                     RequestType = mrn.RequestType,
                     _LastModifiedUtc = mrn._LastModifiedUtc,
-                    MaterialsRequestNote_Items = mrn.MaterialsRequestNote_Items.Select(p => new MaterialsRequestNote_Item { MaterialsRequestNoteId = p.MaterialsRequestNoteId, ProductionOrderNo = p.ProductionOrderNo}).Where(i => i.MaterialsRequestNoteId.Equals(mrn.Id)).ToList()
+                    MaterialsRequestNote_Items = mrn.MaterialsRequestNote_Items.Select(p => new MaterialsRequestNote_Item { MaterialsRequestNoteId = p.MaterialsRequestNoteId, ProductionOrderNo = p.ProductionOrderNo }).Where(i => i.MaterialsRequestNoteId.Equals(mrn.Id)).ToList()
                 });
 
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
@@ -101,26 +102,53 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
             return Model;
         }
 
-        public void UpdateProductionOrder(MaterialsRequestNote Model, string Context)
+        public void UpdateIsRequestedProductionOrder(List<string> productionOrderIds, string context)
         {
-            foreach (MaterialsRequestNote_Item item in Model.MaterialsRequestNote_Items)
+            string productionOrderUri = "sales/production-orders/update/is-requested";
+
+            var data = new
             {
-                string productionOrderUri = "sales/production-orders";
+                context = context,
+                ids = productionOrderIds
+            };
 
-                HttpClient httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 
-                /* Get ProductionOrder */
-                var responseProductionOrder = httpClient.GetAsync($@"{APIEndpoint.Production}{productionOrderUri}/{item.ProductionOrderId}").Result.Content.ReadAsStringAsync();
-                Dictionary<string, object> resultProductionOrder = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseProductionOrder.Result);
-                var jsonProductionOrder = resultProductionOrder.Single(p => p.Key.Equals("data")).Value;
-                Dictionary<string, object> productionOrder = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonProductionOrder.ToString());
+            var response = httpClient.PutAsync($"{APIEndpoint.Production}{productionOrderUri}", new StringContent(JsonConvert.SerializeObject(data).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
+            response.EnsureSuccessStatusCode();
+        }
 
-                productionOrder["isRequested"] = Context.Equals("CREATE") ? true : false;
+        public void UpdateIsCompletedProductionOrder(List<SppParams> contextAndIds)
+        {
+            string productionOrderUri = "sales/production-orders/update/is-completed";
 
-                var response = httpClient.PutAsync($"{APIEndpoint.Production}{productionOrderUri}/{item.ProductionOrderId}", new StringContent(JsonConvert.SerializeObject(productionOrder).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
-                response.EnsureSuccessStatusCode();
-            }
+            var data = new
+            {
+                contextAndIds = contextAndIds
+            };
+
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+            var response = httpClient.PutAsync($"{APIEndpoint.Production}{productionOrderUri}", new StringContent(JsonConvert.SerializeObject(data).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
+            response.EnsureSuccessStatusCode();
+        }
+
+        public void UpdateDistributedQuantityProductionOrder(List<SppParams> contextAndIds)
+        {
+            string productionOrderUri = "sales/production-orders/update/distributed-quantity";
+
+            var data = new
+            {
+                data = contextAndIds
+            };
+
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+            var response = httpClient.PutAsync($"{APIEndpoint.Production}{productionOrderUri}", new StringContent(JsonConvert.SerializeObject(data).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
+            response.EnsureSuccessStatusCode();
         }
 
         public override async Task<int> CreateModel(MaterialsRequestNote Model)
@@ -130,9 +158,16 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
             {
                 try
                 {
+                    List<string> productionOrderIds = new List<string>();
                     Model = await this.CustomCodeGenerator(Model);
                     Created = await this.CreateAsync(Model);
-                    UpdateProductionOrder(Model, "CREATE");
+
+                    foreach (MaterialsRequestNote_Item item in Model.MaterialsRequestNote_Items)
+                    {
+                        productionOrderIds.Add(item.ProductionOrderId);
+                    }
+
+                    UpdateIsRequestedProductionOrder(productionOrderIds, "CREATE");
                     transaction.Commit();
                 }
                 catch (ServiceValidationExeption e)
@@ -155,9 +190,81 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                 .FirstOrDefaultAsync();
         }
 
+        public class SppParams
+        {
+            public string context { get; set; }
+            public string id { get; set; }
+            public double distributedQuantity { get; set; }
+        }
+
+        public async void UpdateIsCompleted(int Id, MaterialsRequestNote Model)
+        {
+            {
+                try
+                {
+                    int CountIsIncomplete = 0;
+                    List<SppParams> contextAndIds = new List<SppParams>();
+                    foreach (MaterialsRequestNote_Item item in Model.MaterialsRequestNote_Items)
+                    {
+                        SppParams sppParams = new SppParams();
+                        if (!item.ProductionOrderIsCompleted)
+                        {
+                            CountIsIncomplete += 1;
+                            sppParams.context = "INCOMPLETE";
+                            sppParams.id = item.ProductionOrderId;
+                        }
+                        else
+                        {
+                            sppParams.context = "COMPLETE";
+                            sppParams.id = item.ProductionOrderId;
+                        }
+
+                        contextAndIds.Add(sppParams);
+                    }
+                    UpdateIsCompletedProductionOrder(contextAndIds);
+
+                    if (CountIsIncomplete == 0)
+                    {
+                        Model.IsCompleted = true;
+                    }
+
+                    await UpdateModel(Id, Model);
+
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        public void UpdateDistributedQuantity(int Id, MaterialsRequestNote Model)
+        {
+            {
+                try
+                {
+                    List<SppParams> contextQuantityAndIds = new List<SppParams>();
+                    foreach (MaterialsRequestNote_Item item in Model.MaterialsRequestNote_Items)
+                    {
+                        SppParams sppParams = new SppParams
+                        {
+                            id = item.ProductionOrderId,
+                            distributedQuantity = item.DistributedLength
+                        };
+
+                        contextQuantityAndIds.Add(sppParams);
+                    }
+                    UpdateDistributedQuantityProductionOrder(contextQuantityAndIds);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
         public override async Task<int> UpdateModel(int Id, MaterialsRequestNote Model)
         {
             MaterialsRequestNote_ItemService materialsRequestNote_ItemService = this.ServiceProvider.GetService<MaterialsRequestNote_ItemService>();
+            materialsRequestNote_ItemService.Username = this.Username;
 
             int Updated = 0;
             using (var transaction = this.DbContext.Database.BeginTransaction())
@@ -169,7 +276,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                         .Select(s => s.Id));
                     Updated = await this.UpdateAsync(Id, Model);
 
-                    materialsRequestNote_ItemService.Username = this.Username;
 
                     foreach (int materialsRequestNote_Item in materialsRequestNote_Items)
                     {
@@ -226,7 +332,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                         await materialsRequestNote_ItemService.DeleteModel(materialsRequestNote_Item);
                     }
 
-                    UpdateProductionOrder(Model, "DELETE");
+                    List<string> productionOrderIds = new List<string>();
+                    foreach (MaterialsRequestNote_Item item in Model.MaterialsRequestNote_Items)
+                    {
+                        productionOrderIds.Add(item.ProductionOrderId);
+                    }
+
+                    UpdateIsRequestedProductionOrder(productionOrderIds, "DELETE");
                     transaction.Commit();
                 }
                 catch (Exception)
@@ -310,6 +422,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                         _id = materialsRequestNote_Item.ProductionOrderId,
                         orderNo = materialsRequestNote_Item.ProductionOrderNo,
                         orderQuantity = materialsRequestNote_Item.OrderQuantity,
+                        isCompleted = materialsRequestNote_Item.ProductionOrderIsCompleted,
+                        distributedQuantity = materialsRequestNote_Item.DistributedLength,
                         orderType = OrderType
                     };
                     materialsRequestNote_ItemViewModel.ProductionOrder = ProductionOrder;
@@ -323,6 +437,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                     materialsRequestNote_ItemViewModel.Product = Product;
 
                     materialsRequestNote_ItemViewModel.Length = materialsRequestNote_Item.Length;
+                    materialsRequestNote_ItemViewModel.DistributedLength = materialsRequestNote_Item.DistributedLength;
 
                     viewModel.MaterialsRequestNote_Items.Add(materialsRequestNote_ItemViewModel);
                 }
@@ -351,16 +466,23 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                 PropertyCopier<MaterialsRequestNote_ItemViewModel, MaterialsRequestNote_Item>.Copy(materialsRequestNote_ItemViewModel, materialsRequestNote_Item);
 
-                materialsRequestNote_Item.ProductionOrderId = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder._id : "";
-                materialsRequestNote_Item.ProductionOrderNo = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderNo : "";
-                materialsRequestNote_Item.OrderQuantity = materialsRequestNote_ItemViewModel.ProductionOrder != null && materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity != null ? (double)materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity : 0;
-                materialsRequestNote_Item.OrderTypeId = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderType._id : "";
-                materialsRequestNote_Item.OrderTypeCode = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderType.code : "";
-                materialsRequestNote_Item.OrderTypeName = materialsRequestNote_ItemViewModel.ProductionOrder != null ? materialsRequestNote_ItemViewModel.ProductionOrder.orderType.name : "";
+                if (!viewModel.RequestType.Equals("PEMBELIAN") && !viewModel.RequestType.Equals("TEST"))
+                {
+
+                    materialsRequestNote_Item.ProductionOrderId = materialsRequestNote_ItemViewModel.ProductionOrder._id;
+                    materialsRequestNote_Item.ProductionOrderNo = materialsRequestNote_ItemViewModel.ProductionOrder.orderNo;
+                    materialsRequestNote_Item.ProductionOrderIsCompleted = materialsRequestNote_ItemViewModel.ProductionOrder.isCompleted;
+                    materialsRequestNote_Item.OrderQuantity = (double)materialsRequestNote_ItemViewModel.ProductionOrder.orderQuantity;
+                    materialsRequestNote_Item.OrderTypeId = materialsRequestNote_ItemViewModel.ProductionOrder.orderType._id;
+                    materialsRequestNote_Item.OrderTypeCode = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.code;
+                    materialsRequestNote_Item.OrderTypeName = materialsRequestNote_ItemViewModel.ProductionOrder.orderType.name;
+                }
+
                 materialsRequestNote_Item.ProductId = materialsRequestNote_ItemViewModel.Product._id;
                 materialsRequestNote_Item.ProductCode = materialsRequestNote_ItemViewModel.Product.code;
                 materialsRequestNote_Item.ProductName = materialsRequestNote_ItemViewModel.Product.name;
                 materialsRequestNote_Item.Length = materialsRequestNote_ItemViewModel.Length != null ? (double)materialsRequestNote_ItemViewModel.Length : 0;
+                materialsRequestNote_Item.DistributedLength = materialsRequestNote_ItemViewModel.DistributedLength != null ? (double)materialsRequestNote_ItemViewModel.DistributedLength : 0;
 
                 model.MaterialsRequestNote_Items.Add(materialsRequestNote_Item);
             }

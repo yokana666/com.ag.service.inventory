@@ -11,6 +11,11 @@ using System;
 using System.Linq;
 using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
 using System.IO;
+using Com.Moonlay.NetCore.Lib.Service;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
+using Microsoft.Extensions.DependencyInjection;
+using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {

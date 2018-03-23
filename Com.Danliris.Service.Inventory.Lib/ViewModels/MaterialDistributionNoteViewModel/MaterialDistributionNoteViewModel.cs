@@ -64,7 +64,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
 
                     var storageName = this.Unit.name.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
 
-                    Dictionary<string, object> filter = new Dictionary<string, object> { { "storageName", storageName }, { "productCode", new Dictionary<string, object> { { "$in", products.ToArray() } } } };
+                    Dictionary<string, object> filter = new Dictionary<string, object> { { "storageName", storageName }, { "uom", "MTR" }, { "productCode", new Dictionary<string, object> { { "$in", products.ToArray() } } } };
                     var response = httpClient.GetAsync($@"{APIEndpoint.Inventory}{inventorySummaryURI}filter=" + JsonConvert.SerializeObject(filter)).Result.Content.ReadAsStringAsync();
                     Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
                     
@@ -116,6 +116,10 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                                     CountDetail++;
                                     materialDistributionNoteDetailError += "ReceivedLength: 'Length must be less than or equal than stock', ";
                                 }
+                                else
+                                {
+                                    inventorySummary.quantity -= (double)mdnd.ReceivedLength;
+                                }
 
                                 if (mdnd.Supplier == null || string.IsNullOrWhiteSpace(mdnd.Supplier._id))
                                 {
@@ -123,7 +127,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                                     materialDistributionNoteDetailError += "Supplier: 'Supplier is required', ";
                                 }
 
-                                inventorySummary.quantity -= (double)mdnd.ReceivedLength;
+                                
                             }
 
                             materialDistributionNoteDetailError += "}, ";

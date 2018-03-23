@@ -13,7 +13,7 @@ using System.Text;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteService;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 
 namespace Com.Danliris.Service.Inventory.WebApi
 {
