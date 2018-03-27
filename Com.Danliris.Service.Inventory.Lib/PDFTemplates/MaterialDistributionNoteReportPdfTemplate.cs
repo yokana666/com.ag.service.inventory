@@ -110,7 +110,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
                 table.AddCell(cell);
 
                 cell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2 };
-                cell.Phrase = new Phrase(d.ProductName.Replace("GREIGE", "", StringComparison.CurrentCultureIgnoreCase), normal_font);
+                cell.Phrase = new Phrase(d.ProductName.Replace("GREIGE ", "", StringComparison.CurrentCultureIgnoreCase), normal_font);
                 table.AddCell(cell);
 
                 cell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2 };
