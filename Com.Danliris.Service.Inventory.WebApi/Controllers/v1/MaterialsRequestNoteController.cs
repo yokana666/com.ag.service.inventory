@@ -53,7 +53,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
         }
 
         [HttpPut("update/is-complete/{Id}")]
-        public IActionResult PutIsCompleted([FromRoute] int Id, [FromBody] MaterialsRequestNoteViewModel ViewModel)
+        public async Task<IActionResult> PutIsCompleted([FromRoute] int Id, [FromBody] MaterialsRequestNoteViewModel ViewModel)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
                 MaterialsRequestNote Model = Service.MapToModel(ViewModel);
 
 
-                Service.UpdateIsCompleted(Id, Model);
+                await Service.UpdateIsCompleted(Id, Model);
                 return NoContent();
             }
             catch (Exception e)

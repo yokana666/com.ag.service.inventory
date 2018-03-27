@@ -38,7 +38,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "Unit", "RequestType", "Remark", "MaterialsRequestNote_Items", "_LastModifiedUtc"
+                    "Id", "Code", "Unit", "RequestType", "Remark", "MaterialsRequestNote_Items", "_LastModifiedUtc", "IsCompleted"
                 };
             Query = Query
                 .Select(mrn => new MaterialsRequestNote
@@ -197,7 +197,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
             public double distributedQuantity { get; set; }
         }
 
-        public async void UpdateIsCompleted(int Id, MaterialsRequestNote Model)
+        public async Task UpdateIsCompleted(int Id, MaterialsRequestNote Model)
         {
             {
                 try
@@ -230,11 +230,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                     await UpdateModel(Id, Model);
 
+
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.Write(e);
                 }
             }
+
         }
 
         public void UpdateDistributedQuantity(int Id, MaterialsRequestNote Model)
@@ -300,7 +303,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     transaction.Rollback();
                 }
