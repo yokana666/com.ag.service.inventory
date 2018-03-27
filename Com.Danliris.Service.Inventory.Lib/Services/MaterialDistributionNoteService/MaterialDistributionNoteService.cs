@@ -18,6 +18,7 @@ using System.Net.Http.Headers;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryDocumentViewModel;
 using System.Text;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using System.Linq.Dynamic.Core;
 
 namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService
 {
@@ -528,6 +529,65 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             base.OnDeleting(model);
             model._DeletedAgent = "Service";
             model._DeletedBy = this.Username;
+        }
+
+        public IQueryable<MaterialDistributionNoteReportViewModel> GetReportQuery(string unitId, string type, DateTime date, int offset)
+        {
+            var Query = (from a in DbContext.MaterialDistributionNotes
+                         join b in DbContext.MaterialDistributionNoteItems on a.Id equals b.MaterialDistributionNoteId
+                         join c in DbContext.MaterialDistributionNoteDetails on b.Id equals c.MaterialDistributionNoteItemId
+                         where a._IsDeleted == false
+                             && a.UnitId == (string.IsNullOrWhiteSpace(unitId) ? a.UnitId : unitId)
+                             && a.Type == (string.IsNullOrWhiteSpace(type) ? a.Type : type)
+                             && a._CreatedUtc.AddHours(offset).Date == date.Date
+                         select new MaterialDistributionNoteReportViewModel
+                         {
+                             _LastModifiedUtc = a._LastModifiedUtc,
+                             No = a.No,
+                             Type = a.Type,
+                             MaterialRequestNoteNo = b.MaterialRequestNoteCode,
+                             ProductionOrderNo = c.ProductionOrderNo,
+                             ProductName = c.ProductName,
+                             Grade = c.Grade,
+                             Quantity = c.Quantity,
+                             Length = c.ReceivedLength,
+                             SupplierName = c.SupplierName,
+                             IsDisposition = a.IsDisposition,
+                             IsApproved = a.IsApproved
+                         });
+
+            return Query;
+        }
+
+        public Tuple<List<MaterialDistributionNoteReportViewModel>, int> GetReport(string unitId, string type, DateTime date, int page, int size, string Order, int offset)
+        {
+            var Query = GetReportQuery(unitId, type, date, offset);
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
+            if (OrderDictionary.Count.Equals(0))
+            {
+                Query = Query.OrderByDescending(b => b._LastModifiedUtc);
+            }
+            else
+            {
+                string Key = OrderDictionary.Keys.First();
+                string OrderType = OrderDictionary[Key];
+
+                Query = Query.OrderBy(string.Concat(Key, " ", OrderType));
+            }
+
+            Pageable<MaterialDistributionNoteReportViewModel> pageable = new Pageable<MaterialDistributionNoteReportViewModel>(Query, page - 1, size);
+            List<MaterialDistributionNoteReportViewModel> Data = pageable.Data.ToList<MaterialDistributionNoteReportViewModel>();
+            int TotalData = pageable.TotalCount;
+
+            return Tuple.Create(Data, TotalData);
+        }
+
+        public List<MaterialDistributionNoteReportViewModel> GetPdfReport(string unitId, string unitName, string type, DateTime date, int offset)
+        {
+            var Data = GetReportQuery(unitId, type, date, offset).ToList();
+
+            return Data;
         }
     }
 }
