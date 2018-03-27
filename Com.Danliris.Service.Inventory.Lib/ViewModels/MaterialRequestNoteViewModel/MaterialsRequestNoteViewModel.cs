@@ -13,6 +13,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
         public string RequestType { get; set; }
         public string Remark { get; set; }
         public bool IsDistributed { get; set; }
+        public bool IsCompleted { get; set; }
         public List<MaterialsRequestNote_ItemViewModel> MaterialsRequestNote_Items { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -56,7 +57,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
                         Count++;
                         materialsRequestNote_ItemsError += "Length: 'Panjang total tidak boleh lebih dari 105% toleransi', ";
                     }
-                    if (!string.Equals(this.RequestType.ToUpper(), "TEST"))
+                    if (!string.Equals(this.RequestType.ToUpper(), "TEST") && !string.Equals(this.RequestType.ToUpper(), "PEMBELIAN"))
                     {
                         if (materialsRequestNote_Item.ProductionOrder == null || string.IsNullOrWhiteSpace(materialsRequestNote_Item.ProductionOrder._id))
                         {
