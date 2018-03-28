@@ -19,8 +19,8 @@ namespace Com.Danliris.Service.Inventory.Lib
 
         public DbSet<MaterialsRequestNote> MaterialsRequestNotes { get; set; }
         public DbSet<MaterialsRequestNote_Item> MaterialsRequestNote_Items { get; set; }
-        public DbSet<FpReturProInvDocsDetails> FpReturProInvDocsDetails { get; set; }
-        public DbSet<FpReturProInvDocs> FpReturProInvDocs { get; set; }
+        public DbSet<FpReturProInvDocsDetails> fpRegradingResultDocsDetails { get; set; }
+        public DbSet<FpReturProInvDocs> fpRegradingResultDocs { get; set; }
         public DbSet<MaterialDistributionNote> MaterialDistributionNotes { get; set; }
         public DbSet<MaterialDistributionNoteItem> MaterialDistributionNoteItems { get; set; }
         public DbSet<MaterialDistributionNoteDetail> MaterialDistributionNoteDetails { get; set; }

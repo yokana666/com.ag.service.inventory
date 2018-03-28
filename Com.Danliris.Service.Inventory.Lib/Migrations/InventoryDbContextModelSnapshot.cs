@@ -35,14 +35,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<string>("NoBon")
                         .HasMaxLength(255);
 
-                    b.Property<int>("NoBonId")
+                    b.Property<string>("NoBonId")
                         .HasMaxLength(128);
 
-                    b.Property<string>("SupplierId")
-                        .HasMaxLength(128);
+                    b.Property<string>("SupplierCode");
 
-                    b.Property<string>("SupplierName")
-                        .HasMaxLength(255);
+                    b.Property<string>("SupplierId");
+
+                    b.Property<string>("SupplierName");
 
                     b.Property<string>("UnitName");
 
@@ -80,7 +80,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FpReturProInvDocs");
+                    b.ToTable("fpRegradingResultDocs");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FpReturProInvDocsDetails", b =>
@@ -95,6 +95,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<int>("FpReturProInvDocsId");
 
+                    b.Property<string>("Grade");
+
                     b.Property<double>("Length");
 
                     b.Property<string>("ProductCode");
@@ -103,11 +105,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("ProductName");
 
-                    b.Property<double>("Quantity");
-
                     b.Property<string>("Remark");
 
-                    b.Property<string>("SupplierId");
+                    b.Property<string>("Retur");
 
                     b.Property<string>("_CreatedAgent")
                         .IsRequired()
@@ -145,7 +145,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.HasIndex("FpReturProInvDocsId");
 
-                    b.ToTable("FpReturProInvDocsDetails");
+                    b.ToTable("fpRegradingResultDocsDetails");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel.MaterialDistributionNote", b =>

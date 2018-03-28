@@ -46,7 +46,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
 
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Bon Pengantar", 50, 296, 0);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 296, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Bon.No, 120, 296, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Bon.no, 120, 296, 0);
 
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "No", 450, 316, 0);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 465, 316, 0);
@@ -101,12 +101,12 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
                 table.AddCell(cell);
 
 
-                cell.Phrase = new Phrase(string.Format("{0:n}", detail.Quantity), normal_font);
-                table.AddCell(cell);
+                //cell.Phrase = new Phrase(string.Format("{0:n}", detail.Quantity), normal_font);
+                //table.AddCell(cell);
 
 
-                cell.Phrase = new Phrase(string.Format("{0:n}", detail.Quantity * detail.Length), normal_font);
-                table.AddCell(cell);
+                //cell.Phrase = new Phrase(string.Format("{0:n}", detail.Quantity * detail.Length), normal_font);
+                //table.AddCell(cell);
                 index++;
             }
 
