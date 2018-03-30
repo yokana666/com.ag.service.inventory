@@ -31,25 +31,37 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             FpReturProInvDocs model = new FpReturProInvDocs();
             PropertyCopier<FpReturProInvDocsViewModel, FpReturProInvDocs>.Copy(viewModel, model);
 
-            model.NoBon = viewModel.Bon.No;
-            model.NoBonId = viewModel.Bon.Id;
-            model.UnitName = viewModel.Bon.UnitName;
+            model.NoBon = viewModel.Bon.no;
+            model.NoBonId = viewModel.Bon._id;
+            model.UnitName = viewModel.Bon.unitName;
             model.SupplierId = viewModel.Supplier._id;
             model.SupplierName = viewModel.Supplier.name;
+            model.SupplierCode = viewModel.Supplier.code;
+            model.ProductId = viewModel.Product.Id;
+            model.ProductCode = viewModel.Product.Code;
+            model.ProductName = viewModel.Product.Name;
+            model.Shift = viewModel.Shift;
+            model.MachineName = viewModel.Machine.name;
+            model.MachineId = viewModel.Machine._id;
+            model.MachineCode = viewModel.Machine.code;
+            model.Operator = viewModel.Operator;
+            model.Remark = viewModel.Remark;
 
             model.Details = new List<FpReturProInvDocsDetails>();
 
             foreach (FpReturProInvDocsDetailsViewModel data in viewModel.Details)
             {
                 FpReturProInvDocsDetails detail = new FpReturProInvDocsDetails();
-                detail.SupplierId = viewModel.Supplier._id;
-                detail.ProductId = data.Product.Id;
-                detail.ProductCode = data.Product.Code;
-                detail.ProductName = data.Product.Name;
-                detail.Quantity = data.Quantity;
+                //detail.SupplierId = viewModel.Supplier._id;
+                detail.ProductId = viewModel.Product.Id;
+                detail.ProductCode = viewModel.Product.Code;
+                detail.ProductName = viewModel.Product.Name;
+                //detail.Quantity = data.Quantity;
                 detail.Length = data.Length;
                 detail.Remark = data.Remark;
-
+                detail.Grade = data.Grade;
+                detail.Retur = data.Retur;
+                detail.LengthBeforeReGrade = data.LengthBeforeReGrade;
                 model.Details.Add(detail);
 
             }
@@ -64,14 +76,29 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             viewModel.Details = new List<FpReturProInvDocsDetailsViewModel>();
             viewModel.Bon = new FpReturProInvDocsViewModel.noBon();
-            viewModel.Bon.Id = model.NoBonId;
-            viewModel.Bon.No = model.NoBon;
-            viewModel.Bon.UnitName = model.UnitName;
+            viewModel.Bon._id = model.NoBonId;
+            viewModel.Bon.no = model.NoBon;
+            viewModel.Bon.unitName = model.UnitName;
 
             viewModel.Supplier = new FpReturProInvDocsViewModel.supplier();
             viewModel.Supplier.name = model.SupplierName;
             viewModel.Supplier._id = model.SupplierId;
+            viewModel.Supplier.code = model.SupplierCode;
             viewModel._CreatedUtc = model._CreatedUtc;
+
+            viewModel.Product = new FpReturProInvDocsViewModel.product();
+            viewModel.Product.Name = model.ProductName;
+            viewModel.Product.Id = model.ProductId;
+            viewModel.Product.Code = model.SupplierCode;
+
+            viewModel.Shift = model.Shift;
+            viewModel.Remark = model.Remark;
+            viewModel.Operator = model.Operator;
+
+            viewModel.Machine = new FpReturProInvDocsViewModel.machine();
+            viewModel.Machine.name = model.MachineName;
+            viewModel.Machine.code = model.MachineCode;
+            viewModel.Machine._id = model.MachineId;
 
             foreach (FpReturProInvDocsDetails data in model.Details)
             {
@@ -80,10 +107,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 detail.Product.Id = data.ProductId;
                 detail.Product.Name = data.ProductName;
                 detail.Product.Length = data.Length;
-                detail.Product.Quantity = data.Quantity;
-                detail.Quantity = data.Quantity;
+                //detail.Product.Quantity = data.Quantity;
+                //detail.Quantity = data.Quantity;
                 detail.Remark = data.Remark;
                 detail.Length = data.Length;
+                detail.Grade = data.Grade;
+                detail.Retur = data.Retur;
+                detail.LengthBeforeReGrade = data.LengthBeforeReGrade;
                 viewModel.Details.Add(detail);
             }
             return viewModel;
@@ -92,17 +122,17 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
         public override Tuple<List<FpReturProInvDocs>, int, Dictionary<string, string>, List<string>> ReadModel(int Page = 1, int Size = 25, string Order = "{}", List<string> Select = null, string Keyword = null, string Filter = "{}")
         {
 
-            IQueryable<FpReturProInvDocs> Query = this.DbContext.FpReturProInvDocs;
+            IQueryable<FpReturProInvDocs> Query = this.DbContext.fpRegradingResultDocs;
 
             List<string> SearchAttributes = new List<string>()
                 {
-                    "Code", "NoBon", "SupplierName"
+                    "Code", "NoBon", "SupplierName","ProductName"
                 };
             Query = ConfigureSearch(Query, SearchAttributes, Keyword);
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "Bon", "Supplier","Details"
+                    "Id", "Code", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator"
                 };
             Query = Query
                 .Select(o => new FpReturProInvDocs
@@ -114,8 +144,18 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     UnitName = o.UnitName,
                     SupplierId = o.SupplierId,
                     SupplierName = o.SupplierName,
+                    SupplierCode = o.SupplierCode,
+                    ProductId = o.ProductId,
+                    ProductName = o.ProductName,
+                    ProductCode = o.ProductCode,
+                    Remark = o.Remark,
+                    Operator = o.Operator,
+                    MachineCode = o.MachineCode,
+                    MachineId = o.MachineId,
+                    MachineName = o.MachineName,
+                    Shift = o.Shift,
                     _CreatedUtc = o._CreatedUtc,
-                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, SupplierId = p.SupplierId, Id = o.Id, Length = p.Length, Quantity = p.Quantity, Remark = p.Remark, Code = p.Code }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
+                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, Grade = p.Grade, Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
@@ -164,28 +204,37 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             /* Create Inventory Document */
             List<InventoryDocumentItemViewModel> inventoryDocumentItems = new List<InventoryDocumentItemViewModel>();
-
+            InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel();
+            double TotalLength = 0;
             foreach (FpReturProInvDocsDetails o in Model.Details)
             {
-                InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel
-                {
-                    productId = o.ProductId,
-                    productCode = o.ProductCode,
-                    productName = o.ProductName,
-                    quantity = o.Length,
-                    uomId = uom["_id"].ToString(),
-                    uom = uom["unit"].ToString()
-                };
-
-                inventoryDocumentItems.Add(inventoryDocumentItem);
+                TotalLength += o.Length;
+                //inventoryDocumentItem = new InventoryDocumentItemViewModel
+                //{
+                //productId = o.ProductId,
+                //productCode = o.ProductCode,
+                //productName = o.ProductName,
+                //quantity = o.Length,
+                //uomId = uom["_id"].ToString(),
+                //uom = uom["unit"].ToString()
+                //};
+                //inventoryDocumentItems.Add(inventoryDocumentItem);
             }
 
+            inventoryDocumentItem.productId = Model.ProductId;
+            inventoryDocumentItem.productCode = Model.ProductCode;
+            inventoryDocumentItem.productName = Model.ProductName;
+            inventoryDocumentItem.quantity = TotalLength;
+            inventoryDocumentItem.uomId = uom["_id"].ToString();
+            inventoryDocumentItem.uom = uom["unit"].ToString();
+
+            inventoryDocumentItems.Add(inventoryDocumentItem);
 
             InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
             {
                 date = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 referenceNo = Model.Code,
-                referenceType = "Bon Retur Barang",
+                referenceType = "Bon Hasil Re-grading",
                 type = Type,
                 storageId = storage["_id"].ToString(),
                 storageCode = storage["code"].ToString(),
@@ -199,18 +248,18 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
         public async Task<FpReturProInvDocs> CustomCodeGenerator(FpReturProInvDocs Model)
         {
-            Model.UnitName = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "PR" : "FS";
+            var unit = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "PR" : "FS";
             var lastData = await this.DbSet.Where(w => string.Equals(w.UnitName, Model.UnitName)).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
 
             DateTime Now = DateTime.Now;
             string Year = Now.ToString("yy");
-            string Month = Now.ToString("MM");
+            //string Month = Now.ToString("MM");
 
             if (lastData == null)
             {
                 Model.AutoIncrementNumber = 1;
                 string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
-                Model.Code = $"BL{Model.UnitName}{Month}{Year}{Number}";
+                Model.Code = $"KB{unit}{Year}{Number}";
             }
             else
             {
@@ -218,13 +267,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 {
                     Model.AutoIncrementNumber = 1;
                     string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
-                    Model.Code = $"BL{Model.UnitName}{Month}{Year}{Number}";
+                    Model.Code = $"KB{unit}{Year}{Number}";
                 }
                 else
                 {
                     Model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
                     string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
-                    Model.Code = $"BL{Model.UnitName}{Month}{Year}{Number}";
+                    Model.Code = $"KB{unit}{Year}{Number}";
                 }
             }
 
@@ -263,20 +312,27 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             //    model.Code = CodeGenerator.GenerateCode();
             //}
             //while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
-
-            base.OnCreating(model);
-            model._CreatedAgent = "Service";
-            model._CreatedBy = this.Username;
-            model._LastModifiedAgent = "Service";
-            model._LastModifiedBy = this.Username;
-
-            FpReturProInvDocsDetailsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpReturProInvDocsDetailsService>();
-            fpReturProInvDocsDetailsService.Username = this.Username;
-            foreach (FpReturProInvDocsDetails data in model.Details)
+            try
             {
+                base.OnCreating(model);
+                model._CreatedAgent = "Service";
+                model._CreatedBy = this.Username;
+                model._LastModifiedAgent = "Service";
+                model._LastModifiedBy = this.Username;
 
-                fpReturProInvDocsDetailsService.OnCreating(data);
+                FpReturProInvDocsDetailsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpReturProInvDocsDetailsService>();
+                fpReturProInvDocsDetailsService.Username = this.Username;
+                foreach (FpReturProInvDocsDetails data in model.Details)
+                {
+
+                    fpReturProInvDocsDetailsService.OnCreating(data);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+
         }
 
         public override async Task<int> DeleteModel(int Id)
@@ -295,7 +351,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     fpReturProInvDocsDetailsService.Username = this.Username;
 
 
-                    HashSet<int> fpReturProInvDocsDetails = new HashSet<int>(this.DbContext.FpReturProInvDocsDetails.Where(p => p.FpReturProInvDocsId.Equals(Id)).Select(p => p.Id));
+                    HashSet<int> fpReturProInvDocsDetails = new HashSet<int>(this.DbContext.fpRegradingResultDocsDetails.Where(p => p.FpReturProInvDocsId.Equals(Id)).Select(p => p.Id));
 
                     foreach (int detail in fpReturProInvDocsDetails)
                     {
