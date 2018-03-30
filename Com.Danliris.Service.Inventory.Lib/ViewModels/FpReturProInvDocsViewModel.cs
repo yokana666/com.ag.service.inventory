@@ -12,6 +12,11 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public string Code { get; set; }
         public noBon Bon { get; set; }
         public supplier Supplier { get; set; }
+        public product Product { get; set; }
+        public string Operator { get; set; }
+        public machine Machine { get; set; }
+        public string Remark { get; set; }
+        public string Shift { get; set; }
         public List<FpReturProInvDocsDetailsViewModel> Details { get; set; }
 
         public class supplier
@@ -19,6 +24,18 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
             public string _id { get; set; }
             public string name { get; set; }
             public string code { get; set; }
+        }
+        public class machine
+        {
+            public string _id { get; set; }
+            public string name { get; set; }
+            public string code { get; set; }
+        }
+        public class product
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Code { get; set; }
         }
 
         public class noBon
@@ -35,8 +52,13 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
             if (this.Bon == null || (this.Bon._id) == "")
                 yield return new ValidationResult("Bon harus di isi", new List<string> { "Bon" });
 
-            //if (this.Supplier == null || string.IsNullOrWhiteSpace(this.Supplier.name))
-            //    yield return new ValidationResult("Supplier harus di isi", new List<string> { "Supplier" });
+
+            if (this.Machine == null || (this.Machine._id) == "")
+                yield return new ValidationResult("Mesin harus di isi", new List<string> { "Machine" });
+
+            if (this.Operator == null || string.IsNullOrWhiteSpace(this.Operator))
+                yield return new ValidationResult("Operator harus di isi", new List<string> { "Operator" });
+
             int Count = 0;
             string detailsError = "[";
             if (this.Details.Count.Equals(0) || this.Details == null)
@@ -45,48 +67,51 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
             }
             else
             {
-                List<string> temp = new List<string>();
+                //List<string> temp = new List<string>();
                 foreach (FpReturProInvDocsDetailsViewModel data in this.Details)
                 {
                     detailsError += "{";
-                    if (data.Product == null || string.IsNullOrWhiteSpace(data.Product.Name))
-                    {
-                        Count++;
-                        detailsError += "Product: 'Barang harus di isi',";
-                    }
-
-                    //if (data.Quantity.Equals(0))
+                    //if (data.Product == null || string.IsNullOrWhiteSpace(data.Product.Name))
                     //{
                     //    Count++;
-                    //    detailsError += "Quantity: '(Piece) harus di isi',";
+                    //    detailsError += "Product: 'Barang harus di isi',";
                     //}
-                    if (data.Product != null)
-                    {
 
-                        if ((data.Length > data.Product.Length) || data.Length.Equals(0))
+                    //if (data.Product != null)
+                    //{
+                    if (!(data.LengthBeforeReGrade.Equals(0)))
+                    {
+                        if ((data.Length > data.LengthBeforeReGrade) || data.Length.Equals(0))
                         {
                             Count++;
-                            detailsError += "Length: 'Panjang harus lebih kecil / harus di isi',";
+                            detailsError += "Length: 'Panjang harus lebih kecil',";
                         }
-
-                        if (data.Product.Name != null || data.Product.Name != "")
-                        {
-                            if (!(temp.Contains(data.Product.Name)))
-                            {
-                                temp.Add(data.Product.Name);
-                            }
-                            else
-                            {
-                                Count++;
-                                detailsError += "Product: 'Barang tidak boleh sama',";
-                            }
-                        }
-
                     }
+
+
+                    //if (data.Product.Name != null || data.Product.Name != "")
+                    //{
+                    //    if (!(temp.Contains(data.Product.Name)))
+                    //    {
+                    //        temp.Add(data.Product.Name);
+                    //    }
+                    //    else
+                    //    {
+                    //        Count++;
+                    //        detailsError += "Product: 'Barang tidak boleh sama',";
+                    //    }
+                    //}
+
+                    //}
                     else if (data.Length.Equals(0))
                     {
                         Count++;
                         detailsError += "Length: 'Panjang harus di isi',";
+                    }
+                    if (data.LengthBeforeReGrade.Equals(0))
+                    {
+                        Count++;
+                        detailsError += "LengthBeforeReGrade: 'harus di isi',";
                     }
                     detailsError += "},";
 

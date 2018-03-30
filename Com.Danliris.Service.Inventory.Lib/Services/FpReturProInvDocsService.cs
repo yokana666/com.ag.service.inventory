@@ -37,6 +37,15 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             model.SupplierId = viewModel.Supplier._id;
             model.SupplierName = viewModel.Supplier.name;
             model.SupplierCode = viewModel.Supplier.code;
+            model.ProductId = viewModel.Product.Id;
+            model.ProductCode = viewModel.Product.Code;
+            model.ProductName = viewModel.Product.Name;
+            model.Shift = viewModel.Shift;
+            model.MachineName = viewModel.Machine.name;
+            model.MachineId = viewModel.Machine._id;
+            model.MachineCode = viewModel.Machine.code;
+            model.Operator = viewModel.Operator;
+            model.Remark = viewModel.Remark;
 
             model.Details = new List<FpReturProInvDocsDetails>();
 
@@ -44,14 +53,15 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             {
                 FpReturProInvDocsDetails detail = new FpReturProInvDocsDetails();
                 //detail.SupplierId = viewModel.Supplier._id;
-                detail.ProductId = data.Product.Id;
-                detail.ProductCode = data.Product.Code;
-                detail.ProductName = data.Product.Name;
+                detail.ProductId = viewModel.Product.Id;
+                detail.ProductCode = viewModel.Product.Code;
+                detail.ProductName = viewModel.Product.Name;
                 //detail.Quantity = data.Quantity;
                 detail.Length = data.Length;
                 detail.Remark = data.Remark;
                 detail.Grade = data.Grade;
                 detail.Retur = data.Retur;
+                detail.LengthBeforeReGrade = data.LengthBeforeReGrade;
                 model.Details.Add(detail);
 
             }
@@ -76,6 +86,20 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             viewModel.Supplier.code = model.SupplierCode;
             viewModel._CreatedUtc = model._CreatedUtc;
 
+            viewModel.Product = new FpReturProInvDocsViewModel.product();
+            viewModel.Product.Name = model.ProductName;
+            viewModel.Product.Id = model.ProductId;
+            viewModel.Product.Code = model.SupplierCode;
+
+            viewModel.Shift = model.Shift;
+            viewModel.Remark = model.Remark;
+            viewModel.Operator = model.Operator;
+
+            viewModel.Machine = new FpReturProInvDocsViewModel.machine();
+            viewModel.Machine.name = model.MachineName;
+            viewModel.Machine.code = model.MachineCode;
+            viewModel.Machine._id = model.MachineId;
+
             foreach (FpReturProInvDocsDetails data in model.Details)
             {
                 FpReturProInvDocsDetailsViewModel detail = new FpReturProInvDocsDetailsViewModel();
@@ -89,6 +113,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 detail.Length = data.Length;
                 detail.Grade = data.Grade;
                 detail.Retur = data.Retur;
+                detail.LengthBeforeReGrade = data.LengthBeforeReGrade;
                 viewModel.Details.Add(detail);
             }
             return viewModel;
@@ -101,13 +126,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             List<string> SearchAttributes = new List<string>()
                 {
-                    "Code", "NoBon", "SupplierName"
+                    "Code", "NoBon", "SupplierName","ProductName"
                 };
             Query = ConfigureSearch(Query, SearchAttributes, Keyword);
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "Bon","Supplier", "Details"
+                    "Id", "Code", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator"
                 };
             Query = Query
                 .Select(o => new FpReturProInvDocs
@@ -119,9 +144,18 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     UnitName = o.UnitName,
                     SupplierId = o.SupplierId,
                     SupplierName = o.SupplierName,
-                    SupplierCode=o.SupplierCode,
+                    SupplierCode = o.SupplierCode,
+                    ProductId = o.ProductId,
+                    ProductName = o.ProductName,
+                    ProductCode = o.ProductCode,
+                    Remark = o.Remark,
+                    Operator = o.Operator,
+                    MachineCode = o.MachineCode,
+                    MachineId = o.MachineId,
+                    MachineName = o.MachineName,
+                    Shift = o.Shift,
                     _CreatedUtc = o._CreatedUtc,
-                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, Grade = p.Grade,Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
+                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, Grade = p.Grade, Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
@@ -170,22 +204,31 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             /* Create Inventory Document */
             List<InventoryDocumentItemViewModel> inventoryDocumentItems = new List<InventoryDocumentItemViewModel>();
-
+            InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel();
+            double TotalLength = 0;
             foreach (FpReturProInvDocsDetails o in Model.Details)
             {
-                InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel
-                {
-                    productId = o.ProductId,
-                    productCode = o.ProductCode,
-                    productName = o.ProductName,
-                    quantity = o.Length,
-                    uomId = uom["_id"].ToString(),
-                    uom = uom["unit"].ToString()
-                };
-
-                inventoryDocumentItems.Add(inventoryDocumentItem);
+                TotalLength += o.Length;
+                //inventoryDocumentItem = new InventoryDocumentItemViewModel
+                //{
+                //productId = o.ProductId,
+                //productCode = o.ProductCode,
+                //productName = o.ProductName,
+                //quantity = o.Length,
+                //uomId = uom["_id"].ToString(),
+                //uom = uom["unit"].ToString()
+                //};
+                //inventoryDocumentItems.Add(inventoryDocumentItem);
             }
 
+            inventoryDocumentItem.productId = Model.ProductId;
+            inventoryDocumentItem.productCode = Model.ProductCode;
+            inventoryDocumentItem.productName = Model.ProductName;
+            inventoryDocumentItem.quantity = TotalLength;
+            inventoryDocumentItem.uomId = uom["_id"].ToString();
+            inventoryDocumentItem.uom = uom["unit"].ToString();
+
+            inventoryDocumentItems.Add(inventoryDocumentItem);
 
             InventoryDocumentViewModel inventoryDocument = new InventoryDocumentViewModel
             {
@@ -210,13 +253,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             DateTime Now = DateTime.Now;
             string Year = Now.ToString("yy");
-            string Month = Now.ToString("MM");
+            //string Month = Now.ToString("MM");
 
             if (lastData == null)
             {
                 Model.AutoIncrementNumber = 1;
                 string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
-                Model.Code = $"KB{unit}{Month}{Year}{Number}";
+                Model.Code = $"KB{unit}{Year}{Number}";
             }
             else
             {
@@ -224,13 +267,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 {
                     Model.AutoIncrementNumber = 1;
                     string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
-                    Model.Code = $"KB{unit}{Month}{Year}{Number}";
+                    Model.Code = $"KB{unit}{Year}{Number}";
                 }
                 else
                 {
                     Model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
                     string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
-                    Model.Code = $"KB{unit}{Month}{Year}{Number}";
+                    Model.Code = $"KB{unit}{Year}{Number}";
                 }
             }
 
