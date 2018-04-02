@@ -14,6 +14,7 @@ using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteServic
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Com.Danliris.Service.Inventory.WebApi
 {
