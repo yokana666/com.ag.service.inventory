@@ -11,9 +11,11 @@ services:
       - DB_CONNECTIONSTRING=mongodb://mongodb:27017
       - AUTH_SECRET=DANLIRISTESTENVIRONMENT
       - PORT=5000
-      - IP=localhost
+      - IP=0.0.0.0
     ports:
       - "5000:5000"
+    depends_on:
+      - mongodb
   dl.core.webapi:
     image: efrataretailindo/dl-core-webapi:latest
     environment:
@@ -21,9 +23,11 @@ services:
       - DB_CONNECTIONSTRING=mongodb://mongodb:27017
       - AUTH_SECRET=DANLIRISTESTENVIRONMENT
       - PORT=5001
-      - IP=localhost
+      - IP=0.0.0.0
     ports:
       - "5001:5001"
+    depends_on:
+      - mongodb
   dl.inventory.webapi:
     image: efrataretailindo/dl-inventory-webapi:latest
     environment:
@@ -31,9 +35,11 @@ services:
       - DB_CONNECTIONSTRING=mongodb://mongodb:27017
       - AUTH_SECRET=DANLIRISTESTENVIRONMENT
       - PORT=5002
-      - IP=localhost
+      - IP=0.0.0.0
     ports:
       - "5002:5002"
+    depends_on:
+      - mongodb
   dl.production.webapi:
     image: efrataretailindo/dl-production-webapi:latest
     environment:
@@ -41,9 +47,11 @@ services:
       - DB_CONNECTIONSTRING=mongodb://mongodb:27017
       - AUTH_SECRET=DANLIRISTESTENVIRONMENT
       - PORT=5003
-      - IP=localhost
+      - IP=0.0.0.0
     ports:
       - "5003:5003"
+    depends_on:
+      - mongodb
   mongodb:
     image: mongo:latest
     ports:
