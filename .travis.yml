@@ -24,11 +24,11 @@ script:
 
 after_success:
     - if [ "$TRAVIS_PULL_REQUEST" == false ]; then
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-      
-    docker tag com-danliris-service-inventory-webapi:test efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.$TRAVIS_BUILD_NUMBER;
-    docker push efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.$TRAVIS_BUILD_NUMBER;
+      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
 
-    docker tag com-danliris-service-inventory-webapi:test efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.latest;
-    docker push efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.latest;
-    fi
+      docker tag com-danliris-service-inventory-webapi:test efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.$TRAVIS_BUILD_NUMBER;
+      docker push efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.$TRAVIS_BUILD_NUMBER;
+
+      docker tag com-danliris-service-inventory-webapi:test efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.latest;
+      docker push efrataretailindo/com-danliris-service-inventory-webapi:v1.0.0.latest;
+      fi
