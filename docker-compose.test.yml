@@ -48,8 +48,6 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
-    volumes:
-      - "mongo:/data/db"
   mssql:
     image: microsoft/mssql-server-linux:latest
     environment:
