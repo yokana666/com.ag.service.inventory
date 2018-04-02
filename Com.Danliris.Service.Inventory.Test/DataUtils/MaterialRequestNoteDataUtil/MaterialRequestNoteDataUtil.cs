@@ -61,7 +61,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
                 RequestType = "AWAL",
                 IsDistributed = false,
                 IsCompleted = false,
-                MaterialsRequestNote_Items = new List<MaterialsRequestNote_Item>()
+                MaterialsRequestNote_Items = new List<MaterialsRequestNote_Item> { materialRequestNoteItemDataUtil.GetNewData() }
             };
 
             return TestData;
