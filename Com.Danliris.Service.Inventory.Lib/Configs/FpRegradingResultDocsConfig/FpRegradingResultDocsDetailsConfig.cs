@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.Configs
 {
-    class FpReturProInvDocsDetailsConfig : IEntityTypeConfiguration<FpReturProInvDocsDetails>
+    class FpRegradingResultDocsDetailsConfig : IEntityTypeConfiguration<FpRegradingResultDocsDetails>
     {
-        public void Configure(EntityTypeBuilder<FpReturProInvDocsDetails> builder)
+        public void Configure(EntityTypeBuilder<FpRegradingResultDocsDetails> builder)
         {
             builder.Property(p => p.Code).HasMaxLength(255);
         }

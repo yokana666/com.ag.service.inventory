@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 {
-    public class FpReturProInvDocsDetailsViewModel : BasicViewModel, IValidatableObject
+    public class FpRegradingResultDetailsDocsViewModel : BasicViewModel, IValidatableObject
     {
         public product Product { get; set; }
         //public double Quantity { get; set; }
@@ -14,6 +14,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public double LengthBeforeReGrade { get; set; }
         public string Remark { get; set; }
         public string Grade { get; set; }
+        public string GradeBefore { get; set; }
         public string Retur { get; set; }
 
         public class product

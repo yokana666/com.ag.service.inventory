@@ -55,8 +55,8 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<StockTransferNoteService>()
                 .AddTransient<StockTransferNote_ItemService>()
                 .AddTransient<MaterialDistributionNoteDetailService>()
-                .AddTransient<FpReturProInvDocsDetailsService>()
-                .AddTransient<FpReturProInvDocsService>();
+                .AddTransient<FpRegradingResultDetailsDocsService>()
+                .AddTransient<FpRegradingResultDocsService>();
 
             var Secret = Configuration.GetValue<string>("Secret") ?? Configuration["Secret"];
             var Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Secret));
