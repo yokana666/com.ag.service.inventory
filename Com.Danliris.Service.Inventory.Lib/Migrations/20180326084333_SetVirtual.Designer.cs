@@ -11,8 +11,8 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20180309092056_AddFpReturProInvDocs")]
-    partial class AddFpReturProInvDocs
+    [Migration("20180326084333_SetVirtual")]
+    partial class SetVirtual
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<bool>("Active");
+
+                    b.Property<int>("AutoIncrementNumber");
 
                     b.Property<string>("Code")
                         .HasMaxLength(255);
@@ -154,6 +156,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<bool>("Active");
 
+                    b.Property<int>("AutoIncrementNumber");
+
                     b.Property<bool>("IsApproved");
 
                     b.Property<bool>("IsDisposition");
@@ -217,8 +221,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<bool>("Active");
 
+                    b.Property<double>("DistributedLength");
+
                     b.Property<string>("Grade")
                         .HasMaxLength(255);
+
+                    b.Property<bool>("IsCompleted");
 
                     b.Property<bool>("IsDisposition");
 
@@ -238,6 +246,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<string>("ProductionOrderId");
+
+                    b.Property<bool>("ProductionOrderIsCompleted");
 
                     b.Property<string>("ProductionOrderNo")
                         .HasMaxLength(255);
@@ -306,6 +316,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<string>("MaterialRequestNoteCode")
                         .HasMaxLength(100);
 
+                    b.Property<DateTime>("MaterialRequestNoteCreatedDateUtc");
+
                     b.Property<int>("MaterialRequestNoteId");
 
                     b.Property<string>("_CreatedAgent")
@@ -347,7 +359,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.ToTable("MaterialDistributionNoteItems");
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote", b =>
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -358,6 +370,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("Code")
                         .HasMaxLength(100);
+
+                    b.Property<bool>("IsCompleted");
+
+                    b.Property<bool>("IsDistributed");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(1000);
@@ -413,7 +429,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.ToTable("MaterialsRequestNotes");
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote_Item", b =>
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote_Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -422,6 +438,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("Code")
                         .HasMaxLength(100);
+
+                    b.Property<double>("DistributedLength");
 
                     b.Property<string>("Grade")
                         .HasMaxLength(500);
@@ -452,6 +470,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("ProductionOrderId")
                         .HasMaxLength(100);
+
+                    b.Property<bool>("ProductionOrderIsCompleted");
 
                     b.Property<string>("ProductionOrderNo")
                         .HasMaxLength(100);
@@ -495,6 +515,150 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.ToTable("MaterialsRequestNote_Items");
                 });
 
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel.StockTransferNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(255);
+
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<string>("ReferenceNo")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ReferenceType")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("SourceStorageCode")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("SourceStorageId")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("SourceStorageName")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("TargetStorageCode")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("TargetStorageId")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("TargetStorageName")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_CreatedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_CreatedUtc");
+
+                    b.Property<string>("_DeletedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_DeletedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_DeletedUtc");
+
+                    b.Property<bool>("_IsDeleted");
+
+                    b.Property<string>("_LastModifiedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_LastModifiedUtc");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StockTransferNotes");
+                });
+
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel.StockTransferNote_Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("ProductCode")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ProductId")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ProductName")
+                        .HasMaxLength(255);
+
+                    b.Property<double>("StockQuantity");
+
+                    b.Property<int>("StockTransferNoteId");
+
+                    b.Property<int?>("StockTransferNote_ItemId");
+
+                    b.Property<double>("TransferedQuantity");
+
+                    b.Property<string>("UomId")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("UomUnit")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_CreatedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_CreatedUtc");
+
+                    b.Property<string>("_DeletedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_DeletedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_DeletedUtc");
+
+                    b.Property<bool>("_IsDeleted");
+
+                    b.Property<string>("_LastModifiedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_LastModifiedUtc");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StockTransferNoteId");
+
+                    b.HasIndex("StockTransferNote_ItemId");
+
+                    b.ToTable("StockTransferNoteItems");
+                });
+
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FpReturProInvDocsDetails", b =>
                 {
                     b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.FpReturProInvDocs", "FpReturProInvDocs")
@@ -519,12 +683,24 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote_Item", b =>
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote_Item", b =>
                 {
-                    b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNote", "MaterialsRequestNote")
+                    b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel.MaterialsRequestNote", "MaterialsRequestNote")
                         .WithMany("MaterialsRequestNote_Items")
                         .HasForeignKey("MaterialsRequestNoteId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel.StockTransferNote_Item", b =>
+                {
+                    b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel.StockTransferNote", "StockTransferNote")
+                        .WithMany("StockTransferNoteItems")
+                        .HasForeignKey("StockTransferNoteId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel.StockTransferNote_Item")
+                        .WithMany("MaterialDistributionNoteDetails")
+                        .HasForeignKey("StockTransferNote_ItemId");
                 });
 #pragma warning restore 612, 618
         }

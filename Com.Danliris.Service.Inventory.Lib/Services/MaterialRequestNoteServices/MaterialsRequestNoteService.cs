@@ -38,7 +38,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "Unit", "RequestType", "Remark", "MaterialsRequestNote_Items", "_LastModifiedUtc"
+                    "Id", "Code", "Unit", "RequestType", "Remark", "MaterialsRequestNote_Items", "_LastModifiedUtc", "IsCompleted"
                 };
             Query = Query
                 .Select(mrn => new MaterialsRequestNote
@@ -197,7 +197,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
             public double distributedQuantity { get; set; }
         }
 
-        public async void UpdateIsCompleted(int Id, MaterialsRequestNote Model)
+        public async Task UpdateIsCompleted(int Id, MaterialsRequestNote Model)
         {
             {
                 try
@@ -230,11 +230,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                     await UpdateModel(Id, Model);
 
+
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.Write(e);
                 }
             }
+
         }
 
         public void UpdateDistributedQuantity(int Id, MaterialsRequestNote Model)
@@ -300,7 +303,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     transaction.Rollback();
                 }
@@ -488,6 +491,62 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
             }
 
             return model;
+        }
+
+        public IQueryable<MaterialsRequestNoteReportViewModel> GetReportQuery(string materialsRequestNoteCode, string productionOrderId, string unitId, string productId, string status, DateTime? dateFrom, DateTime? dateTo, int offset)
+        {
+            bool IsCompleted = !string.IsNullOrWhiteSpace(status) && status.ToUpper().Equals("SUDAH COMPLETE") ? true : false;
+            DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
+            DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
+
+            var Query = (from a in DbContext.MaterialsRequestNotes
+                         join b in DbContext.MaterialsRequestNote_Items on a.Id equals b.MaterialsRequestNoteId
+                         where a._IsDeleted == false
+                             && a.Code == (string.IsNullOrWhiteSpace(materialsRequestNoteCode) ? a.Code : materialsRequestNoteCode)
+                             && a.UnitId == (string.IsNullOrWhiteSpace(unitId) ? a.UnitId : unitId)
+                             && b.ProductionOrderId == (string.IsNullOrWhiteSpace(productionOrderId) ? b.ProductionOrderId : productionOrderId)
+                             && b.ProductId == (string.IsNullOrWhiteSpace(productId) ? b.ProductId : productId)
+                             && b.ProductionOrderIsCompleted == (string.IsNullOrWhiteSpace(status) ? b.ProductionOrderIsCompleted : IsCompleted)
+                             && a._CreatedUtc.AddHours(offset).Date >= DateFrom.Date
+                             && a._CreatedUtc.AddHours(offset).Date <= DateTo.Date
+                         select new MaterialsRequestNoteReportViewModel
+                         {
+                             Code = a.Code,
+                             CreatedDate = a._CreatedUtc,
+                             OrderNo = b.ProductionOrderNo,
+                             ProductName = b.ProductName,
+                             Grade = b.Grade,
+                             Length = b.Length,
+                             DistributedLength = b.DistributedLength,
+                             Status = b.ProductionOrderIsCompleted,
+                             Remark = a.Remark,
+                         });
+
+            return Query;
+        }
+
+        public Tuple<List<MaterialsRequestNoteReportViewModel>, int> GetReport(string materialsRequestNoteCode, string productionOrderId, string unitId, string productId, string status, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
+        {
+            var Query = GetReportQuery(materialsRequestNoteCode, productionOrderId, unitId, productId, status, dateFrom, dateTo, offset);
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
+            if (OrderDictionary.Count.Equals(0))
+            {
+                Query = Query.OrderByDescending(b => b.CreatedDate);
+            }
+            else
+            {
+                string Key = OrderDictionary.Keys.First();
+                string OrderType = OrderDictionary[Key];
+
+                Query = Query.OrderBy(string.Concat(Key, " ", OrderType));
+            }
+
+            Pageable<MaterialsRequestNoteReportViewModel> pageable = new Pageable<MaterialsRequestNoteReportViewModel>(Query, page - 1, size);
+            List<MaterialsRequestNoteReportViewModel> Data = pageable.Data.ToList<MaterialsRequestNoteReportViewModel>();
+            int TotalData = pageable.TotalCount;
+
+            return Tuple.Create(Data, TotalData);
         }
     }
 }

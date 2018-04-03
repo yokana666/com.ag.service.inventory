@@ -11,9 +11,10 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180328101543_fpRegradingResultDocs_remodels")]
+    partial class fpRegradingResultDocs_remodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,30 +33,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<string>("Code")
                         .HasMaxLength(255);
 
-                    b.Property<string>("MachineCode");
-
-                    b.Property<string>("MachineId");
-
-                    b.Property<string>("MachineName");
-
                     b.Property<string>("NoBon")
                         .HasMaxLength(255);
 
                     b.Property<string>("NoBonId")
                         .HasMaxLength(128);
-
-                    b.Property<string>("Operator");
-
-                    b.Property<string>("ProductCode");
-
-                    b.Property<string>("ProductId");
-
-                    b.Property<string>("ProductName");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Shift");
 
                     b.Property<string>("SupplierCode");
 
@@ -117,8 +99,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<string>("Grade");
 
                     b.Property<double>("Length");
-
-                    b.Property<double>("LengthBeforeReGrade");
 
                     b.Property<string>("ProductCode");
 
