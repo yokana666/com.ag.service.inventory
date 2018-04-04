@@ -20,16 +20,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Com.Danliris.Service.Inventory.Lib.Services
 {
-    public class FpReturProInvDocsService : BasicService<InventoryDbContext, FpReturProInvDocs>, IMap<FpReturProInvDocs, FpReturProInvDocsViewModel>
+    public class FpRegradingResultDocsService : BasicService<InventoryDbContext, FpReturProInvDocs>, IMap<FpReturProInvDocs, FpRegradingResultDocsViewModel>
     {
-        public FpReturProInvDocsService(IServiceProvider serviceProvider) : base(serviceProvider)
+        public FpRegradingResultDocsService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        public FpReturProInvDocs MapToModel(FpReturProInvDocsViewModel viewModel)
+        public FpReturProInvDocs MapToModel(FpRegradingResultDocsViewModel viewModel)
         {
             FpReturProInvDocs model = new FpReturProInvDocs();
-            PropertyCopier<FpReturProInvDocsViewModel, FpReturProInvDocs>.Copy(viewModel, model);
+            PropertyCopier<FpRegradingResultDocsViewModel, FpReturProInvDocs>.Copy(viewModel, model);
 
             model.NoBon = viewModel.Bon.no;
             model.NoBonId = viewModel.Bon._id;
@@ -47,11 +47,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             model.Operator = viewModel.Operator;
             model.Remark = viewModel.Remark;
 
-            model.Details = new List<FpReturProInvDocsDetails>();
+            model.Details = new List<FpRegradingResultDocsDetails>();
 
-            foreach (FpReturProInvDocsDetailsViewModel data in viewModel.Details)
+            foreach (FpRegradingResultDetailsDocsViewModel data in viewModel.Details)
             {
-                FpReturProInvDocsDetails detail = new FpReturProInvDocsDetails();
+                FpRegradingResultDocsDetails detail = new FpRegradingResultDocsDetails();
                 //detail.SupplierId = viewModel.Supplier._id;
                 detail.ProductId = viewModel.Product.Id;
                 detail.ProductCode = viewModel.Product.Code;
@@ -60,6 +60,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 detail.Length = data.Length;
                 detail.Remark = data.Remark;
                 detail.Grade = data.Grade;
+                detail.GradeBefore = data.GradeBefore;
                 detail.Retur = data.Retur;
                 detail.LengthBeforeReGrade = data.LengthBeforeReGrade;
                 model.Details.Add(detail);
@@ -69,24 +70,24 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             return model;
         }
 
-        public FpReturProInvDocsViewModel MapToViewModel(FpReturProInvDocs model)
+        public FpRegradingResultDocsViewModel MapToViewModel(FpReturProInvDocs model)
         {
-            FpReturProInvDocsViewModel viewModel = new FpReturProInvDocsViewModel();
-            PropertyCopier<FpReturProInvDocs, FpReturProInvDocsViewModel>.Copy(model, viewModel);
+            FpRegradingResultDocsViewModel viewModel = new FpRegradingResultDocsViewModel();
+            PropertyCopier<FpReturProInvDocs, FpRegradingResultDocsViewModel>.Copy(model, viewModel);
 
-            viewModel.Details = new List<FpReturProInvDocsDetailsViewModel>();
-            viewModel.Bon = new FpReturProInvDocsViewModel.noBon();
+            viewModel.Details = new List<FpRegradingResultDetailsDocsViewModel>();
+            viewModel.Bon = new FpRegradingResultDocsViewModel.noBon();
             viewModel.Bon._id = model.NoBonId;
             viewModel.Bon.no = model.NoBon;
             viewModel.Bon.unitName = model.UnitName;
 
-            viewModel.Supplier = new FpReturProInvDocsViewModel.supplier();
+            viewModel.Supplier = new FpRegradingResultDocsViewModel.supplier();
             viewModel.Supplier.name = model.SupplierName;
             viewModel.Supplier._id = model.SupplierId;
             viewModel.Supplier.code = model.SupplierCode;
             viewModel._CreatedUtc = model._CreatedUtc;
 
-            viewModel.Product = new FpReturProInvDocsViewModel.product();
+            viewModel.Product = new FpRegradingResultDocsViewModel.product();
             viewModel.Product.Name = model.ProductName;
             viewModel.Product.Id = model.ProductId;
             viewModel.Product.Code = model.SupplierCode;
@@ -95,15 +96,15 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             viewModel.Remark = model.Remark;
             viewModel.Operator = model.Operator;
 
-            viewModel.Machine = new FpReturProInvDocsViewModel.machine();
+            viewModel.Machine = new FpRegradingResultDocsViewModel.machine();
             viewModel.Machine.name = model.MachineName;
             viewModel.Machine.code = model.MachineCode;
             viewModel.Machine._id = model.MachineId;
 
-            foreach (FpReturProInvDocsDetails data in model.Details)
+            foreach (FpRegradingResultDocsDetails data in model.Details)
             {
-                FpReturProInvDocsDetailsViewModel detail = new FpReturProInvDocsDetailsViewModel();
-                detail.Product = new FpReturProInvDocsDetailsViewModel.product();
+                FpRegradingResultDetailsDocsViewModel detail = new FpRegradingResultDetailsDocsViewModel();
+                detail.Product = new FpRegradingResultDetailsDocsViewModel.product();
                 detail.Product.Id = data.ProductId;
                 detail.Product.Name = data.ProductName;
                 detail.Product.Length = data.Length;
@@ -111,6 +112,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 //detail.Quantity = data.Quantity;
                 detail.Remark = data.Remark;
                 detail.Length = data.Length;
+                detail.GradeBefore = data.GradeBefore;
                 detail.Grade = data.Grade;
                 detail.Retur = data.Retur;
                 detail.LengthBeforeReGrade = data.LengthBeforeReGrade;
@@ -155,7 +157,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     MachineName = o.MachineName,
                     Shift = o.Shift,
                     _CreatedUtc = o._CreatedUtc,
-                    Details = o.Details.Select(p => new FpReturProInvDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, Grade = p.Grade, Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
+                    Details = o.Details.Select(p => new FpRegradingResultDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, GradeBefore = p.GradeBefore, Grade = p.Grade, Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
@@ -206,7 +208,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             List<InventoryDocumentItemViewModel> inventoryDocumentItems = new List<InventoryDocumentItemViewModel>();
             InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel();
             double TotalLength = 0;
-            foreach (FpReturProInvDocsDetails o in Model.Details)
+            foreach (FpRegradingResultDocsDetails o in Model.Details)
             {
                 TotalLength += o.Length;
                 //inventoryDocumentItem = new InventoryDocumentItemViewModel
@@ -320,9 +322,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 model._LastModifiedAgent = "Service";
                 model._LastModifiedBy = this.Username;
 
-                FpReturProInvDocsDetailsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpReturProInvDocsDetailsService>();
+                FpRegradingResultDetailsDocsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpRegradingResultDetailsDocsService>();
                 fpReturProInvDocsDetailsService.Username = this.Username;
-                foreach (FpReturProInvDocsDetails data in model.Details)
+                foreach (FpRegradingResultDocsDetails data in model.Details)
                 {
 
                     fpReturProInvDocsDetailsService.OnCreating(data);
@@ -347,7 +349,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     Count = this.Delete(Id);
 
 
-                    FpReturProInvDocsDetailsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpReturProInvDocsDetailsService>();
+                    FpRegradingResultDetailsDocsService fpReturProInvDocsDetailsService = ServiceProvider.GetService<FpRegradingResultDetailsDocsService>();
                     fpReturProInvDocsDetailsService.Username = this.Username;
 
 

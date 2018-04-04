@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.Models
 {
-    public class FpReturProInvDocsDetails : StandardEntity, IValidatableObject
+    public class FpRegradingResultDocsDetails : StandardEntity, IValidatableObject
     {
         public int FpReturProInvDocsId { get; set; } // header Id as foreign key
         //public string SupplierId { get; set; } // header Id supplier as foreign key
@@ -19,6 +19,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public double LengthBeforeReGrade { get; set; }
         public string Remark { get; set; }
         public string Grade { get; set; }
+        public string GradeBefore { get; set; }
         public string Retur { get; set; }
         public virtual FpReturProInvDocs FpReturProInvDocs { get; set; }
 

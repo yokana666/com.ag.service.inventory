@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.Configs
 {
-    public class FpReturProInvDocsConfig : IEntityTypeConfiguration<FpReturProInvDocs>
+    public class FpRegradingResultDocsConfig : IEntityTypeConfiguration<FpReturProInvDocs>
     {
         public void Configure(EntityTypeBuilder<FpReturProInvDocs> builder)
         {
