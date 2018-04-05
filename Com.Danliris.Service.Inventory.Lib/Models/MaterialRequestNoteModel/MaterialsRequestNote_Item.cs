@@ -24,6 +24,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel
         public string Grade { get; set; }
         public double DistributedLength { get; set; }
         public double Length { get; set; }
+        public string Remark { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             return new List<ValidationResult>();
