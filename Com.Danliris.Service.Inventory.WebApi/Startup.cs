@@ -14,6 +14,9 @@ using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteServic
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
+using Com.Danliris.Service.Inventory.Lib.Facades;
 
 namespace Com.Danliris.Service.Inventory.WebApi
 {
@@ -33,6 +36,31 @@ namespace Com.Danliris.Service.Inventory.WebApi
             APIEndpoint.Production = Configuration.GetValue<string>("ProductionEndpoint") ?? Configuration["ProductionEndpoint"];
         }
 
+        public void RegisterFacades(IServiceCollection services)
+        {
+            services
+                .AddTransient<FPReturnInvToPurchasingFacade>();
+        }
+
+        public void RegisterServices(IServiceCollection services)
+        {
+            services
+                .AddTransient<MaterialsRequestNoteService>()
+                .AddTransient<MaterialsRequestNote_ItemService>()
+                .AddScoped<MaterialDistributionNoteService>()
+                .AddTransient<MaterialDistributionNoteItemService>()
+                .AddTransient<StockTransferNoteService>()
+                .AddTransient<StockTransferNote_ItemService>()
+                .AddTransient<MaterialDistributionNoteDetailService>()
+                .AddTransient<FpRegradingResultDetailsDocsService>()
+                .AddTransient<FpRegradingResultDocsService>()
+                .AddTransient<FPReturnInvToPurchasingService>()
+                .AddTransient<FPReturnInvToPurchasingDetailService>()
+                .AddScoped<IdentityService>()
+                .AddScoped<HttpClientService>()
+                .AddScoped<ValidateService>();
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -47,16 +75,10 @@ namespace Com.Danliris.Service.Inventory.WebApi
                     options.DefaultApiVersion = new ApiVersion(1, 0);
                 });
 
-            services
-                .AddTransient<MaterialsRequestNoteService>()
-                .AddTransient<MaterialsRequestNote_ItemService>()
-                .AddScoped<MaterialDistributionNoteService>()
-                .AddTransient<MaterialDistributionNoteItemService>()
-                .AddTransient<StockTransferNoteService>()
-                .AddTransient<StockTransferNote_ItemService>()
-                .AddTransient<MaterialDistributionNoteDetailService>()
-                .AddTransient<FpRegradingResultDetailsDocsService>()
-                .AddTransient<FpRegradingResultDocsService>();
+
+            this.RegisterServices(services);
+            this.RegisterFacades(services);
+            this.RegisterEndpoint();
 
             var Secret = Configuration.GetValue<string>("Secret") ?? Configuration["Secret"];
             var Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Secret));
@@ -86,8 +108,6 @@ namespace Com.Danliris.Service.Inventory.WebApi
                        .AllowAnyHeader()
                        .WithExposedHeaders("Content-Disposition", "api-version", "content-length", "content-md5", "content-type", "date", "request-id", "response-time");
             }));
-
-            RegisterEndpoint();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

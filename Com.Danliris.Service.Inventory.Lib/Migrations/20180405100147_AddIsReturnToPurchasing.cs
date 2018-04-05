@@ -4,21 +4,22 @@ using System.Collections.Generic;
 
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
-    public partial class RemarkItemRequestNote : Migration
+    public partial class AddIsReturnToPurchasing : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Remark",
-                table: "MaterialsRequestNote_Items",
-                nullable: true);
+            migrationBuilder.AddColumn<bool>(
+                name: "IsReturnedToPurchasing",
+                table: "fpRegradingResultDocs",
+                nullable: false,
+                defaultValue: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Remark",
-                table: "MaterialsRequestNote_Items");
+                name: "IsReturnedToPurchasing",
+                table: "fpRegradingResultDocs");
         }
     }
 }

@@ -28,6 +28,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
         private static readonly string ApiVersion = "1.0";
         public MaterialDistributionNoteController(MaterialDistributionNoteService service) : base(service, ApiVersion)
         {
+
         }
 
         [HttpPut]
