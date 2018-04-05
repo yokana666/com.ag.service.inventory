@@ -11,213 +11,15 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180403090200_updateModelsFPReturDocsDetailsAddGradeBefore")]
+    partial class updateModelsFPReturDocsDetailsAddGradeBefore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FpRegradingResultDocsDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("FpReturProInvDocsId");
-
-                    b.Property<string>("Grade");
-
-                    b.Property<string>("GradeBefore");
-
-                    b.Property<double>("Length");
-
-                    b.Property<double>("LengthBeforeReGrade");
-
-                    b.Property<string>("ProductCode");
-
-                    b.Property<string>("ProductId");
-
-                    b.Property<string>("ProductName");
-
-                    b.Property<string>("Remark");
-
-                    b.Property<string>("Retur");
-
-                    b.Property<string>("_CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_CreatedUtc");
-
-                    b.Property<string>("_DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_DeletedUtc");
-
-                    b.Property<bool>("_IsDeleted");
-
-                    b.Property<string>("_LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_LastModifiedUtc");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FpReturProInvDocsId");
-
-                    b.ToTable("fpRegradingResultDocsDetails");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel.FPReturnInvToPurchasing", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Active");
-
-                    b.Property<int>("AutoIncrementNumber");
-
-                    b.Property<string>("No")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("SupplierCode")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("SupplierId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("SupplierName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_CreatedUtc");
-
-                    b.Property<string>("_DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_DeletedUtc");
-
-                    b.Property<bool>("_IsDeleted");
-
-                    b.Property<string>("_LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_LastModifiedUtc");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FPReturnInvToPurchasings");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel.FPReturnInvToPurchasingDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000);
-
-                    b.Property<string>("FPRegradingResultDocsCode")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("FPRegradingResultDocsId");
-
-                    b.Property<int>("FPReturnInvToPurchasingId");
-
-                    b.Property<double>("Length");
-
-                    b.Property<string>("ProductCode")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ProductId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(255);
-
-                    b.Property<double>("Quantity");
-
-                    b.Property<string>("_CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_CreatedUtc");
-
-                    b.Property<string>("_DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_DeletedUtc");
-
-                    b.Property<bool>("_IsDeleted");
-
-                    b.Property<string>("_LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_LastModifiedUtc");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FPReturnInvToPurchasingId");
-
-                    b.ToTable("FPReturnInvToPurchasingDetails");
-                });
 
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FpReturProInvDocs", b =>
                 {
@@ -230,8 +32,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("Code")
                         .HasMaxLength(255);
-
-                    b.Property<bool>("IsReturnedToPurchasing");
 
                     b.Property<string>("MachineCode");
 
@@ -301,6 +101,75 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("fpRegradingResultDocs");
+                });
+
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FpReturProInvDocsDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(255);
+
+                    b.Property<int>("FpReturProInvDocsId");
+
+                    b.Property<string>("Grade");
+
+                    b.Property<string>("GradeBefore");
+
+                    b.Property<double>("Length");
+
+                    b.Property<double>("LengthBeforeReGrade");
+
+                    b.Property<string>("ProductCode");
+
+                    b.Property<string>("ProductId");
+
+                    b.Property<string>("ProductName");
+
+                    b.Property<string>("Remark");
+
+                    b.Property<string>("Retur");
+
+                    b.Property<string>("_CreatedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_CreatedUtc");
+
+                    b.Property<string>("_DeletedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_DeletedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_DeletedUtc");
+
+                    b.Property<bool>("_IsDeleted");
+
+                    b.Property<string>("_LastModifiedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("_LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("_LastModifiedUtc");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FpReturProInvDocsId");
+
+                    b.ToTable("fpRegradingResultDocsDetails");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel.MaterialDistributionNote", b =>
@@ -813,19 +682,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.ToTable("StockTransferNoteItems");
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FpRegradingResultDocsDetails", b =>
+            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FpReturProInvDocsDetails", b =>
                 {
                     b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.FpReturProInvDocs", "FpReturProInvDocs")
                         .WithMany("Details")
                         .HasForeignKey("FpReturProInvDocsId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel.FPReturnInvToPurchasingDetail", b =>
-                {
-                    b.HasOne("Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel.FPReturnInvToPurchasing", "FPReturnInvToPurchasing")
-                        .WithMany("FPReturnInvToPurchasingDetails")
-                        .HasForeignKey("FPReturnInvToPurchasingId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

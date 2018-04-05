@@ -52,8 +52,8 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<StockTransferNoteService>()
                 .AddTransient<StockTransferNote_ItemService>()
                 .AddTransient<MaterialDistributionNoteDetailService>()
-                .AddTransient<FpReturProInvDocsDetailsService>()
-                .AddTransient<FpReturProInvDocsService>()
+                .AddTransient<FpRegradingResultDetailsDocsService>()
+                .AddTransient<FpRegradingResultDocsService>()
                 .AddTransient<FPReturnInvToPurchasingService>()
                 .AddTransient<FPReturnInvToPurchasingDetailService>()
                 .AddScoped<IdentityService>()
@@ -74,6 +74,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                     options.AssumeDefaultVersionWhenUnspecified = true;
                     options.DefaultApiVersion = new ApiVersion(1, 0);
                 });
+
 
             this.RegisterServices(services);
             this.RegisterFacades(services);

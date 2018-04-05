@@ -15,12 +15,12 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/fp-retur-pro-inv-docs")]
+    [Route("v{version:apiVersion}/FpRegradingResultDocs")]
     [Authorize]
-    public class FpReturProInvDocsController : BasicController<InventoryDbContext, FpReturProInvDocsService, FpReturProInvDocsViewModel, FpReturProInvDocs>
+    public class FpRegradingResultDocsController : BasicController<InventoryDbContext, FpRegradingResultDocsService, FpRegradingResultDocsViewModel, FpReturProInvDocs>
     {
         private static readonly string ApiVersion = "1.0";
-        public FpReturProInvDocsController(FpReturProInvDocsService service) : base(service, ApiVersion)
+        public FpRegradingResultDocsController(FpRegradingResultDocsService service) : base(service, ApiVersion)
         {
         }
 
@@ -32,7 +32,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
                 var model = await Service.ReadModelById(Id);
                 var viewModel = Service.MapToViewModel(model);
 
-                FpReturProInvDocsPdfTemplate PdfTemplate = new FpReturProInvDocsPdfTemplate();
+                FpRegradingResultDocsPdfTemplate PdfTemplate = new FpRegradingResultDocsPdfTemplate();
                 MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel);
 
                 return new FileStreamResult(stream, "application/pdf")

@@ -1,5 +1,6 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Interfaces;
+using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
@@ -23,13 +24,15 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
     {
         private readonly FPReturnInvToPurchasingService fpReturnInvToPurchasingService;
         private readonly FPReturnInvToPurchasingDetailService fpReturnInvToPurchasingDetailService;
+        private readonly FpRegradingResultDocsService fpRegradingResultDocsService;
         public readonly IServiceProvider serviceProvider;
 
-        public FPReturnInvToPurchasingFacade(IServiceProvider serviceProvider, FPReturnInvToPurchasingService fpReturnInvToPurchasingService, FPReturnInvToPurchasingDetailService fpReturnInvToPurchasingDetailService)
+        public FPReturnInvToPurchasingFacade(IServiceProvider serviceProvider, FPReturnInvToPurchasingService fpReturnInvToPurchasingService, FPReturnInvToPurchasingDetailService fpReturnInvToPurchasingDetailService, FpRegradingResultDocsService fpRegradingResultDocsService)
         {
             this.serviceProvider = serviceProvider;
             this.fpReturnInvToPurchasingService = fpReturnInvToPurchasingService;
             this.fpReturnInvToPurchasingDetailService = fpReturnInvToPurchasingDetailService;
+            this.fpRegradingResultDocsService = fpRegradingResultDocsService;
         }
 
         public async Task<int> Create(FPReturnInvToPurchasing model)
@@ -42,6 +45,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
                 {
                     foreach(FPReturnInvToPurchasingDetail detail in model.FPReturnInvToPurchasingDetails)
                     {
+                        fpRegradingResultDocsService.UpdateIsReturnedToPurchasing(detail.FPRegradingResultDocsId);
                         this.fpReturnInvToPurchasingDetailService.OnCreating(detail);
                     }
 

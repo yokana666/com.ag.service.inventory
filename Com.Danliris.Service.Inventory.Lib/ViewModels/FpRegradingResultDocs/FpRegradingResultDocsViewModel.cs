@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 {
-    public class FpReturProInvDocsViewModel : BasicViewModel, IValidatableObject
+    public class FpRegradingResultDocsViewModel : BasicViewModel, IValidatableObject
     {
         public string Code { get; set; }
         public noBon Bon { get; set; }
@@ -17,7 +17,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public machine Machine { get; set; }
         public string Remark { get; set; }
         public string Shift { get; set; }
-        public List<FpReturProInvDocsDetailsViewModel> Details { get; set; }
+        public List<FpRegradingResultDetailsDocsViewModel> Details { get; set; }
 
         public class supplier
         {
@@ -68,7 +68,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
             else
             {
                 //List<string> temp = new List<string>();
-                foreach (FpReturProInvDocsDetailsViewModel data in this.Details)
+                foreach (FpRegradingResultDetailsDocsViewModel data in this.Details)
                 {
                     detailsError += "{";
                     //if (data.Product == null || string.IsNullOrWhiteSpace(data.Product.Name))
@@ -79,14 +79,14 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 
                     //if (data.Product != null)
                     //{
-                    if (!(data.LengthBeforeReGrade.Equals(0)))
-                    {
-                        if ((data.Length > data.LengthBeforeReGrade) || data.Length.Equals(0))
-                        {
-                            Count++;
-                            detailsError += "Length: 'Panjang harus lebih kecil',";
-                        }
-                    }
+                    //if (!(data.LengthBeforeReGrade.Equals(0)))
+                    //{
+                    //    if ((data.Length > data.LengthBeforeReGrade) || data.Length.Equals(0))
+                    //    {
+                    //        Count++;
+                    //        detailsError += "Length: 'Panjang harus lebih kecil',";
+                    //    }
+                    //}
 
 
                     //if (data.Product.Name != null || data.Product.Name != "")
@@ -103,7 +103,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
                     //}
 
                     //}
-                    else if (data.Length.Equals(0))
+                    if (data.Length.Equals(0))
                     {
                         Count++;
                         detailsError += "Length: 'Panjang harus di isi',";

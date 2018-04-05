@@ -12,18 +12,18 @@ using Com.Danliris.Service.Inventory.Lib.ViewModels;
 
 namespace Com.Danliris.Service.Inventory.Lib.Services
 {
-    public class FpReturProInvDocsDetailsService : BasicService<InventoryDbContext, FpReturProInvDocsDetails>
+    public class FpRegradingResultDetailsDocsService : BasicService<InventoryDbContext, FpRegradingResultDocsDetails>
     {
-        public FpReturProInvDocsDetailsService(IServiceProvider serviceProvider) : base(serviceProvider)
+        public FpRegradingResultDetailsDocsService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        public override Tuple<List<FpReturProInvDocsDetails>, int, Dictionary<string, string>, List<string>> ReadModel(int Page = 1, int Size = 25, string Order = "{}", List<string> Select = null, string Keyword = null, string Filter = "{}")
+        public override Tuple<List<FpRegradingResultDocsDetails>, int, Dictionary<string, string>, List<string>> ReadModel(int Page = 1, int Size = 25, string Order = "{}", List<string> Select = null, string Keyword = null, string Filter = "{}")
         {
             throw new NotImplementedException();
         }
 
-        public override void OnCreating(FpReturProInvDocsDetails model)
+        public override void OnCreating(FpRegradingResultDocsDetails model)
         {
             do
             {
@@ -39,14 +39,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             model._LastModifiedBy = this.Username;
         }
 
-        public override void OnUpdating(int id, FpReturProInvDocsDetails model)
+        public override void OnUpdating(int id, FpRegradingResultDocsDetails model)
         {
             base.OnUpdating(id, model);
             model._LastModifiedAgent = "Service";
             model._LastModifiedBy = this.Username;
         }
 
-        public override void OnDeleting(FpReturProInvDocsDetails model)
+        public override void OnDeleting(FpRegradingResultDocsDetails model)
         {
             base.OnDeleting(model);
             model._DeletedAgent = "Service";

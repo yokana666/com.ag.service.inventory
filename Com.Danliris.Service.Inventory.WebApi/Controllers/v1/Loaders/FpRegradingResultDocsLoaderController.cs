@@ -14,14 +14,14 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.Loaders
 {
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/fp-retur-pro-inv-docs-loader")]
+    [Route("v{version:apiVersion}/fp-regrading-result-docs-loader")]
     [Authorize]
-    public class FpReturProInvDocsLoaderController : Controller
+    public class FpRegradingResultDocsLoaderController : Controller
     {
         private string ApiVersion = "1.0.0";
-        private readonly FpReturProInvDocsService service;
+        private readonly FpRegradingResultDocsService service;
 
-        public FpReturProInvDocsLoaderController(FpReturProInvDocsService service)
+        public FpRegradingResultDocsLoaderController(FpRegradingResultDocsService service)
         {
             this.service = service;
         }
@@ -35,7 +35,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.Loaders
 
                 Dictionary<string, object> Result =
                     new ResultFormatter(ApiVersion, General.OK_STATUS_CODE, General.OK_MESSAGE)
-                    .Ok<FpReturProInvDocs, FpReturProInvDocsViewModel>(Data.Item1, service.MapToViewModel, 1, 25, Data.Item2, Data.Item1.Count, Data.Item3, Data.Item4);
+                    .Ok<FpReturProInvDocs, FpRegradingResultDocsViewModel>(Data.Item1, service.MapToViewModel, 1, 25, Data.Item2, Data.Item1.Count, Data.Item3, Data.Item4);
 
                 return Ok(Result);
             }

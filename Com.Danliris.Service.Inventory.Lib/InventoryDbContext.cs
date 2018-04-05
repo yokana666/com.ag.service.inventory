@@ -21,7 +21,7 @@ namespace Com.Danliris.Service.Inventory.Lib
 
         public DbSet<MaterialsRequestNote> MaterialsRequestNotes { get; set; }
         public DbSet<MaterialsRequestNote_Item> MaterialsRequestNote_Items { get; set; }
-        public DbSet<FpReturProInvDocsDetails> fpRegradingResultDocsDetails { get; set; }
+        public DbSet<FpRegradingResultDocsDetails> fpRegradingResultDocsDetails { get; set; }
         public DbSet<FpReturProInvDocs> fpRegradingResultDocs { get; set; }
         public DbSet<MaterialDistributionNote> MaterialDistributionNotes { get; set; }
         public DbSet<MaterialDistributionNoteItem> MaterialDistributionNoteItems { get; set; }
@@ -37,8 +37,8 @@ namespace Com.Danliris.Service.Inventory.Lib
 
             modelBuilder.ApplyConfiguration(new MaterialsRequestNoteConfig());
             modelBuilder.ApplyConfiguration(new MaterialsRequestNote_ItemConfig());
-            modelBuilder.ApplyConfiguration(new FpReturProInvDocsDetailsConfig());
-            modelBuilder.ApplyConfiguration(new FpReturProInvDocsConfig());
+            modelBuilder.ApplyConfiguration(new FpRegradingResultDocsDetailsConfig());
+            modelBuilder.ApplyConfiguration(new FpRegradingResultDocsConfig());
             modelBuilder.ApplyConfiguration(new MaterialDistributionNoteConfig());
             modelBuilder.ApplyConfiguration(new MaterialDistributionNoteItemConfig());
             modelBuilder.ApplyConfiguration(new MaterialDistributionNoteDetailConfig());
