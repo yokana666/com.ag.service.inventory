@@ -11,8 +11,8 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20180405105025_RemarkItemRequestNote")]
-    partial class RemarkItemRequestNote
+    [Migration("20180405120231_AddRemarkMaterialsRequestNoteItem")]
+    partial class AddRemarkMaterialsRequestNoteItem
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
