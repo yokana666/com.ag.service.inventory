@@ -12,6 +12,8 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
         public double? DistributedLength { get; set; }
         public string Grade { get; set; }
 
+        public string Remark { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             throw new System.NotImplementedException();
