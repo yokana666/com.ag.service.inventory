@@ -8,6 +8,8 @@ using Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Configs.StockTransferNoteConfig;
 using Com.Danliris.Service.Inventory.Lib.Configs.MaterialsRequestNoteConfig;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using Com.Danliris.Service.Inventory.Lib.Configs.FPReturnInvToPurchasingConfig;
+using Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel;
 
 namespace Com.Danliris.Service.Inventory.Lib
 {
@@ -26,8 +28,8 @@ namespace Com.Danliris.Service.Inventory.Lib
         public DbSet<MaterialDistributionNoteDetail> MaterialDistributionNoteDetails { get; set; }
         public DbSet<StockTransferNote> StockTransferNotes { get; set; }
         public DbSet<StockTransferNote_Item> StockTransferNoteItems { get; set; }
-
-
+        public DbSet<FPReturnInvToPurchasing> FPReturnInvToPurchasings { get; set; }
+        public DbSet<FPReturnInvToPurchasingDetail> FPReturnInvToPurchasingDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +44,8 @@ namespace Com.Danliris.Service.Inventory.Lib
             modelBuilder.ApplyConfiguration(new MaterialDistributionNoteDetailConfig());
             modelBuilder.ApplyConfiguration(new StockTransferNoteConfig());
             modelBuilder.ApplyConfiguration(new StockTransferNoteItemConfig());
+            modelBuilder.ApplyConfiguration(new FPReturnInvToPurchasingConfig());
+            modelBuilder.ApplyConfiguration(new FPReturnInvToPurchasingDetailConfig());
         }
     }
 }
