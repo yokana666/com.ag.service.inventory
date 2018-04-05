@@ -79,14 +79,14 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
 
                     //if (data.Product != null)
                     //{
-                    if (!(data.LengthBeforeReGrade.Equals(0)))
-                    {
-                        if ((data.Length > data.LengthBeforeReGrade) || data.Length.Equals(0))
-                        {
-                            Count++;
-                            detailsError += "Length: 'Panjang harus lebih kecil',";
-                        }
-                    }
+                    //if (!(data.LengthBeforeReGrade.Equals(0)))
+                    //{
+                    //    if ((data.Length > data.LengthBeforeReGrade) || data.Length.Equals(0))
+                    //    {
+                    //        Count++;
+                    //        detailsError += "Length: 'Panjang harus lebih kecil',";
+                    //    }
+                    //}
 
 
                     //if (data.Product.Name != null || data.Product.Name != "")
@@ -103,7 +103,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
                     //}
 
                     //}
-                    else if (data.Length.Equals(0))
+                    if (data.Length.Equals(0))
                     {
                         Count++;
                         detailsError += "Length: 'Panjang harus di isi',";
