@@ -134,7 +134,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator"
+                    "Id", "Code","_CreatedUtc", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator"
                 };
             Query = Query
                 .Select(o => new FpReturProInvDocs
@@ -157,6 +157,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     MachineName = o.MachineName,
                     Shift = o.Shift,
                     _CreatedUtc = o._CreatedUtc,
+                    _LastModifiedUtc=o._LastModifiedUtc,
                     Details = o.Details.Select(p => new FpRegradingResultDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, GradeBefore = p.GradeBefore, Grade = p.Grade, Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
