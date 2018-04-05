@@ -391,8 +391,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
         public Tuple<List<FpReturProInvDocs>, int, Dictionary<string, string>, List<string>> ReadNo(string Keyword = null, string Filter = "{}", int Page = 1, int Size = 25, string Order = "{}", List<string> Select = null)
         {
+            Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
 
-            IQueryable<FpReturProInvDocs> Query = this.DbContext.fpRegradingResultDocs.Where(p => p._IsDeleted == false && p.IsReturnedToPurchasing == false);
+            IQueryable<FpReturProInvDocs> Query = this.DbContext.fpRegradingResultDocs.Where(p => p._IsDeleted == false && p.IsReturnedToPurchasing == false && p.UnitName == FilterDictionary["UnitName"] && p.SupplierId == FilterDictionary["SupplierId"]);
 
             List<string> SearchAttributes = new List<string>()
             {
@@ -415,9 +416,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     SupplierId = o.SupplierId,
                     Details = new List<FpRegradingResultDocsDetails>()
                 });
-
-            Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
-            Query = ConfigureFilter(Query, FilterDictionary);
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
             Query = ConfigureOrder(Query, OrderDictionary);
