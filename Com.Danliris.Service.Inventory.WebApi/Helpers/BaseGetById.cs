@@ -21,11 +21,6 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
 
         public async Task<ActionResult> GetById(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var model = await facade.ReadById(id);
 
             if (model == null)

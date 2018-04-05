@@ -12,6 +12,8 @@ using System.ComponentModel.DataAnnotations;
 using Com.Moonlay.NetCore.Lib.Service;
 using Com.Danliris.Service.Inventory.WebApi.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel;
+using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
+using System.IO;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
 {
@@ -41,8 +43,32 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
         [HttpGet("{Id}")]
         public async Task<ActionResult> GetById([FromRoute] int id)
         {
-            return await new BaseGetById<FPReturnInvToPurchasing, FPReturnInvToPurchasingViewModel, FPReturnInvToPurchasingFacade>(fpReturnInvToPurchasingFacade, ApiVersion)
-                .GetById(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            int offset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
+            string accept = Request.Headers["Accept"];
+            string pdf = "application/pdf";
+
+            if (accept.IndexOf(pdf) == -1) // Not PDF
+            {
+                return await new BaseGetById<FPReturnInvToPurchasing, FPReturnInvToPurchasingViewModel, FPReturnInvToPurchasingFacade>(fpReturnInvToPurchasingFacade, ApiVersion)
+                    .GetById(id);
+            }
+            else
+            {
+                var model = await fpReturnInvToPurchasingFacade.ReadById(id);
+
+                FPReturnInvToPurchasingPdfTemplate PdfTemplate = new FPReturnInvToPurchasingPdfTemplate();
+                MemoryStream stream = PdfTemplate.GeneratePdfTemplate(new FPReturnInvToPurchasingViewModel(model), offset);
+
+                return new FileStreamResult(stream, pdf)
+                {
+                    FileDownloadName = $"Bon Retur Barang {model.No}.pdf"
+                };
+            }
         }
 
         [HttpPost]
