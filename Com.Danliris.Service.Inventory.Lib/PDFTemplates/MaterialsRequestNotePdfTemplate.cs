@@ -153,7 +153,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
                     rightCell.Phrase = new Phrase(item.Length.ToString(), small_font);
                     table.AddCell(rightCell);
 
-                    leftCell.Phrase = new Phrase(item.Remark.Trim(), small_font);
+                    leftCell.Phrase = string.IsNullOrWhiteSpace(item.Remark) ? new Phrase("-", small_font) : new Phrase(item.Remark.Trim(), small_font);
                     table.AddCell(leftCell);
                 }
                 else
@@ -173,13 +173,13 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
                     rightCell.Phrase = new Phrase(item.Length.ToString(), small_font);
                     table.AddCell(rightCell);
 
-                    leftCell.Phrase = new Phrase(item.Remark.Trim(), small_font);
+                    leftCell.Phrase = string.IsNullOrWhiteSpace(item.Remark) ? new Phrase("-", small_font) : new Phrase(item.Remark.Trim(), small_font);
                     table.AddCell(leftCell);
                 }
                 index++;
             }
 
-            leftCell.Phrase = new Phrase($"Keterangan : {viewModel.Remark.Trim()}", normal_font);
+            leftCell.Phrase = string.IsNullOrWhiteSpace(viewModel.Remark) ? new Phrase($"Keterangan : -", normal_font) : new Phrase($"Keterangan : {viewModel.Remark.Trim()}", normal_font);
             leftCell.Colspan = IsTestOrPurchasing ? 5 : 6;
             leftCell.Border = Rectangle.NO_BORDER;
             table.AddCell(leftCell);
