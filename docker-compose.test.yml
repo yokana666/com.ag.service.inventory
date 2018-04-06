@@ -64,8 +64,3 @@ services:
       - MSSQL_PID=Developer
     ports:
       - "1401:1433"
-      
-networks:
-  default:
-    external:
-      name: nat
