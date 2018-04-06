@@ -25,6 +25,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public string MachineId { get; set; }
         public string MachineCode { get; set; }
         public string Shift { get; set; }
+        public bool IsReturnedToPurchasing { get; set; }
         public int AutoIncrementNumber { get; set; }
         public ICollection<FpRegradingResultDocsDetails> Details { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

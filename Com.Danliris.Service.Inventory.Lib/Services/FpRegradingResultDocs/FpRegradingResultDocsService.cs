@@ -134,7 +134,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator"
+                    "Id", "Code","_CreatedUtc", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator"
                 };
             Query = Query
                 .Select(o => new FpReturProInvDocs
@@ -157,6 +157,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     MachineName = o.MachineName,
                     Shift = o.Shift,
                     _CreatedUtc = o._CreatedUtc,
+                    _LastModifiedUtc=o._LastModifiedUtc,
                     Details = o.Details.Select(p => new FpRegradingResultDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, GradeBefore = p.GradeBefore, Grade = p.Grade, Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
@@ -386,6 +387,53 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             base.OnDeleting(model);
             model._DeletedAgent = "Service";
             model._DeletedBy = this.Username;
+        }
+
+        public Tuple<List<FpReturProInvDocs>, int, Dictionary<string, string>, List<string>> ReadNo(string Keyword = null, string Filter = "{}", int Page = 1, int Size = 25, string Order = "{}", List<string> Select = null)
+        {
+            Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
+
+            IQueryable<FpReturProInvDocs> Query = this.DbContext.fpRegradingResultDocs.Where(p => p._IsDeleted == false && p.IsReturnedToPurchasing == false && p.UnitName == FilterDictionary["UnitName"] && p.SupplierId == FilterDictionary["SupplierId"]);
+
+            List<string> SearchAttributes = new List<string>()
+            {
+                "Code"
+            };
+            Query = ConfigureSearch(Query, SearchAttributes, Keyword);
+
+            List<string> SelectedFields = new List<string>()
+            {
+                "Id", "Code"
+            };
+
+            Query = Query
+                .Select(o => new FpReturProInvDocs
+                {
+                    Id = o.Id,
+                    Code = o.Code,
+                    _LastModifiedUtc = o._LastModifiedUtc,
+                    UnitName = o.UnitName,
+                    SupplierId = o.SupplierId,
+                    Details = new List<FpRegradingResultDocsDetails>()
+                });
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
+            Query = ConfigureOrder(Query, OrderDictionary);
+
+            Pageable<FpReturProInvDocs> pageable = new Pageable<FpReturProInvDocs>(Query, Page - 1, Size);
+            List<FpReturProInvDocs> Data = pageable.Data.ToList<FpReturProInvDocs>();
+            int TotalData = pageable.TotalCount;
+
+            return Tuple.Create(Data, TotalData, OrderDictionary, SelectedFields);
+        }
+
+        public void UpdateIsReturnedToPurchasing(int fPRegradingResultDocsId)
+        {
+            FpReturProInvDocs model = new FpReturProInvDocs { Id = fPRegradingResultDocsId, IsReturnedToPurchasing = true };
+ 
+            DbContext.fpRegradingResultDocs.Attach(model);
+            DbContext.Entry(model).Property(x => x.IsReturnedToPurchasing).IsModified = true;
+            DbContext.SaveChanges();
         }
     }
 }

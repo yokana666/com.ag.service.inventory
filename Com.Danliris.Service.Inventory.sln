@@ -3,9 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Danliris.Service.Inventory.WebApi", "Com.Danliris.Service.Inventory.WebApi\Com.Danliris.Service.Inventory.WebApi.csproj", "{1D581FCB-2086-4F41-88F4-5800BBD96D89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Service.Inventory.WebApi", "Com.Danliris.Service.Inventory.WebApi\Com.Danliris.Service.Inventory.WebApi.csproj", "{1D581FCB-2086-4F41-88F4-5800BBD96D89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Danliris.Service.Inventory.Lib", "Com.Danliris.Service.Inventory.Lib\Com.Danliris.Service.Inventory.Lib.csproj", "{FA210F3B-8E1A-487A-AC20-E8A119E0185D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Service.Inventory.Lib", "Com.Danliris.Service.Inventory.Lib\Com.Danliris.Service.Inventory.Lib.csproj", "{FA210F3B-8E1A-487A-AC20-E8A119E0185D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Service.Inventory.Test", "Com.Danliris.Service.Inventory.Test\Com.Danliris.Service.Inventory.Test.csproj", "{24BB4EF6-5D29-4BA2-AF83-1C7A217B9690}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{379C64CD-6BAC-4FBF-A28B-D3753FCD98A9}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.travis.yml = .travis.yml
+		docker-compose.test.yml = docker-compose.test.yml
+		Dockerfile.test = Dockerfile.test
+		Dockerfile.test.build = Dockerfile.test.build
+		Dockerfile.test.build.sh = Dockerfile.test.build.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +33,10 @@ Global
 		{FA210F3B-8E1A-487A-AC20-E8A119E0185D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA210F3B-8E1A-487A-AC20-E8A119E0185D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA210F3B-8E1A-487A-AC20-E8A119E0185D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24BB4EF6-5D29-4BA2-AF83-1C7A217B9690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24BB4EF6-5D29-4BA2-AF83-1C7A217B9690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24BB4EF6-5D29-4BA2-AF83-1C7A217B9690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24BB4EF6-5D29-4BA2-AF83-1C7A217B9690}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
