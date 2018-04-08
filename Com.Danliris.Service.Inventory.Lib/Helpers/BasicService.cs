@@ -61,23 +61,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Helpers
                 foreach (var f in FilterDictionary)
                 {
                     string Key = f.Key;
-                    string Value = f.Value;
-                    BindingFlags IgnoreCase = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance;
-                    PropertyInfo propInfo = typeof(TModel).GetProperty(Key, IgnoreCase);
-                    Object propValue = new Object();
-                    if (propInfo == null || String.IsNullOrEmpty(Value))
-                        propValue = null;
-                    if (propInfo.PropertyType.IsEnum)
-                    {
-                        Type enumType = propInfo.PropertyType;
-                        if (Enum.IsDefined(enumType, Value))
-                            propValue = Enum.Parse(enumType, Value);
-                    }
-                    if (propInfo.PropertyType == typeof(Uri))
-                        propValue = new Uri(Convert.ToString(Value));
-                    else
-                        propValue = Convert.ChangeType(Value, propInfo.PropertyType);
-                    Query = Query.Where(m => propInfo.GetValue(m).Equals(propValue));
+                    object Value = f.Value;
+                    string filterQuery = string.Concat(string.Empty, Key, " == @0");
+
+                    Query = Query.Where(filterQuery, Value);
                 }
             }
             return Query;

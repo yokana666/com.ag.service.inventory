@@ -8,6 +8,8 @@ using Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Configs.StockTransferNoteConfig;
 using Com.Danliris.Service.Inventory.Lib.Configs.MaterialsRequestNoteConfig;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using Com.Danliris.Service.Inventory.Lib.Configs.FPReturnInvToPurchasingConfig;
+using Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel;
 
 namespace Com.Danliris.Service.Inventory.Lib
 {
@@ -19,15 +21,15 @@ namespace Com.Danliris.Service.Inventory.Lib
 
         public DbSet<MaterialsRequestNote> MaterialsRequestNotes { get; set; }
         public DbSet<MaterialsRequestNote_Item> MaterialsRequestNote_Items { get; set; }
-        public DbSet<FpReturProInvDocsDetails> FpReturProInvDocsDetails { get; set; }
-        public DbSet<FpReturProInvDocs> FpReturProInvDocs { get; set; }
+        public DbSet<FpRegradingResultDocsDetails> fpRegradingResultDocsDetails { get; set; }
+        public DbSet<FpReturProInvDocs> fpRegradingResultDocs { get; set; }
         public DbSet<MaterialDistributionNote> MaterialDistributionNotes { get; set; }
         public DbSet<MaterialDistributionNoteItem> MaterialDistributionNoteItems { get; set; }
         public DbSet<MaterialDistributionNoteDetail> MaterialDistributionNoteDetails { get; set; }
         public DbSet<StockTransferNote> StockTransferNotes { get; set; }
         public DbSet<StockTransferNote_Item> StockTransferNoteItems { get; set; }
-
-
+        public DbSet<FPReturnInvToPurchasing> FPReturnInvToPurchasings { get; set; }
+        public DbSet<FPReturnInvToPurchasingDetail> FPReturnInvToPurchasingDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,13 +37,15 @@ namespace Com.Danliris.Service.Inventory.Lib
 
             modelBuilder.ApplyConfiguration(new MaterialsRequestNoteConfig());
             modelBuilder.ApplyConfiguration(new MaterialsRequestNote_ItemConfig());
-            modelBuilder.ApplyConfiguration(new FpReturProInvDocsDetailsConfig());
-            modelBuilder.ApplyConfiguration(new FpReturProInvDocsConfig());
+            modelBuilder.ApplyConfiguration(new FpRegradingResultDocsDetailsConfig());
+            modelBuilder.ApplyConfiguration(new FpRegradingResultDocsConfig());
             modelBuilder.ApplyConfiguration(new MaterialDistributionNoteConfig());
             modelBuilder.ApplyConfiguration(new MaterialDistributionNoteItemConfig());
             modelBuilder.ApplyConfiguration(new MaterialDistributionNoteDetailConfig());
             modelBuilder.ApplyConfiguration(new StockTransferNoteConfig());
             modelBuilder.ApplyConfiguration(new StockTransferNoteItemConfig());
+            modelBuilder.ApplyConfiguration(new FPReturnInvToPurchasingConfig());
+            modelBuilder.ApplyConfiguration(new FPReturnInvToPurchasingDetailConfig());
         }
     }
 }

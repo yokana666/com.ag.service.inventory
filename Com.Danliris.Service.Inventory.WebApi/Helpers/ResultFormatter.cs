@@ -111,9 +111,15 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
             return Result;
         }
 
+        public Dictionary<string, object> Fail(string Error)
+        {
+            Result.Add("error", Error);
+            return Result;
+        }
+
         public Dictionary<string, object> Fail()
         {
-            Result.Add("error", "Internal Server Error");
+            Result.Add("error", "Request Failed");
             return Result;
         }
 
