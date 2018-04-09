@@ -48,6 +48,14 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 296, 0);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Product.Name, 120, 296, 0);
 
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Panjang Datang", 50, 286, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 286, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, string.Format("{0:n}", viewModel.TotalLength), 120, 286, 0);
+
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Grade Datang", 50, 276, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 276, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.OriginalGrade, 120, 276, 0);
+
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Tanggal", 410, 316, 0);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 465, 316, 0);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel._CreatedUtc.ToString("MM-dd-yyyy"), 475, 316, 0);
@@ -68,11 +76,11 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             cb.EndText();
 
             #region CreateTable
-            PdfPTable table = new PdfPTable(5);
+            PdfPTable table = new PdfPTable(3);
             PdfPCell cell;
             table.TotalWidth = 500f;
 
-            float[] widths = new float[] { 4f, 4f, 4f, 4f, 7f };
+            float[] widths = new float[] { 4f, 4f, 7f };
             table.SetWidths(widths);
 
             cell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 5 };
@@ -81,16 +89,16 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             //Create cells headers.
 
 
-            cell.Phrase = new Phrase("Grade Asli", bold_font);
-            table.AddCell(cell);
+            //cell.Phrase = new Phrase("Grade Asli", bold_font);
+            //table.AddCell(cell);
 
             cell.Phrase = new Phrase("Hasil Regrade", bold_font);
             table.AddCell(cell);
 
-            cell.Phrase = new Phrase("Panjang Before", bold_font);
-            table.AddCell(cell);
+            //cell.Phrase = new Phrase("Panjang Before", bold_font);
+            //table.AddCell(cell);
 
-            cell.Phrase = new Phrase("Panjang After", bold_font);
+            cell.Phrase = new Phrase("Panjang Re-grade", bold_font);
             table.AddCell(cell);
 
             cell.Phrase = new Phrase("Keterangan", bold_font);
@@ -101,20 +109,21 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             foreach (var detail in viewModel.Details)
             {
                 cell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 5 };
-                cell.Phrase = new Phrase(detail.GradeBefore, normal_font);
-                table.AddCell(cell);
+                //cell.Phrase = new Phrase(detail.GradeBefore, normal_font);
+                //table.AddCell(cell);
 
 
                 cell.Phrase = new Phrase(detail.Grade, normal_font);
                 table.AddCell(cell);
 
 
-                cell.Phrase = new Phrase(string.Format("{0:n}", detail.LengthBeforeReGrade), normal_font);
-                table.AddCell(cell);
+                //cell.Phrase = new Phrase(string.Format("{0:n}", detail.LengthBeforeReGrade), normal_font);
+                //table.AddCell(cell);
 
                 cell.Phrase = new Phrase(string.Format("{0:n}", detail.Length), normal_font);
                 table.AddCell(cell);
 
+                cell = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 5 };
                 cell.Phrase = new Phrase(detail.Remark, normal_font);
                 table.AddCell(cell);
 
@@ -128,7 +137,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             //table.AddCell(footerCell);
             //Save tables.
 
-            table.WriteSelectedRows(0, -1, 50, 270, cb);
+            table.WriteSelectedRows(0, -1, 50, 260, cb);
             #endregion
 
 

@@ -32,7 +32,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
             List<string> SearchAttributes = new List<string>()
                 {
-                    "UnitName", "RequestType", "Code"
+                    "UnitName", "RequestType", "Code", "MaterialsRequestNote_Items.ProductionOrderNo"
                 };
             Query = ConfigureSearch(Query, SearchAttributes, Keyword);
 

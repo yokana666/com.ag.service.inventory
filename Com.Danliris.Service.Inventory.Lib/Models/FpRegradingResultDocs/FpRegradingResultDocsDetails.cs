@@ -16,12 +16,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public string ProductCode { get; set; }
         //public double Quantity { get; set; }
         public double Length { get; set; }
-        public double LengthBeforeReGrade { get; set; }
+        //public double LengthBeforeReGrade { get; set; }
         public string Remark { get; set; }
         public string Grade { get; set; }
-        public string GradeBefore { get; set; }
+        //public string GradeBefore { get; set; }
         public string Retur { get; set; }
-        public virtual FpReturProInvDocs FpReturProInvDocs { get; set; }
+        public virtual FpRegradingResultDocs FpReturProInvDocs { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
