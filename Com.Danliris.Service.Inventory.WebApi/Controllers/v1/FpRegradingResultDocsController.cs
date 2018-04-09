@@ -17,7 +17,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/FpRegradingResultDocs")]
     [Authorize]
-    public class FpRegradingResultDocsController : BasicController<InventoryDbContext, FpRegradingResultDocsService, FpRegradingResultDocsViewModel, FpReturProInvDocs>
+    public class FpRegradingResultDocsController : BasicController<InventoryDbContext, FpRegradingResultDocsService, FpRegradingResultDocsViewModel, FpRegradingResultDocs>
     {
         private static readonly string ApiVersion = "1.0";
         public FpRegradingResultDocsController(FpRegradingResultDocsService service) : base(service, ApiVersion)
