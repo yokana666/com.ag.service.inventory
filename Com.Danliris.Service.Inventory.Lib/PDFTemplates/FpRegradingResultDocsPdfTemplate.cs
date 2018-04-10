@@ -15,7 +15,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             var normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 8);
             var bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 8);
 
-            Document document = new Document(PageSize.A5.Rotate());
+            Document document = new Document(PageSize.A5);
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = PdfWriter.GetInstance(document, stream);
             writer.CloseStream = false;
@@ -29,48 +29,48 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             //cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "SUKOHARJO", 50, 368, 0);
 
             cb.SetFontAndSize(bf_bold, 8);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "FM.FP-01-PR.01-09.1-02", 450, 336, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "FM.FP-01-PR.01-09.1-02", 290, 570, 0);
 
             cb.SetFontAndSize(bf_bold, 14);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "BON HASIL RE-GRADING KAIN GREIGE", 297, 378, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "BON HASIL RE-GRADING KAIN GREIGE", 210, 540, 0);
 
             cb.SetFontAndSize(bf, 8);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "No Bon", 50, 316, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 316, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Code, 120, 316, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "No Bon", 20, 500, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 90, 500, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Code, 100, 500, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Unit", 50, 306, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 306, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Supplier.name, 120, 306, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Unit", 20, 490, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 90, 490, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Bon.unitName, 100, 490, 0);
 
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Nama Barang", 50, 296, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 296, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Product.Name, 120, 296, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Nama Barang", 20, 480, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 90, 480, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Product.Name, 100, 480, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Panjang Datang", 50, 286, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 286, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, string.Format("{0:n}", viewModel.TotalLength), 120, 286, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Panjang Datang", 20, 470, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 90, 470, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, string.Format("{0:n}", viewModel.TotalLength), 100, 470, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Grade Datang", 50, 276, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 110, 276, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.OriginalGrade, 120, 276, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Grade Datang", 20, 460, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 90, 460, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.OriginalGrade, 100, 460, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Tanggal", 410, 316, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 465, 316, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel._CreatedUtc.ToString("MM-dd-yyyy"), 475, 316, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Tanggal", 240, 500, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 290, 500, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel._CreatedUtc.ToString("MM-dd-yyyy"), 300, 500, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Nama Mesin", 410, 306, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 465, 306, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Machine.name, 475, 306, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Nama Mesin", 240, 490, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 290, 490, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Machine.name, 300, 490, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Operator", 410, 296, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 465, 296, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Operator, 475, 296, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Operator", 240, 480, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 290, 480, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Operator, 300, 480, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Shift", 410, 286, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 465, 286, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Shift, 475, 286, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Shift", 240, 470, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, ":", 290, 470, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, viewModel.Shift, 300, 470, 0);
 
 
             cb.EndText();
@@ -78,7 +78,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             #region CreateTable
             PdfPTable table = new PdfPTable(3);
             PdfPCell cell;
-            table.TotalWidth = 500f;
+            table.TotalWidth = 380f;
 
             float[] widths = new float[] { 4f, 4f, 7f };
             table.SetWidths(widths);
@@ -137,7 +137,7 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             //table.AddCell(footerCell);
             //Save tables.
 
-            table.WriteSelectedRows(0, -1, 50, 260, cb);
+            table.WriteSelectedRows(0, -1, 20, 450, cb);
             #endregion
 
 
@@ -145,13 +145,13 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             cb.SetTextMatrix(15, 23);
 
             cb.SetFontAndSize(bf, 8);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Penerima,", 130, 110, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "(.................................)", 130, 50, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Operator", 130, 35, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Penerima,", 100, 110, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "(.................................)", 100, 50, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Operator", 100, 35, 0);
 
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Mengetahui,", 460, 110, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "(.................................)", 460, 50, 0);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Kasubsie", 460, 35, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Mengetahui,", 320, 110, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "(.................................)", 320, 50, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "Kasubsie", 320, 35, 0);
 
             cb.EndText();
 
