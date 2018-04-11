@@ -227,6 +227,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                     {
                         Model.IsCompleted = true;
                     }
+                    else
+                    {
+                        Model.IsCompleted = false;
+                    }
 
                     await UpdateModel(Id, Model);
 
