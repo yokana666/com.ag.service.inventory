@@ -14,9 +14,8 @@ before_install:
 install: true
 
 before_script:
-    - docker-compose -f docker-compose.test.yml up -d
+    - docker-compose -f docker-compose.test.yml up
     - sleep 60
-    - docker-compose logs -f
 
 script:
     - dotnet restore Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj
