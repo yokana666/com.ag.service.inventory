@@ -27,6 +27,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public string Shift { get; set; }
         public double TotalLength { get; set; }
         public string OriginalGrade { get; set; }
+        public bool IsReturn { get; set; }
         public bool IsReturnedToPurchasing { get; set; }
         public int AutoIncrementNumber { get; set; }
         public ICollection<FpRegradingResultDocsDetails> Details { get; set; }

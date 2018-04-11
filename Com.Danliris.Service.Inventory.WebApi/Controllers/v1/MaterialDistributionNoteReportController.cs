@@ -44,7 +44,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                     {
                         apiVersion = ApiVersion,
                         data = data.Item1,
-                        info = new { total = data.Item2 }
+                        info = new { total = data.Item2, page = page, size = size }
                     });
                 }
                 else

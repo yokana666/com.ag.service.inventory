@@ -19,6 +19,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public string Shift { get; set; }
         public double TotalLength { get; set; }
         public string OriginalGrade { get; set; }
+        public bool IsReturn { get; set; }
         public List<FpRegradingResultDetailsDocsViewModel> Details { get; set; }
 
         public class supplier
