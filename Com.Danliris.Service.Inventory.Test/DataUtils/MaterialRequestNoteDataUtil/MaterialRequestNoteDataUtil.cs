@@ -43,9 +43,10 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
         {
             #region Unit
             var response = this.client.GetAsync($"{APIEndpoint.Core}master/units").Result;
-            Console.WriteLine("TEST JACKY");
+            
             if (!response.IsSuccessStatusCode)
             {
+                Console.WriteLine("TEST JACKY");
                 var ex = ErrorHelper.CreateExceptionFromResponseErrors(response);
                 Console.WriteLine(ex.Data.Values);
             }
