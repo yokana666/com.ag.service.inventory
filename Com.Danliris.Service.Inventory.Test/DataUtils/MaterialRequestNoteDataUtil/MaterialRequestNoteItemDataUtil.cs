@@ -21,66 +21,42 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
         public MaterialsRequestNote_Item GetNewData()
         {
             #region SPP
-            try
+            var responseSPP = this.client.GetAsync($"{APIEndpoint.Production}sales/production-orders?page=1&size=1").Result;
+            responseSPP.EnsureSuccessStatusCode();
+
+            var dataSPP = responseSPP.Content.ReadAsStringAsync();
+            Dictionary<string, object> resultSPP = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataSPP.Result.ToString());
+
+            List<ProductionOrderViewModel> listSPP = JsonConvert.DeserializeObject<List<ProductionOrderViewModel>>(resultSPP["data"].ToString());
+            ProductionOrderViewModel productionOrder = listSPP.First();
+            #endregion SPP
+
+            #region Product
+            var responseProduct = this.client.GetAsync($"{APIEndpoint.Core}/master/products?page=1&size=1").Result;
+            responseProduct.EnsureSuccessStatusCode();
+
+            var dataProduct = responseProduct.Content.ReadAsStringAsync();
+            Dictionary<string, object> resultProduct = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataProduct.Result.ToString());
+
+            List<ProductViewModel> listProduct = JsonConvert.DeserializeObject<List<ProductViewModel>>(resultProduct["data"].ToString());
+            ProductViewModel product = listProduct.First();
+            #endregion Product
+
+            return new MaterialsRequestNote_Item
             {
-                var responseSPP = this.client.GetAsync($"{APIEndpoint.Production}sales/production-orders?page=1&size=1").Result;
-
-                if (!responseSPP.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("TEST JACKY SPP");
-                    var ex = ErrorHelper.CreateExceptionFromResponseErrors(responseSPP);
-                    Console.WriteLine(ex.Data.Values);
-                }
-
-                responseSPP.EnsureSuccessStatusCode();
-
-                var dataSPP = responseSPP.Content.ReadAsStringAsync();
-                Dictionary<string, object> resultSPP = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataSPP.Result.ToString());
-
-                List<ProductionOrderViewModel> listSPP = JsonConvert.DeserializeObject<List<ProductionOrderViewModel>>(resultSPP["data"].ToString());
-                ProductionOrderViewModel productionOrder = listSPP.First();
-                #endregion SPP
-
-                #region Product
-                var responseProduct = this.client.GetAsync($"{APIEndpoint.Core}/master/products?page=1&size=1").Result;
-
-                if (!responseProduct.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("TEST JACKY Product");
-                    var ex = ErrorHelper.CreateExceptionFromResponseErrors(responseProduct);
-                    Console.WriteLine(ex.Data.Values);
-                }
-
-                responseProduct.EnsureSuccessStatusCode();
-
-                var dataProduct = responseProduct.Content.ReadAsStringAsync();
-                Dictionary<string, object> resultProduct = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataProduct.Result.ToString());
-
-                List<ProductViewModel> listProduct = JsonConvert.DeserializeObject<List<ProductViewModel>>(resultProduct["data"].ToString());
-                ProductViewModel product = listProduct.First();
-                #endregion Product
-
-                return new MaterialsRequestNote_Item
-                {
-                    ProductionOrderId = productionOrder._id,
-                    ProductionOrderNo = productionOrder.orderNo,
-                    ProductionOrderIsCompleted = false,
-                    OrderQuantity = (double)productionOrder.orderQuantity,
-                    OrderTypeId = productionOrder.orderType._id,
-                    OrderTypeCode = productionOrder.orderType.code,
-                    OrderTypeName = productionOrder.orderType.name,
-                    ProductId = product._id,
-                    ProductCode = product.code,
-                    ProductName = product.name,
-                    Grade = "A",
-                    Length = 5
-                };
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("ERROR: " + e);
-                throw;
-            }
+                ProductionOrderId = productionOrder._id,
+                ProductionOrderNo = productionOrder.orderNo,
+                ProductionOrderIsCompleted = false,
+                OrderQuantity = (double)productionOrder.orderQuantity,
+                OrderTypeId = productionOrder.orderType._id,
+                OrderTypeCode = productionOrder.orderType.code,
+                OrderTypeName = productionOrder.orderType.name,
+                ProductId = product._id,
+                ProductCode = product.code,
+                ProductName = product.name,
+                Grade = "A",
+                Length = 5
+            };
         }
     }
 }

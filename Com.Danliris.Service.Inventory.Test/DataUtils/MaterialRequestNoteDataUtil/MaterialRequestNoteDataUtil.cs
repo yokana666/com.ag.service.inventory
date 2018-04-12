@@ -41,47 +41,32 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
         public override MaterialsRequestNote GetNewData()
         {
-            try
+            #region Unit
+            var response = this.client.GetAsync($"{APIEndpoint.Core}master/units").Result;
+            response.EnsureSuccessStatusCode();
+
+            var data = response.Content.ReadAsStringAsync();
+            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.Result.ToString());
+
+            List<UnitViewModel> list = JsonConvert.DeserializeObject<List<UnitViewModel>>(result["data"].ToString());
+            UnitViewModel fp = list.First(p => p.name.Equals("FINISHING"));
+            #endregion Unit
+
+            MaterialsRequestNote TestData = new MaterialsRequestNote
             {
-                #region Unit
-                var response = this.client.GetAsync($"{APIEndpoint.Core}master/units").Result;
+                UnitId = fp._id,
+                UnitCode = fp.code,
+                UnitName = fp.name,
+                Remark = "",
+                RequestType = "AWAL",
+                IsDistributed = false,
+                IsCompleted = false,
+                MaterialsRequestNote_Items = new List<MaterialsRequestNote_Item> { materialRequestNoteItemDataUtil.GetNewData() }
+            };
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("TEST JACKY");
-                    var ex = ErrorHelper.CreateExceptionFromResponseErrors(response);
-                    Console.WriteLine(ex.Data.Values);
-                }
-
-                response.EnsureSuccessStatusCode();
-
-                var data = response.Content.ReadAsStringAsync();
-                Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.Result.ToString());
-
-                List<UnitViewModel> list = JsonConvert.DeserializeObject<List<UnitViewModel>>(result["data"].ToString());
-                UnitViewModel fp = list.First(p => p.name.Equals("FINISHING"));
-                #endregion Unit
-
-                MaterialsRequestNote TestData = new MaterialsRequestNote
-                {
-                    UnitId = fp._id,
-                    UnitCode = fp.code,
-                    UnitName = fp.name,
-                    Remark = "",
-                    RequestType = "AWAL",
-                    IsDistributed = false,
-                    IsCompleted = false,
-                    MaterialsRequestNote_Items = new List<MaterialsRequestNote_Item> { materialRequestNoteItemDataUtil.GetNewData() }
-                };
-
-                return TestData;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            return TestData;
         }
+
 
         public override async Task<MaterialsRequestNote> GetTestData()
         {

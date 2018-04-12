@@ -72,14 +72,6 @@ namespace Com.Danliris.Service.Inventory.Test
             HttpClient httpClient = new HttpClient();
 
             var response = httpClient.PostAsync("http://localhost:5000/v1/authenticate", new StringContent(JsonConvert.SerializeObject(User).ToString(), Encoding.UTF8, "application/json")).Result;
-
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("TEST JACKY");
-                var ex = ErrorHelper.CreateExceptionFromResponseErrors(response);
-                Console.WriteLine(ex.Data.Values);
-            }
-
             response.EnsureSuccessStatusCode();
 
             var data = response.Content.ReadAsStringAsync();
