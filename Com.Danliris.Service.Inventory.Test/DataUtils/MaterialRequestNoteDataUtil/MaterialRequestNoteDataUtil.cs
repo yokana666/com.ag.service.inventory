@@ -41,38 +41,46 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
         public override MaterialsRequestNote GetNewData()
         {
-            #region Unit
-            var response = this.client.GetAsync($"{APIEndpoint.Core}master/units").Result;
-            
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                Console.WriteLine("TEST JACKY");
-                var ex = ErrorHelper.CreateExceptionFromResponseErrors(response);
-                Console.WriteLine(ex.Data.Values);
+                #region Unit
+                var response = this.client.GetAsync($"{APIEndpoint.Core}master/units").Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("TEST JACKY");
+                    var ex = ErrorHelper.CreateExceptionFromResponseErrors(response);
+                    Console.WriteLine(ex.Data.Values);
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                var data = response.Content.ReadAsStringAsync();
+                Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.Result.ToString());
+
+                List<UnitViewModel> list = JsonConvert.DeserializeObject<List<UnitViewModel>>(result["data"].ToString());
+                UnitViewModel fp = list.First(p => p.name.Equals("FINISHING"));
+                #endregion Unit
+
+                MaterialsRequestNote TestData = new MaterialsRequestNote
+                {
+                    UnitId = fp._id,
+                    UnitCode = fp.code,
+                    UnitName = fp.name,
+                    Remark = "",
+                    RequestType = "AWAL",
+                    IsDistributed = false,
+                    IsCompleted = false,
+                    MaterialsRequestNote_Items = new List<MaterialsRequestNote_Item> { materialRequestNoteItemDataUtil.GetNewData() }
+                };
+
+                return TestData;
             }
-
-            response.EnsureSuccessStatusCode();
-
-            var data = response.Content.ReadAsStringAsync();
-            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.Result.ToString());
-
-            List<UnitViewModel> list = JsonConvert.DeserializeObject<List<UnitViewModel>>(result["data"].ToString());
-            UnitViewModel fp = list.First(p => p.name.Equals("FINISHING"));
-            #endregion Unit
-
-            MaterialsRequestNote TestData = new MaterialsRequestNote
+            catch (Exception e)
             {
-                UnitId = fp._id,
-                UnitCode = fp.code,
-                UnitName = fp.name,
-                Remark = "",
-                RequestType = "AWAL",
-                IsDistributed = false,
-                IsCompleted = false,
-                MaterialsRequestNote_Items = new List<MaterialsRequestNote_Item> { materialRequestNoteItemDataUtil.GetNewData() }
-            };
-
-            return TestData;
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
 
         public override async Task<MaterialsRequestNote> GetTestData()
