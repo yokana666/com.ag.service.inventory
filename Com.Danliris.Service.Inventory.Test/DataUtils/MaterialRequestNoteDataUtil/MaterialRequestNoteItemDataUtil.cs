@@ -78,7 +78,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
             }
             catch(Exception e)
             {
-                Console.WriteLine("ERROR: " + e.Message);
+                Console.WriteLine("ERROR: " + e);
                 throw;
             }
         }
