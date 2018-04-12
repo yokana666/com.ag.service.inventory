@@ -3,6 +3,7 @@ using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,6 +22,13 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
         {
             #region SPP
             var responseSPP = this.client.GetAsync($"{APIEndpoint.Production}sales/production-orders?page=1&size=1").Result;
+
+            if (!responseSPP.IsSuccessStatusCode)
+            {
+                var ex = ErrorHelper.CreateExceptionFromResponseErrors(responseSPP);
+                Console.WriteLine(ex.Data.Values);
+            }
+
             responseSPP.EnsureSuccessStatusCode();
 
             var dataSPP = responseSPP.Content.ReadAsStringAsync();
@@ -32,6 +40,13 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
             #region Product
             var responseProduct = this.client.GetAsync($"{APIEndpoint.Core}/master/products?page=1&size=1").Result;
+
+            if (!responseProduct.IsSuccessStatusCode)
+            {
+                var ex = ErrorHelper.CreateExceptionFromResponseErrors(responseProduct);
+                Console.WriteLine(ex.Data.Values);
+            }
+
             responseProduct.EnsureSuccessStatusCode();
 
             var dataProduct = responseProduct.Content.ReadAsStringAsync();
