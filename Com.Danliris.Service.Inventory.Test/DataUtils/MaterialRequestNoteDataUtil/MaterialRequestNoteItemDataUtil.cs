@@ -25,6 +25,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
             if (!responseSPP.IsSuccessStatusCode)
             {
+                Console.WriteLine("TEST JACKY SPP");
                 var ex = ErrorHelper.CreateExceptionFromResponseErrors(responseSPP);
                 Console.WriteLine(ex.Data.Values);
             }
@@ -43,6 +44,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
             if (!responseProduct.IsSuccessStatusCode)
             {
+                Console.WriteLine("TEST JACKY Product");
                 var ex = ErrorHelper.CreateExceptionFromResponseErrors(responseProduct);
                 Console.WriteLine(ex.Data.Values);
             }
