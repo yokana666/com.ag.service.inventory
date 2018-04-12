@@ -32,7 +32,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
             List<string> SearchAttributes = new List<string>()
                 {
-                    "UnitName", "RequestType", "Code"
+                    "UnitName", "RequestType", "Code", "MaterialsRequestNote_Items.ProductionOrderNo"
                 };
             Query = ConfigureSearch(Query, SearchAttributes, Keyword);
 
@@ -226,6 +226,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                     if (CountIsIncomplete == 0)
                     {
                         Model.IsCompleted = true;
+                    }
+                    else
+                    {
+                        Model.IsCompleted = false;
                     }
 
                     await UpdateModel(Id, Model);

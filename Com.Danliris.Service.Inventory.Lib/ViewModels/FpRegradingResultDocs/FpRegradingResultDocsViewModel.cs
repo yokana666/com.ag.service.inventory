@@ -17,6 +17,9 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
         public machine Machine { get; set; }
         public string Remark { get; set; }
         public string Shift { get; set; }
+        public double TotalLength { get; set; }
+        public string OriginalGrade { get; set; }
+        public bool IsReturn { get; set; }
         public List<FpRegradingResultDetailsDocsViewModel> Details { get; set; }
 
         public class supplier
@@ -108,11 +111,11 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels
                         Count++;
                         detailsError += "Length: 'Panjang harus di isi',";
                     }
-                    if (data.LengthBeforeReGrade.Equals(0))
-                    {
-                        Count++;
-                        detailsError += "LengthBeforeReGrade: 'harus di isi',";
-                    }
+                    //if (data.LengthBeforeReGrade.Equals(0))
+                    //{
+                    //    Count++;
+                    //    detailsError += "LengthBeforeReGrade: 'harus di isi',";
+                    //}
                     detailsError += "},";
 
                 }

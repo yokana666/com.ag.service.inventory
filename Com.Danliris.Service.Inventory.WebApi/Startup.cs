@@ -39,7 +39,8 @@ namespace Com.Danliris.Service.Inventory.WebApi
         public void RegisterFacades(IServiceCollection services)
         {
             services
-                .AddTransient<FPReturnInvToPurchasingFacade>();
+                .AddTransient<FPReturnInvToPurchasingFacade>()
+                .AddTransient<FpRegradingResultDocsReportFacade>();
         }
 
         public void RegisterServices(IServiceCollection services)

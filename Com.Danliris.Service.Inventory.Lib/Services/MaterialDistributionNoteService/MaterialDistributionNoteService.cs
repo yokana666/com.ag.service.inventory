@@ -177,11 +177,34 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
         public override async Task<MaterialDistributionNote> ReadModelById(int id)
         {
-            return await this.DbSet
+            var Data =  await this.DbSet
                 .Where(d => d.Id.Equals(id) && d._IsDeleted.Equals(false))
                 .Include(d => d.MaterialDistributionNoteItems)
                     .ThenInclude(d => d.MaterialDistributionNoteDetails)
                 .FirstOrDefaultAsync();
+
+            List<int> DetailsId = new List<int>();
+
+            foreach (MaterialDistributionNoteItem item in Data.MaterialDistributionNoteItems)
+            {
+                foreach (MaterialDistributionNoteDetail detail in item.MaterialDistributionNoteDetails)
+                {
+                    DetailsId.Add(detail.MaterialsRequestNoteItemId);
+                }
+            }
+
+            var RequestNoteItems = this.DbContext.MaterialsRequestNote_Items.Select(p => new { Id = p.Id, IsCompleted = p.ProductionOrderIsCompleted }).Where(p => DetailsId.Contains(p.Id));
+
+            foreach (MaterialDistributionNoteItem item in Data.MaterialDistributionNoteItems)
+            {
+                foreach (MaterialDistributionNoteDetail detail in item.MaterialDistributionNoteDetails)
+                {
+                    var RequestNoteItem = RequestNoteItems.Single(p => p.Id == detail.MaterialsRequestNoteItemId);
+                    detail.IsCompleted = RequestNoteItem.IsCompleted;
+                }
+            }
+
+            return Data;
         }
 
         public void CreateInventoryDocument(MaterialDistributionNote Model, string Type)
