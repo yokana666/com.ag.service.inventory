@@ -18,6 +18,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
         public double? DistributedLength { get; set; }
         public double? ReceivedLength { get; set; }
         public bool IsDisposition { get; set; }
+        public bool IsCompleted { get; set; }
         public SupplierViewModel Supplier { get; set; }
     }
 }

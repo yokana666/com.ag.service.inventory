@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.Models
 {
-   public class FpReturProInvDocs : StandardEntity, IValidatableObject
+   public class FpRegradingResultDocs : StandardEntity, IValidatableObject
     {
         public string Code { get; set; }
         public string NoBon { get; set; } 
@@ -25,6 +25,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Models
         public string MachineId { get; set; }
         public string MachineCode { get; set; }
         public string Shift { get; set; }
+        public double TotalLength { get; set; }
+        public string OriginalGrade { get; set; }
+        public bool IsReturn { get; set; }
         public bool IsReturnedToPurchasing { get; set; }
         public int AutoIncrementNumber { get; set; }
         public ICollection<FpRegradingResultDocsDetails> Details { get; set; }

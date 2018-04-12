@@ -31,11 +31,11 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.Loaders
         {
             try
             {
-                Tuple<List<FpReturProInvDocs>, int, Dictionary<string, string>, List<string>> Data = service.ReadNo(Keyword, Filter);
+                Tuple<List<FpRegradingResultDocs>, int, Dictionary<string, string>, List<string>> Data = service.ReadNo(Keyword, Filter);
 
                 Dictionary<string, object> Result =
                     new ResultFormatter(ApiVersion, General.OK_STATUS_CODE, General.OK_MESSAGE)
-                    .Ok<FpReturProInvDocs, FpRegradingResultDocsViewModel>(Data.Item1, service.MapToViewModel, 1, 25, Data.Item2, Data.Item1.Count, Data.Item3, Data.Item4);
+                    .Ok<FpRegradingResultDocs, FpRegradingResultDocsViewModel>(Data.Item1, service.MapToViewModel, 1, 25, Data.Item2, Data.Item1.Count, Data.Item3, Data.Item4);
 
                 return Ok(Result);
             }
