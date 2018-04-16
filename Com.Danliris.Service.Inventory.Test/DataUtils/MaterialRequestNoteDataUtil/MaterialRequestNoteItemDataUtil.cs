@@ -1,6 +1,7 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
+using Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Newtonsoft.Json;
 using System;
@@ -20,28 +21,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
         public MaterialsRequestNote_Item GetNewData()
         {
-            #region SPP
-            var responseSPP = this.client.GetAsync($"{APIEndpoint.Production}sales/production-orders?page=1&size=1").Result;
-            responseSPP.EnsureSuccessStatusCode();
-
-            var dataSPP = responseSPP.Content.ReadAsStringAsync();
-            Dictionary<string, object> resultSPP = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataSPP.Result.ToString());
-
-            List<ProductionOrderViewModel> listSPP = JsonConvert.DeserializeObject<List<ProductionOrderViewModel>>(resultSPP["data"].ToString());
-            ProductionOrderViewModel productionOrder = listSPP.First();
-            #endregion SPP
-
-            #region Product
-            var responseProduct = this.client.GetAsync($"{APIEndpoint.Core}/master/products?page=1&size=1").Result;
-            responseProduct.EnsureSuccessStatusCode();
-
-            var dataProduct = responseProduct.Content.ReadAsStringAsync();
-            Dictionary<string, object> resultProduct = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataProduct.Result.ToString());
-
-            List<ProductViewModel> listProduct = JsonConvert.DeserializeObject<List<ProductViewModel>>(resultProduct["data"].ToString());
-            ProductViewModel product = listProduct.First();
-            #endregion Product
-
+            ProductionOrderViewModel productionOrder = ProductionOrderDataUtil.GetProductionOrder(client);
+            ProductViewModel product = ProductDataUtil.GetProduct(client);
+            
             return new MaterialsRequestNote_Item
             {
                 ProductionOrderId = productionOrder._id,

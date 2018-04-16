@@ -183,24 +183,27 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     .ThenInclude(d => d.MaterialDistributionNoteDetails)
                 .FirstOrDefaultAsync();
 
-            List<int> DetailsId = new List<int>();
-
-            foreach (MaterialDistributionNoteItem item in Data.MaterialDistributionNoteItems)
+            if (Data != null)
             {
-                foreach (MaterialDistributionNoteDetail detail in item.MaterialDistributionNoteDetails)
+                List<int> DetailsId = new List<int>();
+
+                foreach (MaterialDistributionNoteItem item in Data.MaterialDistributionNoteItems)
                 {
-                    DetailsId.Add(detail.MaterialsRequestNoteItemId);
+                    foreach (MaterialDistributionNoteDetail detail in item.MaterialDistributionNoteDetails)
+                    {
+                        DetailsId.Add(detail.MaterialsRequestNoteItemId);
+                    }
                 }
-            }
 
-            var RequestNoteItems = this.DbContext.MaterialsRequestNote_Items.Select(p => new { Id = p.Id, IsCompleted = p.ProductionOrderIsCompleted }).Where(p => DetailsId.Contains(p.Id));
+                var RequestNoteItems = this.DbContext.MaterialsRequestNote_Items.Select(p => new { Id = p.Id, IsCompleted = p.ProductionOrderIsCompleted }).Where(p => DetailsId.Contains(p.Id));
 
-            foreach (MaterialDistributionNoteItem item in Data.MaterialDistributionNoteItems)
-            {
-                foreach (MaterialDistributionNoteDetail detail in item.MaterialDistributionNoteDetails)
+                foreach (MaterialDistributionNoteItem item in Data.MaterialDistributionNoteItems)
                 {
-                    var RequestNoteItem = RequestNoteItems.Single(p => p.Id == detail.MaterialsRequestNoteItemId);
-                    detail.IsCompleted = RequestNoteItem.IsCompleted;
+                    foreach (MaterialDistributionNoteDetail detail in item.MaterialDistributionNoteDetails)
+                    {
+                        var RequestNoteItem = RequestNoteItems.Single(p => p.Id == detail.MaterialsRequestNoteItemId);
+                        detail.IsCompleted = RequestNoteItem.IsCompleted;
+                    }
                 }
             }
 
