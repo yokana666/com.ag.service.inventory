@@ -9,6 +9,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
         public string OrderNo { get; set; }
         public string ProductName { get; set; }
         public string Grade { get; set; }
+        public double OrderQuantity { get; set; }
         public double Length { get; set; }
         public double DistributedLength { get; set; }
         public bool Status { get; set; }
