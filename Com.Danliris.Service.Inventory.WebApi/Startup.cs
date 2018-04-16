@@ -68,7 +68,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
             string connectionString = Configuration.GetConnectionString("DefaultConnection") ?? Configuration["DefaultConnection"];
 
             services
-                .AddDbContext<InventoryDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient)
+                .AddDbContext<InventoryDbContext>(options => options.UseSqlServer(connectionString))
                 .AddApiVersioning(options =>
                 {
                     options.ReportApiVersions = true;
