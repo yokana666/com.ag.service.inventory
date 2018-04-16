@@ -520,6 +520,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                              OrderNo = b.ProductionOrderNo,
                              ProductName = b.ProductName,
                              Grade = b.Grade,
+                             OrderQuantity = b.OrderQuantity,
                              Length = b.Length,
                              DistributedLength = b.DistributedLength,
                              Status = b.ProductionOrderIsCompleted,
