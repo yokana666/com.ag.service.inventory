@@ -1,4 +1,5 @@
-﻿using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
+﻿using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
+using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Com.Danliris.Service.Inventory.WebApi;
 using Microsoft.AspNetCore.Hosting;
@@ -55,6 +56,9 @@ namespace Com.Danliris.Service.Inventory.Test
                     services
                         .AddTransient<MaterialRequestNoteDataUtil>()
                         .AddTransient<MaterialRequestNoteItemDataUtil>()
+                        .AddTransient<MaterialDistributionNoteDataUtil>()
+                        .AddTransient<MaterialDistributionNoteItemDataUtil>()
+                        .AddTransient<MaterialDistributionNoteDetailDataUtil>()
                         .AddSingleton<HttpClientService>();
                 })
                 .UseStartup<Startup>();

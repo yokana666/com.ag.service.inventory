@@ -36,6 +36,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
             {
                 TService service = (TService)this.serviceProvider.GetService(typeof(TService));
                 service.Username = "Unit Test";
+                service.Token = HttpClientService.Token;
 
                 return service;
             }
