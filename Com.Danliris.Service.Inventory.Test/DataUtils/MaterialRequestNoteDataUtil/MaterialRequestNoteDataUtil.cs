@@ -4,6 +4,7 @@ using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
+using Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Com.Danliris.Service.Inventory.Test.Interfaces;
 using Newtonsoft.Json;
@@ -41,16 +42,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
         public override MaterialsRequestNote GetNewData()
         {
-            #region Unit
-            var response = this.client.GetAsync($"{APIEndpoint.Core}master/units").Result;
-            response.EnsureSuccessStatusCode();
-
-            var data = response.Content.ReadAsStringAsync();
-            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.Result.ToString());
-
-            List<UnitViewModel> list = JsonConvert.DeserializeObject<List<UnitViewModel>>(result["data"].ToString());
-            UnitViewModel fp = list.First(p => p.name.Equals("FINISHING"));
-            #endregion Unit
+            UnitViewModel fp = UnitDataUtil.GetFinishingUnit(client);
 
             MaterialsRequestNote TestData = new MaterialsRequestNote
             {
@@ -66,6 +58,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 
             return TestData;
         }
+
 
         public override async Task<MaterialsRequestNote> GetTestData()
         {
