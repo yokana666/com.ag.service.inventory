@@ -2,6 +2,7 @@
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
+using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,12 @@ namespace Com.Danliris.Service.Inventory.Test
                 .AddTransient<MaterialsRequestNote_ItemService>(provider => new MaterialsRequestNote_ItemService(provider))
                 .AddTransient<MaterialRequestNoteDataUtil>()
                 .AddTransient<MaterialRequestNoteItemDataUtil>()
+
+                //.AddTransient<Lib.Services.FpRegradingResultDocsService>(provider => new Lib.Services.FpRegradingResultDocsService(provider))
+                //.AddTransient<Lib.Services.FpRegradingResultDetailsDocsService>(provider => new Lib.Services.FpRegradingResultDetailsDocsService(provider))
+                //.AddTransient<FpRegradingResultDataUtil>()
+                //.AddTransient<FpRegradingResultDetailsDataUtil>()
+
                 .AddSingleton<HttpClientService>()
                 .BuildServiceProvider();
 
