@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil;
 
 namespace Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil
 {
@@ -40,13 +41,40 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUti
 
         public override FpRegradingResultDocs GetNewData()
         {
+            UnitReceiptNoteViewModel unit = UnitReceiptNoteDataUtil.GetUnitReceiptNote(client);
+            //ProductViewModel product = ProductDataUtil.GetProduct(client);
+            MachineViewModel machine = MachineDataUtil.GetMachine(client);
+            //SupplierViewModel supplier = SupplierDataUtil.GetSupplier(client);
+
             FpRegradingResultDocs TestData = new FpRegradingResultDocs
             {
-          
+                NoBon = unit.no,
+                NoBonId = unit._id,
+
+                MachineId = machine._id,
+                MachineCode = machine.code,
+                MachineName = machine.name,
+
+                ProductId = unit.items[0].product._id,
+                ProductCode = unit.items[0].product.code,
+                ProductName = unit.items[0].product.name,
+
+                SupplierId = unit.supplier._id,
+                SupplierCode = unit.supplier.code,
+                SupplierName = unit.supplier.name,
+                Operator = "operator test",
+                Shift = "shift 1 test",
+                TotalLength = 100,
+                OriginalGrade = "test grade",
+                Remark = "test remark",
+                UnitName = "PRINTING",
+
+                Details = new List<FpRegradingResultDocsDetails> { fpRegradingResultDetailsDataUtil.GetNewData() }
+
             };
-        
+
             return TestData;
-    }
+        }
 
         public override async Task<FpRegradingResultDocs> GetTestData()
         {

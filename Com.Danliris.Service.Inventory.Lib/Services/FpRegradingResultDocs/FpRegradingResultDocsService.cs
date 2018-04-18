@@ -302,6 +302,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 }
                 catch (Exception e)
                 {
+                    throw new Exception(e.Message);
                     transaction.Rollback();
                 }
             }

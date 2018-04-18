@@ -1,6 +1,8 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.ViewModels;
+using Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,14 +21,18 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUti
 
         public FpRegradingResultDocsDetails GetNewData()
         {
+            ProductViewModel product = ProductDataUtil.GetProduct(client);
+
             return new FpRegradingResultDocsDetails
             {
-                ProductName = "testProduct",
-                ProductId = "testProductId",
-                ProductCode = "testProductCode",
+                ProductName = product.name,
+                ProductId = product._id,
+                ProductCode = product.code,
                 Length = 100,
                 Grade = "A",
                 Remark = "test",
+                Retur ="Ya",
+                
             };
         }
     }

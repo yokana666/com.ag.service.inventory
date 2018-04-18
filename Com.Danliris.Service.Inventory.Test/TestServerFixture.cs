@@ -1,4 +1,8 @@
+
 ﻿using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
+
+﻿using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
+
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Com.Danliris.Service.Inventory.WebApi;
@@ -42,6 +46,7 @@ namespace Com.Danliris.Service.Inventory.Test
                     new KeyValuePair<string, string>("CoreEndpoint", "http://localhost:5001/v1/"),
                     new KeyValuePair<string, string>("InventoryEndpoint", "http://localhost:5002/v1/"),
                     new KeyValuePair<string, string>("ProductionEndpoint", "http://localhost:5003/v1/"),
+                    new KeyValuePair<string, string>("PurchasingEndpoint", "http://localhost:5004/v1/"),
                     new KeyValuePair<string, string>("Secret", "DANLIRISTESTENVIRONMENT"),
                     new KeyValuePair<string, string>("ASPNETCORE_ENVIRONMENT", "Test"),
                     new KeyValuePair<string, string>("DefaultConnection", "Server=localhost,1401;Database=com.danliris.db.inventory.controller.test;User=sa;password=Standar123.;MultipleActiveResultSets=true;")
@@ -56,8 +61,14 @@ namespace Com.Danliris.Service.Inventory.Test
                     services
                         .AddTransient<MaterialRequestNoteDataUtil>()
                         .AddTransient<MaterialRequestNoteItemDataUtil>()
-                        //.AddTransient<FpRegradingResultDataUtil>()
-                        //.AddTransient<FpRegradingResultDetailsDataUtil>()
+
+                        .AddTransient<FpRegradingResultDataUtil>()
+                        .AddTransient<FpRegradingResultDetailsDataUtil>()
+
+                        .AddTransient<MaterialDistributionNoteDataUtil>()
+                        .AddTransient<MaterialDistributionNoteItemDataUtil>()
+                        .AddTransient<MaterialDistributionNoteDetailDataUtil>()
+
                         .AddSingleton<HttpClientService>();
                 })
                 .UseStartup<Startup>();
