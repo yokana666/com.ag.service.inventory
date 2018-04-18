@@ -2,12 +2,12 @@
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
-
+using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
-
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
 
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
+using Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -70,6 +70,8 @@ namespace Com.Danliris.Service.Inventory.Test
                 .AddTransient<MaterialDistributionNoteDetailService>(provider => new MaterialDistributionNoteDetailService(provider))
                 .AddTransient<MaterialsRequestNoteService>(provider => new MaterialsRequestNoteService(provider))
                 .AddTransient<MaterialsRequestNote_ItemService>(provider => new MaterialsRequestNote_ItemService(provider))
+                .AddTransient<StockTransferNoteService>(provider => new StockTransferNoteService(provider))
+                .AddTransient<StockTransferNote_ItemService>(provider => new StockTransferNote_ItemService(provider))
                 .AddTransient<MaterialRequestNoteDataUtil>()
                 .AddTransient<MaterialRequestNoteItemDataUtil>()
 
@@ -83,6 +85,9 @@ namespace Com.Danliris.Service.Inventory.Test
                 .AddTransient<MaterialDistributionNoteDataUtil>()
                 .AddTransient<MaterialDistributionNoteItemDataUtil>()
                 .AddTransient<MaterialDistributionNoteDetailDataUtil>()
+
+                .AddTransient<StockTransferNoteDataUtil>()
+                .AddTransient<StockTransferNoteItemDataUtil>()
 
                 .AddSingleton<HttpClientService>()
                 .BuildServiceProvider();
