@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Helpers
 {
-    public class BaseGet<TModel, TFacade> : Controller
-        where TFacade : IReadable<TModel>
+    public class BaseGet<TFacade> : Controller
+        where TFacade : IReadable
     {
         private readonly TFacade facade;
 
@@ -19,7 +19,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
 
         public ActionResult Get(int page = 1, int size = 25, string order = "{}", string keyword = null, string filter = "{}")
         {
-            Tuple<List<TModel>, int, Dictionary<string, string>> Data = this.facade.Read(page, size, order, keyword, filter);
+            Tuple<List<object>, int, Dictionary<string, string>> Data = this.facade.Read(page, size, order, keyword, filter);
 
             return Ok(new
             {

@@ -11,9 +11,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNote
 {
     public class MaterialDistributionNoteDetailDataUtil
     {
-        private HttpClientService client;
+        private HttpClientTestService client;
 
-        public MaterialDistributionNoteDetailDataUtil(HttpClientService client)
+        public MaterialDistributionNoteDetailDataUtil(HttpClientTestService client)
         {
             this.client = client;
         }

@@ -15,10 +15,10 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUti
 {
     public class StockTransferNoteDataUtil : BasicDataUtil<InventoryDbContext, StockTransferNoteService, StockTransferNote>, IEmptyData<StockTransferNoteViewModel>
     {
-        private readonly HttpClientService client;
+        private readonly HttpClientTestService client;
         private readonly StockTransferNoteItemDataUtil stockTransferNoteItemDataUtil;
 
-        public StockTransferNoteDataUtil(InventoryDbContext dbContext, StockTransferNoteService service, HttpClientService client, StockTransferNoteItemDataUtil stockTransferNoteItemDataUtil) : base(dbContext, service)
+        public StockTransferNoteDataUtil(InventoryDbContext dbContext, StockTransferNoteService service, HttpClientTestService client, StockTransferNoteItemDataUtil stockTransferNoteItemDataUtil) : base(dbContext, service)
         {
             this.client = client;
             this.stockTransferNoteItemDataUtil = stockTransferNoteItemDataUtil;
@@ -63,7 +63,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUti
         public override async Task<StockTransferNote> GetTestData()
         {
             StockTransferNote Data = GetNewData();
-            this.Service.Token = HttpClientService.Token;
+            this.Service.Token = HttpClientTestService.Token;
             await this.Service.CreateModel(Data);
             return Data;
         }

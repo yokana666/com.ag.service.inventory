@@ -78,7 +78,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingV
         {
             int Count = 0;
 
-            if (this.Unit == null || string.IsNullOrWhiteSpace(this.Unit._id))
+            if (this.Unit == null || string.IsNullOrWhiteSpace(this.Unit.name))
                 yield return new ValidationResult("Unit is required", new List<string> { "Unit" });
 
             if (this.Supplier == null || string.IsNullOrWhiteSpace(this.Supplier._id))

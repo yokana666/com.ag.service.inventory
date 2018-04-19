@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public static class ProductDataUtil
     {
-        public static ProductViewModel GetProduct(HttpClientService client)
+        public static ProductViewModel GetProduct(HttpClientTestService client)
         {
             var responseProduct = client.GetAsync($"{APIEndpoint.Core}/master/products?page=1&size=1").Result;
             responseProduct.EnsureSuccessStatusCode();

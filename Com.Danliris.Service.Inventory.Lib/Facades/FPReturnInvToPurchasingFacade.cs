@@ -43,7 +43,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
             {
                 try
                 {
-                    foreach(FPReturnInvToPurchasingDetail detail in model.FPReturnInvToPurchasingDetails)
+                    foreach (FPReturnInvToPurchasingDetail detail in model.FPReturnInvToPurchasingDetails)
                     {
                         fpRegradingResultDocsService.UpdateIsReturnedToPurchasing(detail.FPRegradingResultDocsId);
                         this.fpReturnInvToPurchasingDetailService.OnCreating(detail);
@@ -70,7 +70,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
             return Created;
         }
 
-        public Tuple<List<dynamic>, int, Dictionary<string, string>> Read(int page = 1, int size = 25, string order = "{}", string keyword = null, string filter = "{}")
+        public Tuple<List<object>, int, Dictionary<string, string>> Read(int page = 1, int size = 25, string order = "{}", string keyword = null, string filter = "{}")
         {
             #region Query
 
@@ -129,7 +129,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
 
             #endregion Paging
 
-            dynamic list = Data
+            List<object> list = new List<object>();
+            list.AddRange(
+                Data
                     .GroupBy(d => new { d.Id, d.No, d.UnitName, d._CreatedUtc, d.SupplierName })
                     .Select(s => new
                     {
@@ -140,7 +142,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
                         TotalLength = s.Sum(d => d.FPReturnInvToPurchasingDetails.Sum(p => p.Length)),
                         SupplierName = s.First().SupplierName,
                         _CreatedUtc = s.First()._CreatedUtc
-                    }).ToList();
+                    }).ToList()
+            );
 
             return Tuple.Create(list, TotalData, OrderDictionary);
         }
@@ -157,7 +160,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
         {
             int Count = 0;
 
-            if(!this.fpReturnInvToPurchasingService.IsExists(id))
+            if (!this.fpReturnInvToPurchasingService.IsExists(id))
             {
                 return 0;
             }
@@ -208,7 +211,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
             #endregion UOM
 
             #region Storage
-     
+
             var storageName = model.UnitName.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
             Dictionary<string, object> filterStorage = new Dictionary<string, object> { { "name", storageName } };
             var responseStorage = httpClient.GetAsync($@"{APIEndpoint.Core}{storageURI}?filter=" + JsonConvert.SerializeObject(filterStorage)).Result.Content.ReadAsStringAsync();
@@ -222,7 +225,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
 
             List<InventoryDocumentItemViewModel> inventoryDocumentItems = new List<InventoryDocumentItemViewModel>();
 
-            foreach(FPReturnInvToPurchasingDetail detail in model.FPReturnInvToPurchasingDetails)
+            foreach (FPReturnInvToPurchasingDetail detail in model.FPReturnInvToPurchasingDetails)
             {
                 InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel();
 

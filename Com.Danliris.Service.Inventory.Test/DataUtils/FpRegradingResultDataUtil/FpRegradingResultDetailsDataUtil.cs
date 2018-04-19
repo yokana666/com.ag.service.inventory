@@ -3,6 +3,7 @@ using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil;
+using Com.Danliris.Service.Inventory.Test.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUti
 {
     public class FpRegradingResultDetailsDataUtil
     {
-        private readonly Helpers.HttpClientService client;
+        private readonly HttpClientTestService client;
 
-        public FpRegradingResultDetailsDataUtil(Helpers.HttpClientService client)
+        public FpRegradingResultDetailsDataUtil(HttpClientTestService client)
         {
             this.client = client;
         }

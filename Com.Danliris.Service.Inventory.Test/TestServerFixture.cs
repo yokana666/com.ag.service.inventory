@@ -1,7 +1,8 @@
 
-﻿using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
-
-﻿using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
+using Com.Danliris.Service.Inventory.Lib;
+using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
+using Com.Danliris.Service.Inventory.Test.DataUtils.FPReturnInvToPurchasingDataUtil;
+using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
 
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUtil;
@@ -9,6 +10,7 @@ using Com.Danliris.Service.Inventory.Test.Helpers;
 using Com.Danliris.Service.Inventory.WebApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -73,7 +75,11 @@ namespace Com.Danliris.Service.Inventory.Test
                         .AddTransient<StockTransferNoteDataUtil>()
                         .AddTransient<StockTransferNoteItemDataUtil>()
 
-                        .AddSingleton<HttpClientService>();
+                        .AddTransient<FPReturnInvToPurchasingDataUtil>()
+                        .AddTransient<FPReturnInvToPurchasingDetailDataUtil>()
+
+                        .AddSingleton<HttpClientTestService>()
+                        .AddDbContext<InventoryDbContext>(options => options.UseSqlServer(configuration["DefaultConnection"]), ServiceLifetime.Transient);
                 })
                 .UseStartup<Startup>();
 

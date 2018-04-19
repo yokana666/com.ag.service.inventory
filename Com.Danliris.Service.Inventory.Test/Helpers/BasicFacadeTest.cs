@@ -11,8 +11,8 @@ using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Helpers
 {
-    public class BasicFacadeTest<TFacade, TModel, TDataUtil>
-        where TDataUtil : BaseDataUtil<TModel>
+    public abstract class BasicFacadeTest<TFacade, TModel, TDataUtil>
+        where TDataUtil : BaseDataUtil<TModel, TFacade>
         where TModel : StandardEntity, IValidatableObject
     {
         private IServiceProvider serviceProvider { get; set; }
@@ -113,7 +113,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
         [SkippableFact]
         public async void Should_Success_Delete_Data()
         {
-            Skip.If(Keys.Count == 0 || !typeof(TFacade).GetInterfaces().Contains(typeof(IDeleteable)), "Not Deleteable");
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(IDeleteable)), "Not Deleteable");
 
             TModel Data = await DataUtil.GetTestData();
             int AffectedRows = await (this.Facade as IDeleteable).Delete(Data.Id);
@@ -124,7 +124,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
         [SkippableFact]
         public async void Should_Success_Get_Data()
         {
-            Skip.If(Keys.Count == 0 || !typeof(TFacade).GetInterfaces().Contains(typeof(IReadable)), "Not Readable");
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(IReadable)), "Not Readable");
 
             TModel Data = await DataUtil.GetTestData();
             var Response = (this.Facade as IReadable).Read();
@@ -135,7 +135,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
         [SkippableFact]
         public async void Should_Success_Get_Data_By_Id()
         {
-            Skip.If(Keys.Count == 0 || !typeof(TFacade).GetInterfaces().Contains(typeof(IReadByIdable<TModel>)), "Not Read By Id able");
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(IReadByIdable<TModel>)), "Not Read By Id able");
 
             TModel Data = await DataUtil.GetTestData();
 
