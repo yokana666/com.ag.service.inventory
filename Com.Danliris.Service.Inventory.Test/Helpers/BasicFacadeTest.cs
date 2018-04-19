@@ -135,7 +135,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
         [SkippableFact]
         public async void Should_Success_Get_Data_By_Id()
         {
-            Skip.If(Keys.Count == 0 || !typeof(TFacade).GetInterfaces().Contains(typeof(IReadByIdable<TModel)), "Not Read By Id able");
+            Skip.If(Keys.Count == 0 || !typeof(TFacade).GetInterfaces().Contains(typeof(IReadByIdable<TModel>)), "Not Read By Id able");
 
             TModel Data = await DataUtil.GetTestData();
 
