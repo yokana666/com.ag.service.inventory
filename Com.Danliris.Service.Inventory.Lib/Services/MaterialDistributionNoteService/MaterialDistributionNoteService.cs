@@ -177,7 +177,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
         public override async Task<MaterialDistributionNote> ReadModelById(int id)
         {
-            var Data =  await this.DbSet
+            var Data = await this.DbSet
                 .Where(d => d.Id.Equals(id) && d._IsDeleted.Equals(false))
                 .Include(d => d.MaterialDistributionNoteItems)
                     .ThenInclude(d => d.MaterialDistributionNoteDetails)
