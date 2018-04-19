@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Lib.Facades
 {
-    public class FPReturnInvToPurchasingFacade : ICreateable<FPReturnInvToPurchasing>, IReadable<ListFPReturnInvToPurchasingViewModel>, IReadByIdable<FPReturnInvToPurchasing>, IDeleteable
+    public class FPReturnInvToPurchasingFacade : ICreateable<FPReturnInvToPurchasing>, IReadable, IReadByIdable<FPReturnInvToPurchasing>, IDeleteable
     {
         private readonly FPReturnInvToPurchasingService fpReturnInvToPurchasingService;
         private readonly FPReturnInvToPurchasingDetailService fpReturnInvToPurchasingDetailService;
@@ -70,7 +70,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
             return Created;
         }
 
-        public Tuple<List<ListFPReturnInvToPurchasingViewModel>, int, Dictionary<string, string>> Read(int page = 1, int size = 25, string order = "{}", string keyword = null, string filter = "{}")
+        public Tuple<List<dynamic>, int, Dictionary<string, string>> Read(int page = 1, int size = 25, string order = "{}", string keyword = null, string filter = "{}")
         {
             #region Query
 
@@ -129,9 +129,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
 
             #endregion Paging
 
-            List<ListFPReturnInvToPurchasingViewModel> list = Data
+            dynamic list = Data
                     .GroupBy(d => new { d.Id, d.No, d.UnitName, d._CreatedUtc, d.SupplierName })
-                    .Select(s => new ListFPReturnInvToPurchasingViewModel
+                    .Select(s => new
                     {
                         Id = s.First().Id,
                         No = s.First().No,
