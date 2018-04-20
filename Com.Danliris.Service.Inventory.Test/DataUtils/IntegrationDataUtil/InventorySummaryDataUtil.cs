@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public class InventorySummaryDataUtil
     {
-        public static InventorySummaryViewModel GetInventorySummary(HttpClientService client)
+        public static InventorySummaryViewModel GetInventorySummary(HttpClientTestService client)
         {
             var response = client.GetAsync($"{APIEndpoint.Inventory}/inventory/inventory-summary?page=1&size=1").Result;
             response.EnsureSuccessStatusCode();

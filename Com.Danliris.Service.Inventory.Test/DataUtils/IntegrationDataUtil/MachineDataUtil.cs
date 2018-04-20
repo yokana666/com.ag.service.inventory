@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public static class MachineDataUtil
     {
-        public static MachineViewModel GetMachine(HttpClientService client)
+        public static MachineViewModel GetMachine(HttpClientTestService client)
         {
             var response = client.GetAsync($"{APIEndpoint.Core}/master/machines?page=1&size=1").Result;
             response.EnsureSuccessStatusCode();

@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public static class UnitDataUtil
     {
-        public static UnitViewModel GetFinishingUnit(HttpClientService client)
+        public static UnitViewModel GetFinishingUnit(HttpClientTestService client)
         {
             var response = client.GetAsync($"{APIEndpoint.Core}master/units").Result;
             response.EnsureSuccessStatusCode();

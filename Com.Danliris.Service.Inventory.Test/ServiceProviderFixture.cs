@@ -1,5 +1,6 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
+using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
@@ -8,13 +9,16 @@ using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteData
 
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUtil;
-using Com.Danliris.Service.Inventory.Test.Helpers;
+using TestHelpers = Com.Danliris.Service.Inventory.Test.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using Xunit;
+using Com.Danliris.Service.Inventory.Test.DataUtils.FPReturnInvToPurchasingDataUtil;
+using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
+using Com.Danliris.Service.Inventory.Lib.Facades;
 
 namespace Com.Danliris.Service.Inventory.Test
 {
@@ -72,24 +76,27 @@ namespace Com.Danliris.Service.Inventory.Test
                 .AddTransient<MaterialsRequestNote_ItemService>(provider => new MaterialsRequestNote_ItemService(provider))
                 .AddTransient<StockTransferNoteService>(provider => new StockTransferNoteService(provider))
                 .AddTransient<StockTransferNote_ItemService>(provider => new StockTransferNote_ItemService(provider))
+                .AddTransient<FPReturnInvToPurchasingService>(provider => new FPReturnInvToPurchasingService(provider))
+                .AddTransient<FPReturnInvToPurchasingDetailService>(provider => new FPReturnInvToPurchasingDetailService(provider))
+                .AddTransient<FPReturnInvToPurchasingFacade>()
                 .AddTransient<MaterialRequestNoteDataUtil>()
                 .AddTransient<MaterialRequestNoteItemDataUtil>()
-
-
                 .AddTransient<Lib.Services.FpRegradingResultDocsService>(provider => new Lib.Services.FpRegradingResultDocsService(provider))
                 .AddTransient<Lib.Services.FpRegradingResultDetailsDocsService>(provider => new Lib.Services.FpRegradingResultDetailsDocsService(provider))
                 .AddTransient<FpRegradingResultDataUtil>()
                 .AddTransient<FpRegradingResultDetailsDataUtil>()
-
-
                 .AddTransient<MaterialDistributionNoteDataUtil>()
                 .AddTransient<MaterialDistributionNoteItemDataUtil>()
                 .AddTransient<MaterialDistributionNoteDetailDataUtil>()
-
                 .AddTransient<StockTransferNoteDataUtil>()
                 .AddTransient<StockTransferNoteItemDataUtil>()
+                .AddTransient<FPReturnInvToPurchasingDataUtil>()
+                .AddTransient<FPReturnInvToPurchasingDetailDataUtil>()
 
+                .AddSingleton<TestHelpers.HttpClientTestService>(provider => new TestHelpers.HttpClientTestService(provider))
                 .AddSingleton<HttpClientService>()
+                .AddSingleton<IdentityService>()
+
                 .BuildServiceProvider();
 
             InventoryDbContext dbContext = ServiceProvider.GetService<InventoryDbContext>();

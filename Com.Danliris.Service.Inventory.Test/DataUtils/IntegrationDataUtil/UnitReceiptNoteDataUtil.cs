@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public static class UnitReceiptNoteDataUtil
     {
-        public static UnitReceiptNoteViewModel GetUnitReceiptNote(HttpClientService client)
+        public static UnitReceiptNoteViewModel GetUnitReceiptNote(HttpClientTestService client)
         {
             var response = client.GetAsync($"{APIEndpoint.Purchasing}/unit-receipt-notes-basic?page=1&size=1").Result;
             response.EnsureSuccessStatusCode();

@@ -8,7 +8,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingSer
 {
     public class FPReturnInvToPurchasingService : StandardEntityService<InventoryDbContext, FPReturnInvToPurchasing>
     {
-        public FPReturnInvToPurchasingService(IServiceProvider serviceProvider, IdentityService identityService) : base(serviceProvider)
+        public FPReturnInvToPurchasingService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

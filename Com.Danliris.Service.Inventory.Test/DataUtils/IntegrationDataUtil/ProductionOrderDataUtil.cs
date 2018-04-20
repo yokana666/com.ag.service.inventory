@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public static class ProductionOrderDataUtil
     {
-        public static ProductionOrderViewModel GetProductionOrder(HttpClientService client)
+        public static ProductionOrderViewModel GetProductionOrder(HttpClientTestService client)
         {
             var responseSPP = client.GetAsync($"{APIEndpoint.Production}sales/production-orders?page=1&size=1").Result;
             responseSPP.EnsureSuccessStatusCode();

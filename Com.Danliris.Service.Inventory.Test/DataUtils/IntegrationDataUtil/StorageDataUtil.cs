@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public class StorageDataUtil
     {
-        public static StorageViewModel GetPrintingGreigeStorage(HttpClientService client)
+        public static StorageViewModel GetPrintingGreigeStorage(HttpClientTestService client)
         {
             Dictionary<string, object> filter = new Dictionary<string, object> { { "name", "Gudang Greige Printing" } };
             var response = client.GetAsync($@"{APIEndpoint.Core}master/storages?filter=" + JsonConvert.SerializeObject(filter)).Result.Content.ReadAsStringAsync();

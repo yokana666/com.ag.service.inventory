@@ -14,9 +14,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUti
 {
     public class FpRegradingResultDataUtil : BasicDataUtil<InventoryDbContext, FpRegradingResultDocsService, FpRegradingResultDocs>, IEmptyData<FpRegradingResultDocsViewModel>
     {
-        private readonly Helpers.HttpClientService client;
+        private readonly HttpClientTestService client;
         private readonly FpRegradingResultDetailsDataUtil fpRegradingResultDetailsDataUtil;
-        public FpRegradingResultDataUtil(InventoryDbContext dbContext, FpRegradingResultDocsService service, Helpers.HttpClientService client, FpRegradingResultDetailsDataUtil fpRegradingResultDetailsDataUtil) : base(dbContext, service)
+        public FpRegradingResultDataUtil(InventoryDbContext dbContext, FpRegradingResultDocsService service, HttpClientTestService client, FpRegradingResultDetailsDataUtil fpRegradingResultDetailsDataUtil) : base(dbContext, service)
         {
             this.client = client;
             this.fpRegradingResultDetailsDataUtil = fpRegradingResultDetailsDataUtil;
@@ -79,7 +79,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUti
         public override async Task<FpRegradingResultDocs> GetTestData()
         {
             FpRegradingResultDocs Data = GetNewData();
-            this.Service.Token = Helpers.HttpClientService.Token;
+            this.Service.Token = HttpClientTestService.Token;
             await this.Service.CreateModel(Data);
             return Data;
         }

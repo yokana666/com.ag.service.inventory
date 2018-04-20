@@ -12,9 +12,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 {
     public class MaterialRequestNoteItemDataUtil
     {
-        private readonly HttpClientService client;
+        private readonly HttpClientTestService client;
 
-        public MaterialRequestNoteItemDataUtil(HttpClientService client)
+        public MaterialRequestNoteItemDataUtil(HttpClientTestService client)
         {
             this.client = client;
         }
