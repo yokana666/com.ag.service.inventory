@@ -22,7 +22,7 @@ before_script:
 script:
     - dotnet restore Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj
     - dotnet build Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj
-    - dotnet test Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj /p:CollectCoverage=true
+    - dotnet test Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
 after_success:
     - if [ "$TRAVIS_PULL_REQUEST" == false ]; then
