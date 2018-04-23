@@ -11,6 +11,7 @@ env:
 
 before_install:
     - bash Dockerfile.test.build.sh
+    
 install: true
 
 before_script:
@@ -20,9 +21,12 @@ before_script:
 script:
     - dotnet restore Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj
     - dotnet build Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj
-    - dotnet test Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj /p:CollectCoverage=true
+    - dotnet test Com.Danliris.Service.Inventory.Test/Com.Danliris.Service.Inventory.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
 after_success:
+    - curl -s https://codecov.io/bash > codecov
+    - chmod +x codecov
+    - ./codecov -f "/home/travis/build/danliris/com.danliris.service.inventory/Com.Danliris.Service.Inventory.Test/coverage.info"
     - if [ "$TRAVIS_PULL_REQUEST" == false ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
 
