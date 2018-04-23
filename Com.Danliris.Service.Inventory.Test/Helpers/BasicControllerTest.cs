@@ -55,58 +55,58 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
             get { return (TDataUtil)this.TestFixture.Service.GetService(typeof(TDataUtil)); }
         }
 
-        //[Fact]
-        //public async Task Should_Success_Get_All_Data()
-        //{
-        //    var response = await this.Client.GetAsync(URI);
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        [Fact]
+        public async Task Should_Success_Get_All_Data()
+        {
+            var response = await this.Client.GetAsync(URI);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        //    var json = response.Content.ReadAsStringAsync().Result;
-        //    Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+            var json = response.Content.ReadAsStringAsync().Result;
+            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
 
-        //    Assert.True(result.ContainsKey("apiVersion"));
-        //    Assert.True(result.ContainsKey("message"));
-        //    Assert.True(result.ContainsKey("data"));
-        //    Assert.True(result["data"].GetType().Name.Equals("JArray"));
-        //}
+            Assert.True(result.ContainsKey("apiVersion"));
+            Assert.True(result.ContainsKey("message"));
+            Assert.True(result.ContainsKey("data"));
+            Assert.True(result["data"].GetType().Name.Equals("JArray"));
+        }
 
-        //[Fact]
-        //public async Task Should_Success_Get_Data_By_Id()
-        //{
-        //    TModel Model = await DataUtil.GetTestData();
-        //    TViewModel ViewModel = Service.MapToViewModel(Model);
+        [Fact]
+        public async Task Should_Success_Get_Data_By_Id()
+        {
+            TModel Model = await DataUtil.GetTestData();
+            TViewModel ViewModel = Service.MapToViewModel(Model);
 
-        //    var response = await this.Client.GetAsync(string.Concat(URI, "/", ViewModel.Id));
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var response = await this.Client.GetAsync(string.Concat(URI, "/", ViewModel.Id));
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        //    var json = response.Content.ReadAsStringAsync().Result;
-        //    Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+            var json = response.Content.ReadAsStringAsync().Result;
+            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
 
-        //    Assert.True(result.ContainsKey("apiVersion"));
-        //    Assert.True(result.ContainsKey("message"));
-        //    Assert.True(result.ContainsKey("data"));
-        //    Assert.True(result["data"].GetType().Name.Equals("JObject"));
-        //}
+            Assert.True(result.ContainsKey("apiVersion"));
+            Assert.True(result.ContainsKey("message"));
+            Assert.True(result.ContainsKey("data"));
+            Assert.True(result["data"].GetType().Name.Equals("JObject"));
+        }
 
-        //[Fact]
-        //public async Task Should_Success_Create_Data()
-        //{
-        //    TViewModel ViewModel = Service.MapToViewModel(DataUtil.GetNewData());
+        [Fact]
+        public async Task Should_Success_Create_Data()
+        {
+            TViewModel ViewModel = Service.MapToViewModel(DataUtil.GetNewData());
 
-        //    var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(ViewModel).ToString(), Encoding.UTF8, MediaType));
-        //    Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(ViewModel).ToString(), Encoding.UTF8, MediaType));
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        //    var responseLocationHeader = await this.Client.GetAsync(response.Headers.Location.OriginalString);
-        //    Assert.Equal(HttpStatusCode.OK, responseLocationHeader.StatusCode);
+            var responseLocationHeader = await this.Client.GetAsync(response.Headers.Location.OriginalString);
+            Assert.Equal(HttpStatusCode.OK, responseLocationHeader.StatusCode);
 
-        //    var json = responseLocationHeader.Content.ReadAsStringAsync().Result;
-        //    Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+            var json = responseLocationHeader.Content.ReadAsStringAsync().Result;
+            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
 
-        //    Assert.True(result.ContainsKey("apiVersion"));
-        //    Assert.True(result.ContainsKey("message"));
-        //    Assert.True(result.ContainsKey("data"));
-        //    Assert.True(result["data"].GetType().Name.Equals("JObject"));
-        //}
+            Assert.True(result.ContainsKey("apiVersion"));
+            Assert.True(result.ContainsKey("message"));
+            Assert.True(result.ContainsKey("data"));
+            Assert.True(result["data"].GetType().Name.Equals("JObject"));
+        }
 
         [Fact]
         public async Task Should_Success_Update_Data()
