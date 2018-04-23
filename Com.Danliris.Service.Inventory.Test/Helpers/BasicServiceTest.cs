@@ -47,100 +47,100 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
             get { return (TDbContext)this.serviceProvider.GetService(typeof(TDbContext)); }
         }
 
-        //[Fact]
-        //public async void Should_Success_Create_Data()
-        //{
-        //    TModel Data = DataUtil.GetNewData();
-        //    int AffectedRows = await this.Service.CreateModel(Data);
+        [Fact]
+        public async void Should_Success_Create_Data()
+        {
+            TModel Data = DataUtil.GetNewData();
+            int AffectedRows = await this.Service.CreateModel(Data);
 
-        //    Assert.True(AffectedRows > 0);
-        //}
+            Assert.True(AffectedRows > 0);
+        }
 
-        //[Fact]
-        //public async void Should_Success_Update_Data()
-        //{
-        //    TModel Data = await DataUtil.GetTestData();
-        //    int AffectedRows = await this.Service.UpdateModel(Data.Id, Data);
+        [Fact]
+        public async void Should_Success_Update_Data()
+        {
+            TModel Data = await DataUtil.GetTestData();
+            int AffectedRows = await this.Service.UpdateModel(Data.Id, Data);
 
-        //    Assert.True(AffectedRows > 0);
-        //}
+            Assert.True(AffectedRows > 0);
+        }
 
-        //[SkippableFact]
-        //public async void Should_Error_Create_Data_With_Same_Keys()
-        //{
-        //    Skip.If(Keys.Count == 0, "No Keys");
+        [SkippableFact]
+        public async void Should_Error_Create_Data_With_Same_Keys()
+        {
+            Skip.If(Keys.Count == 0, "No Keys");
 
-        //    try
-        //    {
-        //        TModel Data = await DataUtil.GetTestData();
-        //        Data.Id = 0;
+            try
+            {
+                TModel Data = await DataUtil.GetTestData();
+                Data.Id = 0;
 
-        //        await this.Service.CreateModel(Data);
-        //    }
-        //    catch (ServiceValidationExeption ex)
-        //    {
-        //        foreach (string Key in Keys)
-        //        {
-        //            ValidationResult result = ex.ValidationResults.FirstOrDefault(r => r.MemberNames.Contains(Key, StringComparer.CurrentCultureIgnoreCase));
-        //            Assert.NotNull(result);
-        //        }
-        //    }
-        //}
+                await this.Service.CreateModel(Data);
+            }
+            catch (ServiceValidationExeption ex)
+            {
+                foreach (string Key in Keys)
+                {
+                    ValidationResult result = ex.ValidationResults.FirstOrDefault(r => r.MemberNames.Contains(Key, StringComparer.CurrentCultureIgnoreCase));
+                    Assert.NotNull(result);
+                }
+            }
+        }
 
-        //[SkippableFact]
-        //public async void Should_Error_Update_Data_With_Same_Keys()
-        //{
-        //    Skip.If(Keys.Count == 0, "No Keys");
+        [SkippableFact]
+        public async void Should_Error_Update_Data_With_Same_Keys()
+        {
+            Skip.If(Keys.Count == 0, "No Keys");
 
-        //    try
-        //    {
-        //        TModel Data = await DataUtil.GetTestData();
-        //        TModel UpdateData = await DataUtil.GetTestData();
+            try
+            {
+                TModel Data = await DataUtil.GetTestData();
+                TModel UpdateData = await DataUtil.GetTestData();
 
-        //        foreach (string Key in this.Keys)
-        //        {
-        //            string Value = (string)Data.GetType().GetProperty(Key).GetValue(Data, null);
-        //            UpdateData.GetType().GetProperty(Key).SetValue(UpdateData, Value);
-        //        }
+                foreach (string Key in this.Keys)
+                {
+                    string Value = (string)Data.GetType().GetProperty(Key).GetValue(Data, null);
+                    UpdateData.GetType().GetProperty(Key).SetValue(UpdateData, Value);
+                }
 
-        //        await this.Service.UpdateModel(UpdateData.Id, UpdateData);
-        //    }
-        //    catch (ServiceValidationExeption ex)
-        //    {
-        //        foreach (string Key in Keys)
-        //        {
-        //            ValidationResult result = ex.ValidationResults.FirstOrDefault(r => r.MemberNames.Contains(Key, StringComparer.CurrentCultureIgnoreCase));
-        //            Assert.NotNull(result);
-        //        }
-        //    }
-        //}
+                await this.Service.UpdateModel(UpdateData.Id, UpdateData);
+            }
+            catch (ServiceValidationExeption ex)
+            {
+                foreach (string Key in Keys)
+                {
+                    ValidationResult result = ex.ValidationResults.FirstOrDefault(r => r.MemberNames.Contains(Key, StringComparer.CurrentCultureIgnoreCase));
+                    Assert.NotNull(result);
+                }
+            }
+        }
 
-        //[Fact]
-        //public async void Should_Success_Delete_Data()
-        //{
-        //    TModel Data = await DataUtil.GetTestData();
-        //    int AffectedRows = await this.Service.DeleteModel(Data.Id);
+        [Fact]
+        public async void Should_Success_Delete_Data()
+        {
+            TModel Data = await DataUtil.GetTestData();
+            int AffectedRows = await this.Service.DeleteModel(Data.Id);
 
-        //    Assert.True(AffectedRows > 0);
-        //}
+            Assert.True(AffectedRows > 0);
+        }
 
-        //[Fact]
-        //public async void Should_Success_Get_Data()
-        //{
-        //    TModel Data = await DataUtil.GetTestData();
-        //    var Response = this.Service.ReadModel();
+        [Fact]
+        public async void Should_Success_Get_Data()
+        {
+            TModel Data = await DataUtil.GetTestData();
+            var Response = this.Service.ReadModel();
 
-        //    Assert.NotEqual(Response.Item1.Count, 0);
-        //}
+            Assert.NotEqual(Response.Item1.Count, 0);
+        }
 
-        //[Fact]
-        //public async void Should_Success_Get_Data_By_Id()
-        //{
-        //    TModel Data = await DataUtil.GetTestData();
+        [Fact]
+        public async void Should_Success_Get_Data_By_Id()
+        {
+            TModel Data = await DataUtil.GetTestData();
 
-        //    var Response = await this.Service.ReadModelById(Data.Id);
+            var Response = await this.Service.ReadModelById(Data.Id);
 
-        //    Assert.True(!Response.Equals(null));
-        //}
+            Assert.True(!Response.Equals(null));
+        }
     }
 }
