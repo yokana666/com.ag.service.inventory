@@ -55,20 +55,20 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
             get { return (TDataUtil)this.TestFixture.Service.GetService(typeof(TDataUtil)); }
         }
 
-        [Fact]
-        public async Task Should_Success_Get_All_Data()
-        {
-            var response = await this.Client.GetAsync(URI);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        //[Fact]
+        //public async Task Should_Success_Get_All_Data()
+        //{
+        //    var response = await this.Client.GetAsync(URI);
+        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var json = response.Content.ReadAsStringAsync().Result;
-            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+        //    var json = response.Content.ReadAsStringAsync().Result;
+        //    Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
 
-            Assert.True(result.ContainsKey("apiVersion"));
-            Assert.True(result.ContainsKey("message"));
-            Assert.True(result.ContainsKey("data"));
-            Assert.True(result["data"].GetType().Name.Equals("JArray"));
-        }
+        //    Assert.True(result.ContainsKey("apiVersion"));
+        //    Assert.True(result.ContainsKey("message"));
+        //    Assert.True(result.ContainsKey("data"));
+        //    Assert.True(result["data"].GetType().Name.Equals("JArray"));
+        //}
 
         [Fact]
         public async Task Should_Success_Get_Data_By_Id()
