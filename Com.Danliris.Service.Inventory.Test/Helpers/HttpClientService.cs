@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Com.Danliris.Service.Inventory.Lib.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -6,11 +7,11 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Test.Helpers
 {
-    public class HttpClientService : HttpClient
+    public class HttpClientTestService : HttpClient
     {
         public static string Token;
 
-        public HttpClientService()
+        public HttpClientTestService(IServiceProvider serviceProvider)
         {
             var User = new { username = "dev2", password = "Standar123" };
 
@@ -23,6 +24,10 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
             Token = token;
 
             this.SetBearerToken(token);
+
+            IdentityService identityService = (IdentityService) serviceProvider.GetService(typeof(IdentityService));
+            identityService.Token = Token;
+            identityService.Username = "Unit Test";
         }
     }
 }

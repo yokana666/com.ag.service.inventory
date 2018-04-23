@@ -9,5 +9,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Helpers
         public static string Core { get; set; }
         public static string Inventory { get; set; }
         public static string Production { get; set; }
+        public static string Purchasing { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
 {
     public class MaterialsRequestNoteViewModel : BasicViewModel, IValidatableObject
     {
+        public int AutoIncrementNumber { get; set; }
         public string Code { get; set; }
         public UnitViewModel Unit { get; set; }
         public string RequestType { get; set; }

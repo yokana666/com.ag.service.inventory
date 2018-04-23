@@ -9,20 +9,20 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
-    public static class UnitDataUtil
+    public class InventorySummaryDataUtil
     {
-        public static UnitViewModel GetFinishingUnit(HttpClientTestService client)
+        public static InventorySummaryViewModel GetInventorySummary(HttpClientTestService client)
         {
-            var response = client.GetAsync($"{APIEndpoint.Core}master/units").Result;
+            var response = client.GetAsync($"{APIEndpoint.Inventory}/inventory/inventory-summary?page=1&size=1").Result;
             response.EnsureSuccessStatusCode();
 
             var data = response.Content.ReadAsStringAsync();
             Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.Result.ToString());
 
-            List<UnitViewModel> list = JsonConvert.DeserializeObject<List<UnitViewModel>>(result["data"].ToString());
-            UnitViewModel fp = list.First(p => p.name.Equals("FINISHING"));
+            List<InventorySummaryViewModel> list = JsonConvert.DeserializeObject<List<InventorySummaryViewModel>>(result["data"].ToString());
+            InventorySummaryViewModel inventorySummary = list.First();
 
-            return fp;
+            return inventorySummary;
         }
     }
 }

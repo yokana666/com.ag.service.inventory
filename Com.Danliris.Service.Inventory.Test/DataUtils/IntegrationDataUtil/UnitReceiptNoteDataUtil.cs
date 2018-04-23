@@ -9,20 +9,23 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
-    public static class UnitDataUtil
+    public static class UnitReceiptNoteDataUtil
     {
-        public static UnitViewModel GetFinishingUnit(HttpClientTestService client)
+        public static UnitReceiptNoteViewModel GetUnitReceiptNote(HttpClientTestService client)
         {
-            var response = client.GetAsync($"{APIEndpoint.Core}master/units").Result;
+            var response = client.GetAsync($"{APIEndpoint.Purchasing}/unit-receipt-notes-basic?page=1&size=1").Result;
             response.EnsureSuccessStatusCode();
 
             var data = response.Content.ReadAsStringAsync();
             Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.Result.ToString());
 
-            List<UnitViewModel> list = JsonConvert.DeserializeObject<List<UnitViewModel>>(result["data"].ToString());
-            UnitViewModel fp = list.First(p => p.name.Equals("FINISHING"));
+            List<UnitReceiptNoteViewModel> list = JsonConvert.DeserializeObject<List<UnitReceiptNoteViewModel>>(result["data"].ToString());
+            //List<UnitReceiptNoteViewModel.Item> item =  
+            UnitReceiptNoteViewModel UnitReceiptNote = list.First();
 
-            return fp;
+            return UnitReceiptNote;
         }
     }
+
+
 }

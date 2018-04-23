@@ -1,28 +1,32 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
+﻿using Com.Danliris.Service.Inventory.Lib.Interfaces;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib.Service;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Helpers
 {
-    public abstract class BasicServiceTest<TDbContext, TService, TModel, TDataUtil>
-        where TDbContext : DbContext
-        where TService : BasicService<TDbContext, TModel>
-        where TModel : StandardEntity, IValidatableObject, new()
-        where TDataUtil : BasicDataUtil<TDbContext, TService, TModel>
+    public abstract class BasicFacadeTest<TFacade, TModel, TDataUtil>
+        where TDataUtil : BaseDataUtil<TModel, TFacade>
+        where TModel : StandardEntity, IValidatableObject
     {
         private IServiceProvider serviceProvider { get; set; }
         private readonly List<string> Keys;
 
-        public BasicServiceTest(ServiceProviderFixture fixture, List<string> keys)
+        public BasicFacadeTest(ServiceProviderFixture fixture, List<string> keys)
         {
             serviceProvider = fixture.ServiceProvider;
             Keys = keys;
+        }
+
+        protected TFacade Facade
+        {
+            get { return (TFacade)this.serviceProvider.GetService(typeof(TFacade)); }
         }
 
         protected TDataUtil DataUtil
@@ -30,52 +34,41 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
             get { return (TDataUtil)this.serviceProvider.GetService(typeof(TDataUtil)); }
         }
 
-        protected TService Service
-        {
-            get
-            {
-                TService service = (TService)this.serviceProvider.GetService(typeof(TService));
-                service.Username = "Unit Test";
-                service.Token = HttpClientTestService.Token;
-
-                return service;
-            }
-        }
-
-        protected TDbContext DbContext
-        {
-            get { return (TDbContext)this.serviceProvider.GetService(typeof(TDbContext)); }
-        }
-
-        [Fact]
+        [SkippableFact]
         public async void Should_Success_Create_Data()
         {
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(ICreateable<TModel>)), "Not Createable");
+
             TModel Data = DataUtil.GetNewData();
-            int AffectedRows = await this.Service.CreateModel(Data);
+            int AffectedRows = await (this.Facade as ICreateable<TModel>).Create(Data);
 
             Assert.True(AffectedRows > 0);
         }
 
-        [Fact]
+        /*
+        [SkippableFact]
         public async void Should_Success_Update_Data()
         {
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(IUpdateable<TModel>)), "Not Updateable");
+
             TModel Data = await DataUtil.GetTestData();
-            int AffectedRows = await this.Service.UpdateModel(Data.Id, Data);
+            int AffectedRows = await (this.Facade as IUpdateable<TModel>).UpdateModel(Data.Id, Data);
 
             Assert.True(AffectedRows > 0);
         }
+        */
 
         [SkippableFact]
         public async void Should_Error_Create_Data_With_Same_Keys()
         {
-            Skip.If(Keys.Count == 0, "No Keys");
+            Skip.If(Keys.Count == 0 || !typeof(TFacade).GetInterfaces().Contains(typeof(ICreateable<TModel>)), "No Keys or Not Createable");
 
             try
             {
                 TModel Data = await DataUtil.GetTestData();
                 Data.Id = 0;
 
-                await this.Service.CreateModel(Data);
+                await (this.Facade as ICreateable<TModel>).Create(Data);
             }
             catch (ServiceValidationExeption ex)
             {
@@ -87,10 +80,11 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
             }
         }
 
+        /*
         [SkippableFact]
         public async void Should_Error_Update_Data_With_Same_Keys()
         {
-            Skip.If(Keys.Count == 0, "No Keys");
+            Skip.If(Keys.Count == 0 || !typeof(TFacade).GetInterfaces().Contains(typeof(IUpdateable<TModel>)), "No Keys or Not Updateable");
 
             try
             {
@@ -103,7 +97,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
                     UpdateData.GetType().GetProperty(Key).SetValue(UpdateData, Value);
                 }
 
-                await this.Service.UpdateModel(UpdateData.Id, UpdateData);
+                await (this.Facade as IUpdateable).Update(UpdateData.Id, UpdateData);
             }
             catch (ServiceValidationExeption ex)
             {
@@ -114,31 +108,38 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
                 }
             }
         }
+        */
 
-        [Fact]
+        [SkippableFact]
         public async void Should_Success_Delete_Data()
         {
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(IDeleteable)), "Not Deleteable");
+
             TModel Data = await DataUtil.GetTestData();
-            int AffectedRows = await this.Service.DeleteModel(Data.Id);
+            int AffectedRows = await (this.Facade as IDeleteable).Delete(Data.Id);
 
             Assert.True(AffectedRows > 0);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void Should_Success_Get_Data()
         {
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(IReadable)), "Not Readable");
+
             TModel Data = await DataUtil.GetTestData();
-            var Response = this.Service.ReadModel();
+            var Response = (this.Facade as IReadable).Read();
 
             Assert.NotEqual(Response.Item1.Count, 0);
         }
 
-        [Fact]
+        [SkippableFact]
         public async void Should_Success_Get_Data_By_Id()
         {
+            Skip.If(!typeof(TFacade).GetInterfaces().Contains(typeof(IReadByIdable<TModel>)), "Not Read By Id able");
+
             TModel Data = await DataUtil.GetTestData();
 
-            var Response = await this.Service.ReadModelById(Data.Id);
+            var Response = await (this.Facade as IReadByIdable<TModel>).ReadById(Data.Id);
 
             Assert.True(!Response.Equals(null));
         }
