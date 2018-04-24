@@ -19,10 +19,10 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
 {
     public class MaterialRequestNoteDataUtil : BasicDataUtil<InventoryDbContext, MaterialsRequestNoteService, MaterialsRequestNote>, IEmptyData<MaterialsRequestNoteViewModel>
     {
-        private readonly HttpClientService client;
+        private readonly HttpClientTestService client;
         private readonly MaterialRequestNoteItemDataUtil materialRequestNoteItemDataUtil;
 
-        public MaterialRequestNoteDataUtil(InventoryDbContext dbContext, MaterialsRequestNoteService service, HttpClientService client, MaterialRequestNoteItemDataUtil materialRequestNoteItemDataUtil) : base(dbContext, service)
+        public MaterialRequestNoteDataUtil(InventoryDbContext dbContext, MaterialsRequestNoteService service, HttpClientTestService client, MaterialRequestNoteItemDataUtil materialRequestNoteItemDataUtil) : base(dbContext, service)
         {
             this.client = client;
             this.materialRequestNoteItemDataUtil = materialRequestNoteItemDataUtil;
@@ -63,7 +63,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataU
         public override async Task<MaterialsRequestNote> GetTestData()
         {
             MaterialsRequestNote Data = GetNewData();
-            this.Service.Token = HttpClientService.Token;
+            this.Service.Token = HttpClientTestService.Token;
             await this.Service.CreateModel(Data);
             return Data;
         }

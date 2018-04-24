@@ -80,8 +80,6 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
 
             #endregion
 
-
-
             //Creating new table.
             #region CreateTable
             PdfPTable table = IsTestOrPurchasing ? new PdfPTable(5) : new PdfPTable(6);
@@ -137,6 +135,9 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
 
             //Add all items.
             int index = 1;
+            int TotalRows = viewModel.MaterialsRequestNote_Items.Count;
+            int rowsPerPage = 8;
+
             foreach (var item in viewModel.MaterialsRequestNote_Items)
             {
                 if (IsTestOrPurchasing)
@@ -176,6 +177,27 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
                     leftCell.Phrase = string.IsNullOrWhiteSpace(item.Remark) ? new Phrase("-", small_font) : new Phrase(item.Remark.Trim(), small_font);
                     table.AddCell(leftCell);
                 }
+
+                if (index % rowsPerPage == 0)
+                {
+                    if (index == rowsPerPage)
+                    {
+                        table.WriteSelectedRows(0, -1, 20, 385, cb);
+                    }
+                    else
+                    {
+                        table.WriteSelectedRows(0, -1, 15, 550, cb);
+                    }
+
+                    for (var i = 0; i < rowsPerPage; i++)
+                    {
+                        table.DeleteLastRow();
+                    }
+
+                    if (index != TotalRows)
+                        document.NewPage();
+                }
+
                 index++;
             }
 
@@ -191,7 +213,16 @@ namespace Com.Danliris.Service.Inventory.Lib.PDFTemplates
             table.AddCell(footerCell);
             //Save tables.
 
-            table.WriteSelectedRows(0, -1, 20, 385, cb);
+            index--;
+            if (index % rowsPerPage != 0)
+            {
+                if (index < rowsPerPage)
+                    table.WriteSelectedRows(0, -1, 20, 385, cb);
+                else
+                    table.WriteSelectedRows(0, -1, 15, 550, cb);
+            }
+
+            //table.WriteSelectedRows(0, -1, 20, 385, cb);
             #endregion
 
             //Set footer

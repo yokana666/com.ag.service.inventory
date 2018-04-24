@@ -11,7 +11,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil
 {
     public class SupplierDataUtil
     {
-        public static SupplierViewModel GetSupplier(HttpClientService client)
+        public static SupplierViewModel GetSupplier(HttpClientTestService client)
         {
             var response = client.GetAsync($"{APIEndpoint.Core}/master/suppliers?page=1&size=1").Result;
             response.EnsureSuccessStatusCode();

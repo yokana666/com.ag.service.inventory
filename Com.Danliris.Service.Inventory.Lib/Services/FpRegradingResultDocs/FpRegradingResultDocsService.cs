@@ -134,7 +134,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
 
             List<string> SelectedFields = new List<string>()
                 {
-                    "Id", "Code","_CreatedUtc", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator"
+                    "Id", "Code","_CreatedUtc", "Bon", "Supplier", "Product", "Details", "Machine", "Remark", "Operator", "IsReturnedToPurchasing"
                 };
             Query = Query
                 .Select(o => new FpRegradingResultDocs
@@ -158,6 +158,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                     Shift = o.Shift,
                     _CreatedUtc = o._CreatedUtc,
                     _LastModifiedUtc=o._LastModifiedUtc,
+                    IsReturnedToPurchasing=o.IsReturnedToPurchasing,
                     Details = o.Details.Select(p => new FpRegradingResultDocsDetails { FpReturProInvDocsId = p.FpReturProInvDocsId, ProductName = p.ProductName, ProductCode = p.ProductCode, ProductId = p.ProductId, Id = o.Id, Length = p.Length, Remark = p.Remark, Code = p.Code, Grade = p.Grade, Retur = p.Retur }).Where(i => i.FpReturProInvDocsId.Equals(o.Id)).ToList()
                 });
 
@@ -302,6 +303,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 }
                 catch (Exception e)
                 {
+                    throw new Exception(e.Message);
                     transaction.Rollback();
                 }
             }

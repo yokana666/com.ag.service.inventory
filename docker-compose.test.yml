@@ -52,6 +52,20 @@ services:
       - "5003:5003"
     depends_on:
       - mongodb
+
+  dl.purchasing.webapi:
+    image: efrataretailindo/dl-purchasing-webapi:latest
+    environment:
+      - POWERBI_ACCESS_KEY=DLDEVELOPMENT
+      - DB_CONNECTIONSTRING=mongodb://mongodb:27017
+      - AUTH_SECRET=DANLIRISTESTENVIRONMENT
+      - PORT=5004
+      - IP=0.0.0.0
+    ports:
+      - "5004:5004"
+    depends_on:
+      - mongodb
+
   mongodb:
     image: mongo:latest
     ports:
