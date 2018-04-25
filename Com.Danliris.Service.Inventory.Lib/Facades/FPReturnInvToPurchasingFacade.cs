@@ -194,7 +194,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
                         Id = s.First().Id,
                         No = s.First().No,
                         UnitName = s.First().UnitName,
-                        TotalQuantity = s.Sum(d => d.FPReturnInvToPurchasingDetails.Sum(p => p.Quantity),
+                        TotalQuantity = s.Sum(d => d.FPReturnInvToPurchasingDetails.Sum(p => p.Quantity)),
                         TotalLength = s.Sum(d => d.FPReturnInvToPurchasingDetails.Sum(p => p.Length)),
                         SupplierName = s.First().SupplierName,
                         _CreatedUtc = s.First()._CreatedUtc
