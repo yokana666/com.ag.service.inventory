@@ -287,7 +287,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
         public async Task<MaterialDistributionNote> CustomCodeGenerator(MaterialDistributionNote Model)
         {
             var Type = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "PR" : "FS";
-            var lastData = await this.DbSet.Where(w => string.Equals(w.UnitName, Model.UnitName)).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
+            var lastData = await this.DbSet.Where(w => w.UnitName == Model.UnitName).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
 
             DateTime Now = DateTime.Now;
             string Year = Now.ToString("yy");

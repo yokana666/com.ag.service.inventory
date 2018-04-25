@@ -71,7 +71,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
         public async Task<MaterialsRequestNote> CustomCodeGenerator(MaterialsRequestNote Model)
         {
             Model.Type = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "P" : "F";
-            var lastData = await this.DbSet.Where(w => string.Equals(w.UnitName, Model.UnitName)).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
+            var lastData = await this.DbSet.Where(w => w.UnitName == Model.UnitName).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
 
             DateTime Now = DateTime.Now;
             string Year = Now.ToString("yy");

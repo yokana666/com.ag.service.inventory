@@ -255,7 +255,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
         public async Task<FpRegradingResultDocs> CustomCodeGenerator(FpRegradingResultDocs Model)
         {
             var unit = string.Equals(Model.UnitName.ToUpper(), "PRINTING") ? "PR" : "FS";
-            var lastData = await this.DbSet.Where(w => string.Equals(w.UnitName, Model.UnitName)).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
+            var lastData = await this.DbSet.Where(w => w.UnitName == Model.UnitName).OrderByDescending(o => o._CreatedUtc).FirstOrDefaultAsync();
 
             DateTime Now = DateTime.Now;
             string Year = Now.ToString("yy");
@@ -305,8 +305,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message);
                     transaction.Rollback();
+                    throw new Exception(e.Message);
                 }
             }
             return Created;
@@ -431,9 +431,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services
             return Tuple.Create(Data, TotalData, OrderDictionary, SelectedFields);
         }
 
-        public void UpdateIsReturnedToPurchasing(int fPRegradingResultDocsId)
+        public void UpdateIsReturnedToPurchasing(int fPRegradingResultDocsId, bool flag)
         {
-            FpRegradingResultDocs model = new FpRegradingResultDocs { Id = fPRegradingResultDocsId, IsReturnedToPurchasing = true };
+            FpRegradingResultDocs model = new FpRegradingResultDocs { Id = fPRegradingResultDocsId, IsReturnedToPurchasing = flag };
  
             DbContext.fpRegradingResultDocs.Attach(model);
             DbContext.Entry(model).Property(x => x.IsReturnedToPurchasing).IsModified = true;
