@@ -141,7 +141,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
                     SupplierName = s.SupplierName,
                     _CreatedUtc = s._CreatedUtc,
                     _LastModifiedUtc = s._LastModifiedUtc,
-                    FPReturnInvToPurchasingDetails = s.FPReturnInvToPurchasingDetails.Select(p => new FPReturnInvToPurchasingDetail { FPReturnInvToPurchasingId = p.FPReturnInvToPurchasingId, Length = p.Length }).Where(i => i.FPReturnInvToPurchasingId.Equals(s.Id)).ToList()
+                    FPReturnInvToPurchasingDetails = s.FPReturnInvToPurchasingDetails.Select(p => new FPReturnInvToPurchasingDetail { FPReturnInvToPurchasingId = p.FPReturnInvToPurchasingId, Quantity = p.Quantity, Length = p.Length, NecessaryLength = p.NecessaryLength }).Where(i => i.FPReturnInvToPurchasingId.Equals(s.Id)).ToList()
                 });
 
             #endregion Query
@@ -194,8 +194,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
                         Id = s.First().Id,
                         No = s.First().No,
                         UnitName = s.First().UnitName,
-                        TotalQuantity = s.Sum(d => d.FPReturnInvToPurchasingDetails.Count()),
+                        TotalQuantity = s.Sum(d => d.FPReturnInvToPurchasingDetails.Sum(p => p.Quantity)),
                         TotalLength = s.Sum(d => d.FPReturnInvToPurchasingDetails.Sum(p => p.Length)),
+                        TotalNecessaryLength = s.Sum(d => d.FPReturnInvToPurchasingDetails.Sum(p => p.NecessaryLength)),
                         SupplierName = s.First().SupplierName,
                         _CreatedUtc = s.First()._CreatedUtc
                     }).ToList()
