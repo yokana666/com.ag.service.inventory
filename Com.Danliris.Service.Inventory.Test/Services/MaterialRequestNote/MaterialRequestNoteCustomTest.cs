@@ -10,7 +10,8 @@ using model = Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteMode
 
 namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
 {
-    class MaterialRequestNoteCustomTest
+    [Collection("ServiceProviderFixture Collection")]
+    public class MaterialRequestNoteCustomTest
     {
         private readonly MaterialRequestNoteDataUtil dataUtil;
         private readonly MaterialsRequestNoteService service;
@@ -33,9 +34,9 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
                 }
             }
 
-            var result = this.service.UpdateIsCompleted(Data.Id, Data);
-
             int AffectedRows = await this.service.UpdateModel(Data.Id, Data);
+
+            this.service.UpdateIsCompleted(Data.Id, Data);
 
             Assert.True(AffectedRows > 0);
         }
