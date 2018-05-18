@@ -1,6 +1,7 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
+using Com.Danliris.Service.Inventory.Test.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,18 +14,43 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
     [Collection("ServiceProviderFixture Collection")]
     public class MaterialRequestNoteCustomTest
     {
-        private readonly MaterialRequestNoteDataUtil dataUtil;
-        private readonly MaterialsRequestNoteService service;
-        public MaterialRequestNoteCustomTest(MaterialRequestNoteDataUtil dataUtil, MaterialsRequestNoteService materialsRequestNoteService)
+        //private readonly MaterialRequestNoteDataUtil dataUtil;
+        //private readonly MaterialsRequestNoteService service;
+
+        private IServiceProvider serviceProvider { get; set; }
+        private readonly List<string> Keys;
+        public MaterialRequestNoteCustomTest(ServiceProviderFixture fixture, List<string> keys)
         {
-            this.dataUtil = dataUtil;
-            this.service = materialsRequestNoteService;
+            serviceProvider = fixture.ServiceProvider;
+            Keys = keys;
+        }
+
+        protected MaterialRequestNoteDataUtil DataUtil
+        {
+            get { return (MaterialRequestNoteDataUtil)this.serviceProvider.GetService(typeof(MaterialRequestNoteDataUtil)); }
+        }
+
+        protected MaterialsRequestNoteService Service
+        {
+            get
+            {
+                MaterialsRequestNoteService service = (MaterialsRequestNoteService)this.serviceProvider.GetService(typeof(MaterialsRequestNoteService));
+                service.Username = "Unit Test";
+                service.Token = HttpClientTestService.Token;
+
+                return service;
+            }
+        }
+
+        protected MaterialsRequestNoteService DbContext
+        {
+            get { return (MaterialsRequestNoteService)this.serviceProvider.GetService(typeof(MaterialsRequestNoteService)); }
         }
 
         [Fact]
         public async void Should_Success_Update_Data()
         {
-            model.MaterialsRequestNote Data = await this.dataUtil.GetTestDataCustom();
+            model.MaterialsRequestNote Data = await DataUtil.GetTestData();
 
             foreach (MaterialsRequestNote_Item item in Data.MaterialsRequestNote_Items)
             {
@@ -34,11 +60,12 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
                 }
             }
 
-            int AffectedRows = await this.service.UpdateModel(Data.Id, Data);
+            int AffectedRows = await this.Service.UpdateModel(Data.Id, Data);
 
-            this.service.UpdateIsCompleted(Data.Id, Data);
+            this.Service.UpdateIsCompleted(Data.Id, Data);
 
             Assert.True(AffectedRows > 0);
+
         }
 
     }
