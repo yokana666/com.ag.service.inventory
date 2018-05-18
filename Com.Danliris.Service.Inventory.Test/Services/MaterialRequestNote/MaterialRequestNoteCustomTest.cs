@@ -18,11 +18,11 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
         //private readonly MaterialsRequestNoteService service;
 
         private IServiceProvider serviceProvider { get; set; }
-        private readonly List<string> Keys;
-        public MaterialRequestNoteCustomTest(ServiceProviderFixture fixture, List<string> keys)
+        //private readonly List<string> Keys;
+        public MaterialRequestNoteCustomTest(ServiceProviderFixture fixture)
         {
             serviceProvider = fixture.ServiceProvider;
-            Keys = keys;
+            //Keys = keys;
         }
 
         protected MaterialRequestNoteDataUtil DataUtil
