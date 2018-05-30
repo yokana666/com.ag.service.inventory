@@ -641,9 +641,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                 Length = s.Sum(d => d.Length)
             }).ToList();
 
-            InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel();
+            
             foreach (MaterialsRequestNote_Item item in list)
             {
+                InventoryDocumentItemViewModel inventoryDocumentItem = new InventoryDocumentItemViewModel();
                 inventoryDocumentItem.productId = item.ProductId;
                 inventoryDocumentItem.productCode = item.ProductCode;
                 inventoryDocumentItem.productName = item.ProductName;
