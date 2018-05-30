@@ -20,12 +20,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
             this.fpRegradingResultDocsService = fpRegradingResultDocsService;
         }
 
-        public Tuple<List<FpRegradingResultDocsReportViewModel>, int> GetReport(string unitName, string code, string productName, bool? isReturn, bool? isReturnedToPurchasing, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
+        public Tuple<List<FpRegradingResultDocsReportViewModel>, int> GetReport(string unitName, string code, string productName, bool? isReturn, bool? isReturnedToPurchasing, DateTimeOffset? dateFrom, DateTimeOffset? dateTo, int page, int size, string Order)
         {
             IQueryable<FpRegradingResultDocs> Query = this.fpRegradingResultDocsService.DbSet;
 
-            DateTime dateFromFilter = (dateFrom == null ? new DateTime(1970, 1, 1) : dateFrom.Value.Date);
-            DateTime dateToFilter = (dateTo == null ? DateTime.UtcNow.AddHours(offset).Date : dateTo.Value.Date);
+            DateTimeOffset dateFromFilter = (dateFrom == null ? new DateTime(1970, 1, 1) : dateFrom.Value.Date);
+            DateTimeOffset dateToFilter = (dateTo == null ? DateTimeOffset.UtcNow.Date : dateTo.Value.Date);
 
             Query = Query
                 .Where(p => p._IsDeleted == false &&
@@ -34,8 +34,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
                     p.ProductName == (string.IsNullOrWhiteSpace(productName) ? p.ProductName : productName) &&
                     p.IsReturn == (isReturn == null ? p.IsReturn : isReturn) &&
                     p.IsReturnedToPurchasing == (isReturnedToPurchasing == null ? p.IsReturnedToPurchasing : isReturnedToPurchasing) &&
-                    p._CreatedUtc.AddHours(offset).Date >= dateFromFilter &&
-                    p._CreatedUtc.AddHours(offset).Date <= dateToFilter
+                    p.Date.Date >= dateFromFilter &&
+                    p.Date.Date <= dateToFilter
                 );
 
             Query = Query
