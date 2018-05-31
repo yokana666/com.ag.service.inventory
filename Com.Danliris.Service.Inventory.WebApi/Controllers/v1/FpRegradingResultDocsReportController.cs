@@ -23,14 +23,14 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
         }
 
         [HttpGet]
-        public IActionResult Get(string unitName, string code, string productName, bool? isReturn, bool? isReturnedToPurchasing, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order = "{}")
+        public IActionResult Get(string unitName, string code, string productName, bool? isReturn, bool? isReturnedToPurchasing, DateTimeOffset? dateFrom, DateTimeOffset? dateTo, int page, int size, string Order = "{}")
         {
             int offset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
             string accept = Request.Headers["Accept"];
 
             try
             {
-                var data = fpRegradingResultDocsReportFacade.GetReport(unitName, code, productName, isReturn, isReturnedToPurchasing, dateFrom, dateTo, page, size, Order, offset);
+                var data = fpRegradingResultDocsReportFacade.GetReport(unitName, code, productName, isReturn, isReturnedToPurchasing, dateFrom, dateTo, page, size, Order);
 
                 return Ok(new
                 {
