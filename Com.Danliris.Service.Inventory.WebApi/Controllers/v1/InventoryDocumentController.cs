@@ -161,6 +161,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                 StorageId=Convert.ToInt32(vm.storageId),
                 StorageName=vm.storageName,
                 Date=vm.date,
+                Type=vm.type,
                 Items=items
             };
 

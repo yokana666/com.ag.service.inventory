@@ -135,6 +135,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
 
                     foreach (var item in model.Items)
                     {
+                        var qty = item.Quantity;
+                        if (model.Type == "OUT")
+                        {
+                            qty = item.Quantity * -1;
+                        }
+                        var SumQty = dbContext.InventoryMovements.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == item.ProductId && a.UomId == item.UomId).Sum(a => a.Quantity);
                         InventoryMovementFacade movement = new InventoryMovementFacade(this.serviceProvider, this.dbContext);
                         InventoryMovement movementModel = new InventoryMovement
                         {
@@ -144,10 +150,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                             StorageCode = model.StorageCode,
                             StorageId = model.StorageId,
                             StorageName = model.StorageName,
-                            Quantity = item.Quantity,
+                            Before = SumQty,
+                            Quantity = qty,
+                            After = SumQty + qty,
                             ReferenceNo = model.ReferenceNo,
                             ReferenceType = model.ReferenceType,
-                            
+                            Type=model.Type,
                             Date = model.Date,
                             UomId=item.UomId,
                             UomUnit=item.UomUnit

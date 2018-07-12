@@ -16,6 +16,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
         public string StorageCode { get; set; }
         public string StorageName { get; set; }
         public string Remark { get; set; }
+        public string Type { get; set; }
         public virtual ICollection<InventoryDocumentItem> Items { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
