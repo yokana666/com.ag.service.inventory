@@ -1,11 +1,12 @@
 ﻿using Com.Moonlay.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
 {
-    public class InventoryDocumentItem : StandardEntity
+    public class InventoryDocumentItem : StandardEntity, IValidatableObject
     {
         /* Product */
         public string ProductId { get; set; }
@@ -21,6 +22,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
 
         public int InventoryDocumentId { get; set; }
         public virtual InventoryDocument InventoryDocument { get; set; }
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return new List<ValidationResult>();
+        }
     }
 }
 

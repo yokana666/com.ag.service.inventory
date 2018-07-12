@@ -42,8 +42,41 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
 
 
                 var Data = _facade.Read(page, size, order, keyword, filter);
+                List<InventoryDocumentViewModel> newData = new List<InventoryDocumentViewModel>();
+                foreach (var model in Data.Item1)
+                {
+                    List<InventoryDocumentItemViewModel> items = new List<InventoryDocumentItemViewModel>();
+                    foreach (var item in model.Items)
+                    {
+                        items.Add(new InventoryDocumentItemViewModel
+                        {
+                            productCode = item.ProductCode,
+                            productId = item.ProductId,
+                            productName = item.ProductName,
+                            remark = item.ProductRemark,
+                            quantity = item.Quantity,
+                            stockPlanning = item.StockPlanning,
+                            uomId = item.UomId,
+                            uom = item.UomUnit,
 
-                var newData = _mapper.Map<List<InventoryDocumentViewModel>>(Data.Item1);
+                        });
+                    }
+                    InventoryDocumentViewModel viewModel = new InventoryDocumentViewModel
+                    {
+                        referenceNo = model.ReferenceNo,
+                        referenceType = model.ReferenceType,
+                        remark = model.Remark,
+                        storageCode = model.StorageCode,
+                        storageId = model.StorageId.ToString(),
+                        storageName = model.StorageName,
+                        date = model.Date,
+                        type = model.Type,
+                        items = items
+                    };
+                    newData.Add(viewModel);
+                }
+
+                
 
                 List<object> listData = new List<object>();
                 listData.AddRange(
@@ -93,7 +126,35 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                 var indexAcceptPdf = Request.Headers["Accept"].ToList().IndexOf("application/pdf");
 
                 InventoryDocument model = _facade.ReadModelById(id);
-                InventoryDocumentViewModel viewModel = _mapper.Map<InventoryDocumentViewModel>(model);
+                //InventoryDocumentViewModel viewModel = _mapper.Map<InventoryDocumentViewModel>(model);
+                List<InventoryDocumentItemViewModel> items = new List<InventoryDocumentItemViewModel>();
+                foreach (var item in model.Items)
+                {
+                    items.Add(new InventoryDocumentItemViewModel
+                    {
+                        productCode = item.ProductCode,
+                        productId = item.ProductId,
+                        productName = item.ProductName,
+                        remark = item.ProductRemark,
+                        quantity = item.Quantity,
+                        stockPlanning = item.StockPlanning,
+                        uomId = item.UomId,
+                        uom = item.UomUnit,
+
+                    });
+                }
+                InventoryDocumentViewModel viewModel = new InventoryDocumentViewModel
+                {
+                    referenceNo = model.ReferenceNo,
+                    referenceType = model.ReferenceType,
+                    remark = model.Remark,
+                    storageCode = model.StorageCode,
+                    storageId = model.StorageId.ToString(),
+                    storageName = model.StorageName,
+                    date = model.Date,
+                    type = model.Type,
+                    items = items
+                };
                 if (viewModel == null)
                 {
                     throw new Exception("Invalid Id");

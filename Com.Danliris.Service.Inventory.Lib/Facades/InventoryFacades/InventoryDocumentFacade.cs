@@ -40,7 +40,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                     StorageCode = s.StorageCode,
                     StorageId = s.StorageId,
                     StorageName = s.StorageName,
-                    Items = s.Items.ToList()
+                    Items = s.Items.Select(a=>new InventoryDocumentItem {
+                        Quantity=a.Quantity,
+                        ProductCode=a.ProductCode,
+                        ProductId=a.ProductId,
+                        ProductName=a.ProductName,
+                        UomId=a.UomId,
+                        UomUnit=a.UomUnit,
+                    }).ToList()
                 });
 
             List<string> searchAttributes = new List<string>()

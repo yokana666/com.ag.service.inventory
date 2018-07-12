@@ -44,7 +44,8 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryDocument
         [Fact]
         public async Task Should_Success_Get_Data_By_Id()
         {
-            var response = await this.Client.GetAsync($"{URI}/1");
+            Lib.Models.InventoryModel.InventoryDocument model = await DataUtil.GetTestData("dev2");
+            var response = await this.Client.GetAsync($"{URI}/{model.Id}");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 

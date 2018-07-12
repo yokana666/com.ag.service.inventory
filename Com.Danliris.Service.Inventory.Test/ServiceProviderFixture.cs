@@ -20,6 +20,7 @@ using Com.Danliris.Service.Inventory.Test.DataUtils.FPReturnInvToPurchasingDataU
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
 using Com.Danliris.Service.Inventory.Lib.Facades;
 using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
+using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 
 namespace Com.Danliris.Service.Inventory.Test
 {
@@ -94,6 +95,7 @@ namespace Com.Danliris.Service.Inventory.Test
                 .AddTransient<FPReturnInvToPurchasingDataUtil>()
                 .AddTransient<FPReturnInvToPurchasingDetailDataUtil>()
 
+                .AddTransient<InventoryDocumentFacade>()
                 .AddTransient<InventoryDocumentDataUtil>()
                 .AddTransient<InventoryDocumentItemDataUtil>()
 

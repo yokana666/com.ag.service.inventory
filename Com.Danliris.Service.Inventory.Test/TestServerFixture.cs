@@ -2,6 +2,7 @@
 using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
 using Com.Danliris.Service.Inventory.Test.DataUtils.FPReturnInvToPurchasingDataUtil;
+using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
 
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
@@ -77,6 +78,9 @@ namespace Com.Danliris.Service.Inventory.Test
 
                         .AddTransient<FPReturnInvToPurchasingDataUtil>()
                         .AddTransient<FPReturnInvToPurchasingDetailDataUtil>()
+
+                        .AddTransient<InventoryDocumentDataUtil>()
+                        .AddTransient<InventoryDocumentItemDataUtil>()
 
                         .AddSingleton<HttpClientTestService>()
                         .AddDbContext<InventoryDbContext>(options => options.UseSqlServer(configuration["DefaultConnection"]), ServiceLifetime.Transient);
