@@ -25,7 +25,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
             this.dbSet = dbContext.Set<InventoryDocument>();
         }
 
-        public Tuple<List<object>, int, Dictionary<string, string>> Read(int page = 1, int size = 25, string order = "{}", string keyword = null, string filter = "{}")
+        public Tuple<List<InventoryDocument>, int, Dictionary<string, string>> Read(int page = 1, int size = 25, string order = "{}", string keyword = null, string filter = "{}")
         {
             IQueryable<InventoryDocument> Query = this.dbSet;
 
@@ -94,7 +94,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                 }).ToList()
             );
 
-            return Tuple.Create(list, TotalData, OrderDictionary);
+            return Tuple.Create(Data, TotalData, OrderDictionary);
         }
 
         public InventoryDocument ReadModelById(int id)
