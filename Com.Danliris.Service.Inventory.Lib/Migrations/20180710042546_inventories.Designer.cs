@@ -11,9 +11,10 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180710042546_inventories")]
+    partial class inventories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,8 +341,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<string>("StorageName")
                         .HasMaxLength(255);
 
-                    b.Property<string>("Type");
-
                     b.Property<string>("_CreatedAgent")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -461,46 +460,35 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<string>("No")
-                        .HasMaxLength(255);
+                    b.Property<string>("No");
 
-                    b.Property<string>("ProductCode")
-                        .HasMaxLength(1000);
+                    b.Property<string>("ProductCode");
 
-                    b.Property<string>("ProductId")
-                        .HasMaxLength(255);
+                    b.Property<string>("ProductId");
 
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(4000);
+                    b.Property<string>("ProductName");
 
                     b.Property<double>("Quantity");
 
-                    b.Property<string>("ReferenceNo")
-                        .HasMaxLength(255);
+                    b.Property<string>("ReferenceNo");
 
-                    b.Property<string>("ReferenceType")
-                        .HasMaxLength(255);
+                    b.Property<string>("ReferenceType");
 
                     b.Property<string>("Remark");
 
                     b.Property<double>("StockPlanning");
 
-                    b.Property<string>("StorageCode")
-                        .HasMaxLength(255);
+                    b.Property<string>("StorageCode");
 
-                    b.Property<int>("StorageId")
-                        .HasMaxLength(255);
+                    b.Property<int>("StorageId");
 
-                    b.Property<string>("StorageName")
-                        .HasMaxLength(255);
+                    b.Property<string>("StorageName");
 
                     b.Property<string>("Type");
 
-                    b.Property<string>("UomId")
-                        .HasMaxLength(255);
+                    b.Property<string>("UomId");
 
-                    b.Property<string>("UomUnit")
-                        .HasMaxLength(255);
+                    b.Property<string>("UomUnit");
 
                     b.Property<string>("_CreatedAgent")
                         .IsRequired()
@@ -536,7 +524,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InventoryMovements");
+                    b.ToTable("InventoryMovement");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.InventoryModel.InventorySummary", b =>
@@ -546,36 +534,27 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<string>("No")
-                        .HasMaxLength(255);
+                    b.Property<string>("No");
 
-                    b.Property<string>("ProductCode")
-                        .HasMaxLength(1000);
+                    b.Property<string>("ProductCode");
 
-                    b.Property<string>("ProductId")
-                        .HasMaxLength(255);
+                    b.Property<string>("ProductId");
 
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(4000);
+                    b.Property<string>("ProductName");
 
                     b.Property<double>("Quantity");
 
                     b.Property<double>("StockPlanning");
 
-                    b.Property<string>("StorageCode")
-                        .HasMaxLength(255);
+                    b.Property<string>("StorageCode");
 
-                    b.Property<int>("StorageId")
-                        .HasMaxLength(255);
+                    b.Property<int>("StorageId");
 
-                    b.Property<string>("StorageName")
-                        .HasMaxLength(255);
+                    b.Property<string>("StorageName");
 
-                    b.Property<string>("UomId")
-                        .HasMaxLength(255);
+                    b.Property<string>("UomId");
 
-                    b.Property<string>("UomUnit")
-                        .HasMaxLength(255);
+                    b.Property<string>("UomUnit");
 
                     b.Property<string>("_CreatedAgent")
                         .IsRequired()
@@ -611,7 +590,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InventorySummaries");
+                    b.ToTable("InventorySummary");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel.MaterialDistributionNote", b =>
