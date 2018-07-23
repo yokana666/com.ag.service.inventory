@@ -165,7 +165,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                             Type=model.Type,
                             Date = model.Date,
                             UomId=item.UomId,
-                            UomUnit=item.UomUnit
+                            UomUnit=item.UomUnit,
+                            Remark=item.ProductRemark
                         };
                         await movement.Create(movementModel, username);
                     }
