@@ -11,9 +11,10 @@ using System;
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180710041355_inventoryDoc")]
+    partial class inventoryDoc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,8 +341,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<string>("StorageName")
                         .HasMaxLength(255);
 
-                    b.Property<string>("Type");
-
                     b.Property<string>("_CreatedAgent")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -446,172 +445,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.HasIndex("InventoryDocumentId");
 
                     b.ToTable("InventoryDocumentItems");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.InventoryModel.InventoryMovement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Active");
-
-                    b.Property<double>("After");
-
-                    b.Property<double>("Before");
-
-                    b.Property<DateTimeOffset>("Date");
-
-                    b.Property<string>("No")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ProductCode")
-                        .HasMaxLength(1000);
-
-                    b.Property<string>("ProductId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(4000);
-
-                    b.Property<double>("Quantity");
-
-                    b.Property<string>("ReferenceNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ReferenceType")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Remark");
-
-                    b.Property<double>("StockPlanning");
-
-                    b.Property<string>("StorageCode")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("StorageId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("StorageName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Type");
-
-                    b.Property<string>("UomId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UomUnit")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_CreatedUtc");
-
-                    b.Property<string>("_DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_DeletedUtc");
-
-                    b.Property<bool>("_IsDeleted");
-
-                    b.Property<string>("_LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_LastModifiedUtc");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InventoryMovements");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.InventoryModel.InventorySummary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("No")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ProductCode")
-                        .HasMaxLength(1000);
-
-                    b.Property<string>("ProductId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(4000);
-
-                    b.Property<double>("Quantity");
-
-                    b.Property<double>("StockPlanning");
-
-                    b.Property<string>("StorageCode")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("StorageId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("StorageName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UomId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UomUnit")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_CreatedUtc");
-
-                    b.Property<string>("_DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_DeletedUtc");
-
-                    b.Property<bool>("_IsDeleted");
-
-                    b.Property<string>("_LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("_LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("_LastModifiedUtc");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InventorySummaries");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel.MaterialDistributionNote", b =>
