@@ -17,6 +17,8 @@ using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
 using Com.Danliris.Service.Inventory.Lib.Facades;
+using AutoMapper;
+using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 
 namespace Com.Danliris.Service.Inventory.WebApi
 {
@@ -41,7 +43,10 @@ namespace Com.Danliris.Service.Inventory.WebApi
         {
             services
                 .AddTransient<FPReturnInvToPurchasingFacade>()
-                .AddTransient<FpRegradingResultDocsReportFacade>();
+                .AddTransient<FpRegradingResultDocsReportFacade>()
+                .AddTransient<InventoryDocumentFacade>()
+                .AddTransient<InventoryMovementFacade>()
+                .AddTransient<InventorySummaryFacade>();
         }
 
         public void RegisterServices(IServiceCollection services)
@@ -62,6 +67,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddScoped<HttpClientService>()
                 .AddScoped<ValidateService>();
         }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -103,6 +109,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddJsonFormatters();
 
+            services.AddAutoMapper();
             services.AddCors(options => options.AddPolicy("InventoryPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
