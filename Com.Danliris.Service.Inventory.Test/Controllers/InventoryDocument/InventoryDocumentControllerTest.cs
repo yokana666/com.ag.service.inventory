@@ -72,15 +72,15 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryDocument
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [Fact]
-        public async Task Should_Error_Create_Null_Item_Data()
-        {
-            InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
+        //[Fact]
+        //public async Task Should_Error_Create_Null_Item_Data()
+        //{
+        //    InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
             
-            viewModel.items = new List<InventoryDocumentItemViewModel> { null };
-            var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
+        //    viewModel.items = new List<InventoryDocumentItemViewModel> { null };
+        //    var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
+        //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        //}
 
         [Fact]
         public async Task Should_Error_Create_IN_Minus_Data()

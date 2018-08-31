@@ -54,11 +54,11 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
                     }
                     else
                     {
-                        var itemsExist = items.Where(i => i.productId != null  && i.productId.Equals(item.productId)).Count();
+                        var itemsExist = items.Where(i => i.productId != null && i.uomId != null && i.productId.Equals(item.productId) && i.uomId.Equals(item.uomId)).Count();
                         if (itemsExist > 1)
                         {
                             itemErrorCount++;
-                            itemError += "product: 'Barang sudah digunakan', ";
+                            itemError += "productId: 'Barang dan Satuan sudah digunakan', ";
                         }
                     }
 
