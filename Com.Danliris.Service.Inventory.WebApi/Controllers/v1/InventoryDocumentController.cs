@@ -63,6 +63,8 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                     }
                     InventoryDocumentViewModel viewModel = new InventoryDocumentViewModel
                     {
+                        Id=model.Id,
+                        no= model.No,
                         referenceNo = model.ReferenceNo,
                         referenceType = model.ReferenceType,
                         remark = model.Remark,
@@ -76,12 +78,12 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                     newData.Add(viewModel);
                 }
 
-                
-
                 List<object> listData = new List<object>();
                 listData.AddRange(
                     newData.AsQueryable().Select(s => new
                     {
+                        s.no,
+                        s.Id,
                         s.code,
                         s.date,
                         s.items,
@@ -89,7 +91,8 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                         s.storageId,
                         s.storageName,
                         s.referenceNo,
-                        s.referenceType
+                        s.referenceType,
+                        s.type
                     }).ToList()
                 );
 
@@ -145,6 +148,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                 }
                 InventoryDocumentViewModel viewModel = new InventoryDocumentViewModel
                 {
+                    no=model.No,
                     referenceNo = model.ReferenceNo,
                     referenceType = model.ReferenceType,
                     remark = model.Remark,

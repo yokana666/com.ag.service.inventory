@@ -129,6 +129,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                     model._CreatedBy = username;
                     model._LastModifiedAgent = "Facade";
                     model._LastModifiedBy = username;
+                    model._CreatedUtc = DateTime.UtcNow;
+                    model._LastModifiedUtc = DateTime.UtcNow;
 
                     InventorySummaryFacade summary = new InventorySummaryFacade(this.serviceProvider, this.dbContext);
 
@@ -169,7 +171,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
             string Month = model.Date.ToString("MM");
 
 
-            string no = $"MOV-{Year}-{Month}-{model.StorageCode}-{model.ReferenceType}-";
+            string no = $"MOV-{Year}-{Month}-{model.StorageCode}-";
             int Padding = 7;
 
             var lastNo = await this.dbSet.Where(w => w.No.StartsWith(no) && !w._IsDeleted).OrderByDescending(o => o.No).FirstOrDefaultAsync();

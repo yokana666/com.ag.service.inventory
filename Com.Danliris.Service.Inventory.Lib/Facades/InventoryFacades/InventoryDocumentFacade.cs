@@ -29,6 +29,15 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
         {
             IQueryable<InventoryDocument> Query = this.dbSet;
 
+            List<string> SearchAttributes = new List<string>()
+                {
+                    "No", "ReferenceNo", "StorageName","ReferenceType","Type"
+                };
+            if (keyword != null)
+            {
+                Query = Query.Where(General.BuildSearch(SearchAttributes), keyword);
+            }
+
             Query = Query
                 .Select(s => new InventoryDocument
                 {
@@ -40,6 +49,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                     StorageCode = s.StorageCode,
                     StorageId = s.StorageId,
                     StorageName = s.StorageName,
+                    Type=s.Type,
+                    _LastModifiedUtc=s._LastModifiedUtc,
                     Items = s.Items.Select(a=>new InventoryDocumentItem {
                         Quantity=a.Quantity,
                         ProductCode=a.ProductCode,
@@ -50,15 +61,15 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                     }).ToList()
                 });
 
-            List<string> searchAttributes = new List<string>()
-            {
-                "No", "ReferenceNo", "StorageName","ReferenceType"
-            };
+            //List<string> searchAttributes = new List<string>()
+            //{
+            //    "No", "ReferenceNo", "StorageName","ReferenceType","Type"
+            //};
 
-            if (keyword != null)
-            {
-                Query = Query.Where(General.BuildSearch(searchAttributes), keyword);
-            }
+            //if (keyword != null)
+            //{
+            //    Query = Query.Where(General.BuildSearch(searchAttributes), keyword);
+            //}
             #region OrderBy
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -121,10 +132,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                 try
                 {
                     model.No = await GenerateNo(model);
+                    
                     model._CreatedAgent = "Facade";
                     model._CreatedBy = username;
                     model._LastModifiedAgent = "Facade";
                     model._LastModifiedBy = username;
+                    model._CreatedUtc = DateTime.UtcNow;
+                    model._LastModifiedUtc = DateTime.UtcNow;
 
                     foreach (var item in model.Items)
                     {
@@ -187,7 +201,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
             string Month = model.Date.ToString("MM");
 
 
-            string no = $"DOC-{Year}-{Month}-{model.StorageCode}-{model.ReferenceType}-";
+            string no = $"DOC-{Year}-{Month}-{model.StorageCode}-";
             int Padding = 7;
 
             var lastNo = await this.dbSet.Where(w => w.No.StartsWith(no) && !w._IsDeleted).OrderByDescending(o => o.No).FirstOrDefaultAsync();
