@@ -59,6 +59,47 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryDocument
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
 
+        public async Task Should_Error_Create_Invalid_Data()
+        {
+            InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
+            
+            viewModel.date = DateTimeOffset.MinValue;
+            viewModel.type = null;
+            viewModel.referenceNo = null;
+            viewModel.referenceType = null;
+            viewModel.storageId = null;
+            var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
 
+        [Fact]
+        public async Task Should_Error_Create_Null_Item_Data()
+        {
+            InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
+            
+            viewModel.items = new List<InventoryDocumentItemViewModel> { null };
+            var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Should_Error_Create_IN_Minus_Data()
+        {
+            InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
+            viewModel.type = "IN";
+            viewModel.items[0].quantity=-1;
+            var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Should_Error_Create_ADJ_zero_Data()
+        {
+            InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
+            viewModel.type = "ADJ";
+            viewModel.items[0].quantity = 0;
+            var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
     }
 }
