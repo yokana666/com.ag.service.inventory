@@ -12,7 +12,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
 {
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/inventory/inventory-movement/report")]
+    [Route("v{version:apiVersion}/inventory/inventory-movement-reports")]
     [Authorize]
     public class InvetoryMovementReportController : Controller
     {

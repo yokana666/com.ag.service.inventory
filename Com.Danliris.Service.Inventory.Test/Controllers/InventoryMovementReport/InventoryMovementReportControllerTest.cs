@@ -15,7 +15,7 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryMovementRepor
     public class InventoryMovementReportControllerTest
     {
         private const string MediaType = "application/json";
-        private readonly string URI = "v1/inventory/inventory-movement/report";
+        private readonly string URI = "v1/inventory/inventory-movement-reports";
 
         private TestServerFixture TestFixture { get; set; }
 
