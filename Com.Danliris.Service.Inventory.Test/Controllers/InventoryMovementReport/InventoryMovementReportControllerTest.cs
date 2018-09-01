@@ -23,12 +23,7 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryMovementRepor
         {
             get { return this.TestFixture.Client; }
         }
-
-        protected InventoryMovementDataUtil DataUtil
-        {
-            get { return (InventoryMovementDataUtil)this.TestFixture.Service.GetService(typeof(InventoryMovementDataUtil)); }
-        }
-
+                
         public InventoryMovementReportControllerTest(TestServerFixture fixture)
         {
             TestFixture = fixture;

@@ -29,7 +29,11 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
         {
             int offset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
             string accept = Request.Headers["Accept"];
-
+            if (page == 0)
+            {
+                page = 1;
+                size = 25;
+            }
             try
             {
 

@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
         public async void Should_Success_Get_Report_Data_Null_Parameter()
         {
             InventoryMovement model = await DataUtil.GetTestData("Unit test");
-            var Response = Facade.GetReport("", null, null, null, null, 1, 25, "{}", 7);
+            var Response = Facade.GetReport(null, null, null, null, null, 1, 25, "{}", 7);
             Assert.NotEqual(Response.Item2, 0);
         }
 
