@@ -102,6 +102,8 @@ namespace Com.Danliris.Service.Inventory.Test
                 .AddTransient<InventoryMovementFacade>()
                 .AddTransient<InventoryMovementDataUtil>()
 
+                .AddTransient<InventoryMovementReportFacade>()
+
                 .AddSingleton<TestHelpers.HttpClientTestService>(provider => new TestHelpers.HttpClientTestService(provider))
                 .AddSingleton<HttpClientService>()
                 .AddSingleton<IdentityService>()
