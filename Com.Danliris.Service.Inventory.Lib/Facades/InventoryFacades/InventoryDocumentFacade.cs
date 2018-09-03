@@ -146,8 +146,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                         item._CreatedBy = username;
                         item._LastModifiedAgent = "Facade";
                         item._LastModifiedBy = username;
+                        item._CreatedUtc = DateTime.UtcNow;
+                        item._LastModifiedUtc = DateTime.UtcNow;
 
-                        
+
                     }
 
                     this.dbSet.Add(model);
