@@ -123,6 +123,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                         model._CreatedBy = username;
                         model._LastModifiedAgent = "Facade";
                         model._LastModifiedBy = username;
+                        model._CreatedUtc = DateTime.UtcNow;
+                        model._LastModifiedUtc = DateTime.UtcNow;
 
                         this.dbSet.Add(model);
                     }
@@ -130,6 +132,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                     {
                         model._LastModifiedAgent = "Facade";
                         model._LastModifiedBy = username;
+                        model._LastModifiedUtc = DateTime.UtcNow;
 
                         exist.Quantity = model.Quantity;
                         exist.StockPlanning = model.StockPlanning;
