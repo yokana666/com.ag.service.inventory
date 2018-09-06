@@ -65,12 +65,12 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
                     if (type=="ADJ" && item.quantity == 0)
                     {
                         itemErrorCount++;
-                        itemError += "quantity: 'Jumlah adjust tidak boleh kurang dari 0'";
+                        itemError += "quantity: 'Jumlah adjust tidak boleh = 0',";
                     }
                     if (type != "ADJ" && item.quantity <= 0)
                     {
                         itemErrorCount++;
-                        itemError += "quantity: 'Jumlah tidak boleh kurang dari 0'";
+                        itemError += "quantity: 'Jumlah tidak boleh kurang dari 0',";
                     }
                     if (item.uom == null || string.IsNullOrWhiteSpace(item.uomId))
                     {
