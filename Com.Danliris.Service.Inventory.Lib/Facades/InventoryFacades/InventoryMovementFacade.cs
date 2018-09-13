@@ -167,11 +167,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
 
         async Task<string> GenerateNo(InventoryMovement model)
         {
-            CodeGenerator codeGenerator = new CodeGenerator();
-
             do
             {
-                model.No = codeGenerator.GenerateCode();
+                model.No = CodeGenerator.GenerateCode();
             }
             while (this.dbSet.Any(d => d.No.Equals(model.No)));
 
