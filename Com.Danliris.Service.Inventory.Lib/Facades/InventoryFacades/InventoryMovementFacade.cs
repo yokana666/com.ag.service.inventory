@@ -138,7 +138,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                     Created = await dbContext.SaveChangesAsync();
                     transaction.Commit();
 
-                    var SumQty = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).Sum(a => a.Quantity);
+                    //var SumQty = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).Sum(a => a.Quantity);
+                    var SumQty = this.dbSet.OrderByDescending(a=>a._CreatedUtc).FirstOrDefault(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId);
+                    
                     var SumStock = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).Sum(a => a.StockPlanning);
                     InventorySummary summaryModel = new InventorySummary
                     {
@@ -148,7 +150,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                         UomId = model.UomId,
                         UomUnit = model.UomUnit,
                         StockPlanning = SumStock,
-                        Quantity = SumQty,
+                        Quantity = SumQty.After,
                         StorageId = model.StorageId,
                         StorageCode = model.StorageCode,
                         StorageName = model.StorageName
