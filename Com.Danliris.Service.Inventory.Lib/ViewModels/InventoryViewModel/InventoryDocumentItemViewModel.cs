@@ -8,12 +8,12 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
 {
     public class InventoryDocumentItemViewModel : BasicViewModel, IValidatableObject
     {
-        public string productId { get; set; }
+        public int productId { get; set; }
         public string productCode { get; set; }
         public string productName { get; set; }
         public double quantity { get; set; }
         public double stockPlanning { get; set; }
-        public string uomId { get; set; }
+        public int uomId { get; set; }
         public string uom { get; set; }
         public string remark { get; set; }
 
