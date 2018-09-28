@@ -11,12 +11,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
         public DateTimeOffset Date { get; set; }
         public string ReferenceNo { get; set; }
         public string ReferenceType { get; set; }
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
 
         public string UomUnit { get; set; }
-        public string UomId { get; set; }
+        public int UomId { get; set; }
 
         public int StorageId { get; set; }
         public string StorageCode { get; set; }

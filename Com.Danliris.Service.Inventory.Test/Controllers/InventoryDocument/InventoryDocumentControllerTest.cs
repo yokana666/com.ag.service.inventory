@@ -67,7 +67,7 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryDocument
             viewModel.type = null;
             viewModel.referenceNo = null;
             viewModel.referenceType = null;
-            viewModel.storageId = null;
+            viewModel.storageId = 0;
             var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }

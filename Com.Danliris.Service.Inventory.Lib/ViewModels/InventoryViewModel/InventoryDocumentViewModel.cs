@@ -15,7 +15,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
         public string referenceNo { get; set; }
         public string referenceType { get; set; }
         public string type { get; set; }
-        public string storageId { get; set; }
+        public int storageId { get; set; }
         public string storageCode { get; set; }
         public string storageName { get; set; }
         public List<InventoryDocumentItemViewModel> items { get; set; }
@@ -23,7 +23,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (this.storageId == null || string.IsNullOrWhiteSpace(this.storageId))
+            if (this.storageId == null || storageId==0)
                 yield return new ValidationResult("Gudang harus diisi", new List<string> { "storageId" });
             if (this.referenceNo == null || string.IsNullOrWhiteSpace(this.referenceNo))
                 yield return new ValidationResult("No. referensi harus diisi", new List<string> { "referenceNo" });
@@ -47,7 +47,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
                 {
                     itemError += "{";
 
-                    if (item.productId == null || string.IsNullOrWhiteSpace(item.productId))
+                    if (item.productId == null || item.productId==0)
                     {
                         itemErrorCount++;
                         itemError += "productId: 'Barang harus diisi', ";
@@ -72,7 +72,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
                         itemErrorCount++;
                         itemError += "quantity: 'Jumlah harus lebih dari 0',";
                     }
-                    if (item.uom == null || string.IsNullOrWhiteSpace(item.uomId))
+                    if (item.uom == null || item.uomId==0)
                     {
                         itemErrorCount++;
                         itemError += "uomId: 'Satuan harus diisi', ";
