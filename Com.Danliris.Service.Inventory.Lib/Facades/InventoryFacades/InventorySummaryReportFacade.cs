@@ -104,5 +104,36 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
 
             return Excel.CreateExcel(new List<KeyValuePair<DataTable, string>>() { new KeyValuePair<DataTable, string>(result, "Territory") }, true);
         }
+
+        public List<InventorySummaryViewModel> GetInventorySummaries(string productIds = "{}")
+        {
+            Dictionary<string, object> productIdDictionaries = JsonConvert.DeserializeObject<Dictionary<string, object>>(productIds);
+            var productIdString = productIdDictionaries.Values.FirstOrDefault();
+            var productIdList = JsonConvert.DeserializeObject<List<int>>(productIdString.ToString());
+
+            IQueryable<InventorySummary> rootQuery = DbContext.InventorySummaries.Where(x => !x._IsDeleted);
+            List<InventorySummary> documentItems = new List<InventorySummary>();
+            foreach (var id in productIdList)
+            {
+                var result = rootQuery.Where(x => x.ProductId == id.ToString());
+                documentItems.AddRange(result.ToList());
+            }
+            return documentItems.Select(x => new InventorySummaryViewModel()
+            {
+                productCode = x.ProductCode,
+                productId = x.ProductId,
+                productName = x.ProductName,
+                quantity = x.Quantity,
+                storageCode = x.StorageCode,
+                Active = x.Active,
+                Id  = x.Id,
+                stockPlanning = x.StockPlanning.ToString(),
+                storageId = x.StorageId.ToString(),
+                storageName = x.StorageName,
+                code = x.No,
+                uomId = x.UomId,
+                uom = x.UomUnit,
+            }).ToList();
+        }
     }
 }

@@ -17,5 +17,6 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
         public double quantity { get; set; }
         public string uomId { get; set; }
         public string uom { get; set; }
+        public string stockPlanning { get; set; }
     }
 }
