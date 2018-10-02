@@ -115,7 +115,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
             List<InventorySummary> documentItems = new List<InventorySummary>();
             foreach (var id in productIdList)
             {
-                var result = rootQuery.Where(x => x.ProductId == id.ToString());
+                var result = rootQuery.Where(x => x.ProductId == id);
                 documentItems.AddRange(result.ToList());
             }
             return documentItems.Select(x => new InventorySummaryViewModel()
@@ -128,7 +128,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                 Active = x.Active,
                 Id  = x.Id,
                 stockPlanning = x.StockPlanning.ToString(),
-                storageId = x.StorageId.ToString(),
+                storageId = x.StorageId,
                 storageName = x.StorageName,
                 code = x.No,
                 uomId = x.UomId,
