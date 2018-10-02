@@ -48,7 +48,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                              productName = a.ProductName,
                              uomId = a.UomId,
                              uom = a.UomUnit,
-                             storageId = a.StorageId.ToString(),
+                             storageId = a.StorageId,
                              storageCode = a.StorageCode,
                              storageName = a.StorageName,
                              quantity = a.Quantity,

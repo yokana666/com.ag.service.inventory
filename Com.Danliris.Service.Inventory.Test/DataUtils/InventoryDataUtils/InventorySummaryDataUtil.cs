@@ -39,7 +39,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils
             {
                 code = "No1",
                 storageCode = "test01",
-                storageId = "2",
+                storageId = 2,
                 storageName = "Test",
                 productCode = "ProductCode1",
                 productName = "ProductName1",
