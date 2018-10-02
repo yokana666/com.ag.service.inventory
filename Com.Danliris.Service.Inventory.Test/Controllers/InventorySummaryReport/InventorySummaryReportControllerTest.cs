@@ -51,6 +51,19 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventorySummaryReport
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [Fact]
+        public async Task Should_Success_Get_Summaries_By_ProductID()
+        {
+            var response = await this.Client.GetAsync(URI + "/productIds");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
+            var json = response.Content.ReadAsStringAsync().Result;
+            Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+
+            Assert.True(result.ContainsKey("apiVersion"));
+            Assert.True(result.ContainsKey("message"));
+            Assert.True(result.ContainsKey("data"));
+            Assert.True(result["data"].GetType().Name.Equals("JArray"));
+        }
     }
 }

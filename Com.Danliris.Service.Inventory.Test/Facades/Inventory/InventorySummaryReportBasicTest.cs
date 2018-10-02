@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
+﻿using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
@@ -63,6 +60,21 @@ namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
             InventorySummary model = await DataUtil.GetTestData("Unit test");
             var Response = Facade.GenerateExcel("", "", 7);
             Assert.IsType(typeof(System.IO.MemoryStream), Response);
+        }
+
+        [Fact]
+        public async void Should_Success_Get_Summaries_By_ProductID()
+        {
+            InventorySummary model = await DataUtil.GetTestData("Unit test");
+            
+            List<int> productId = new List<int>() { model.ProductId };
+            Dictionary<string, object> postedProduct = new Dictionary<string, object>
+            {
+                { "ProductId", productId }
+            };
+            string product = JsonConvert.SerializeObject(postedProduct);
+            var Response = Facade.GetInventorySummaries(product);
+            Assert.NotEqual(Response.Count, 0);
         }
     }
 }
