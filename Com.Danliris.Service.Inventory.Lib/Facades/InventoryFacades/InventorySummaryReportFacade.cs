@@ -108,6 +108,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
         public List<InventorySummaryViewModel> GetInventorySummaries(string productIds = "{}")
         {
             Dictionary<string, object> productIdDictionaries = JsonConvert.DeserializeObject<Dictionary<string, object>>(productIds);
+            if (productIdDictionaries.Count == 0)
+                return new List<InventorySummaryViewModel>();
             var productIdString = productIdDictionaries.Values.FirstOrDefault();
             var productIdList = JsonConvert.DeserializeObject<List<int>>(productIdString.ToString());
 
