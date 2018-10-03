@@ -1,5 +1,6 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryDocumentViewModel;
 using Com.Moonlay.NetCore.Lib;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -7,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
@@ -49,15 +49,16 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                     StorageCode = s.StorageCode,
                     StorageId = s.StorageId,
                     StorageName = s.StorageName,
-                    Type=s.Type,
-                    _LastModifiedUtc=s._LastModifiedUtc,
-                    Items = s.Items.Select(a=>new InventoryDocumentItem {
-                        Quantity=a.Quantity,
-                        ProductCode=a.ProductCode,
-                        ProductId=a.ProductId,
-                        ProductName=a.ProductName,
-                        UomId=a.UomId,
-                        UomUnit=a.UomUnit,
+                    Type = s.Type,
+                    _LastModifiedUtc = s._LastModifiedUtc,
+                    Items = s.Items.Select(a => new InventoryDocumentItem
+                    {
+                        Quantity = a.Quantity,
+                        ProductCode = a.ProductCode,
+                        ProductId = a.ProductId,
+                        ProductName = a.ProductName,
+                        UomId = a.UomId,
+                        UomUnit = a.UomUnit,
                     }).ToList()
                 });
 
@@ -132,7 +133,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                 try
                 {
                     model.No = await GenerateNo(model);
-                    
+
                     model._CreatedAgent = "Facade";
                     model._CreatedBy = username;
                     model._LastModifiedAgent = "Facade";
@@ -178,11 +179,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
                             After = SumQty + qty,
                             ReferenceNo = model.ReferenceNo,
                             ReferenceType = model.ReferenceType,
-                            Type=model.Type,
+                            Type = model.Type,
                             Date = model.Date,
-                            UomId=item.UomId,
-                            UomUnit=item.UomUnit,
-                            Remark=item.ProductRemark
+                            UomId = item.UomId,
+                            UomUnit = item.UomUnit,
+                            Remark = item.ProductRemark
                         };
                         await movement.Create(movementModel, username);
                     }
@@ -227,5 +228,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
             //    return no + lastNoNumber.ToString().PadLeft(Padding, '0');
             //}
         }
+
+        
     }
 }
