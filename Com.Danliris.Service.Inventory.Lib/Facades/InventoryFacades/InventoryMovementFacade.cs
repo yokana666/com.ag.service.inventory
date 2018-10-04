@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
@@ -120,51 +119,53 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
         {
             int Created = 0;
 
-            using (var transaction = this.dbContext.Database.BeginTransaction())
+            var internalTransaction = dbContext.Database.CurrentTransaction == null;
+            var transaction = !internalTransaction ? dbContext.Database.CurrentTransaction : dbContext.Database.BeginTransaction();
+
+            try
             {
-                try
+                model.No = await GenerateNo(model);
+                model._CreatedAgent = "Facade";
+                model._CreatedBy = username;
+                model._LastModifiedAgent = "Facade";
+                model._LastModifiedBy = username;
+                model._CreatedUtc = DateTime.UtcNow;
+                model._LastModifiedUtc = DateTime.UtcNow;
+
+                InventorySummaryFacade summary = new InventorySummaryFacade(this.serviceProvider, this.dbContext);
+
+                this.dbSet.Add(model);
+                Created = await dbContext.SaveChangesAsync();
+
+                //var SumQty = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).Sum(a => a.Quantity);
+                var SumQty = this.dbSet.OrderByDescending(a => a._CreatedUtc).FirstOrDefault(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId);
+
+                var SumStock = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).Sum(a => a.StockPlanning);
+                InventorySummary summaryModel = new InventorySummary
                 {
-                    model.No = await GenerateNo(model);
-                    model._CreatedAgent = "Facade";
-                    model._CreatedBy = username;
-                    model._LastModifiedAgent = "Facade";
-                    model._LastModifiedBy = username;
-                    model._CreatedUtc = DateTime.UtcNow;
-                    model._LastModifiedUtc = DateTime.UtcNow;
-
-                    InventorySummaryFacade summary = new InventorySummaryFacade(this.serviceProvider, this.dbContext);
-
-                    this.dbSet.Add(model);
-                    Created = await dbContext.SaveChangesAsync();
+                    ProductId = model.ProductId,
+                    ProductCode = model.ProductCode,
+                    ProductName = model.ProductName,
+                    UomId = model.UomId,
+                    UomUnit = model.UomUnit,
+                    StockPlanning = SumStock,
+                    Quantity = SumQty.After,
+                    StorageId = model.StorageId,
+                    StorageCode = model.StorageCode,
+                    StorageName = model.StorageName
+                };
+                await summary.Create(summaryModel, username);
+                if (internalTransaction)
                     transaction.Commit();
 
-                    //var SumQty = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).Sum(a => a.Quantity);
-                    var SumQty = this.dbSet.OrderByDescending(a=>a._CreatedUtc).FirstOrDefault(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId);
-                    
-                    var SumStock = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).Sum(a => a.StockPlanning);
-                    InventorySummary summaryModel = new InventorySummary
-                    {
-                        ProductId = model.ProductId,
-                        ProductCode = model.ProductCode,
-                        ProductName = model.ProductName,
-                        UomId = model.UomId,
-                        UomUnit = model.UomUnit,
-                        StockPlanning = SumStock,
-                        Quantity = SumQty.After,
-                        StorageId = model.StorageId,
-                        StorageCode = model.StorageCode,
-                        StorageName = model.StorageName
-                    };
-                    await summary.Create(summaryModel, username);
-                }
-                catch (Exception e)
-                {
-                    transaction.Rollback();
-                    throw new Exception(e.Message);
-                }
+                return Created;
             }
-
-            return Created;
+            catch (Exception e)
+            {
+                if (internalTransaction)
+                    transaction.Rollback();
+                throw new Exception(e.Message);
+            }
         }
 
         async Task<string> GenerateNo(InventoryMovement model)
