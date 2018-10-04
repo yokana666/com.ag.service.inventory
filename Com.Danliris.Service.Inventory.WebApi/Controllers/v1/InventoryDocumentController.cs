@@ -25,13 +25,11 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
         private readonly IMapper _mapper;
         private readonly InventoryDocumentFacade _facade;
         private readonly IdentityService identityService;
-        private readonly InventoryDbContext context;
         public InventoryDocumentController(IMapper mapper, InventoryDocumentFacade facade, IdentityService identityService)
         {
             _mapper = mapper;
             _facade = facade;
             this.identityService = identityService;
-            context = facade.dbContext;
         }
 
         [HttpGet]
