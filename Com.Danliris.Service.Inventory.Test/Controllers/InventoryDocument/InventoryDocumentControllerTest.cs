@@ -62,7 +62,7 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryDocument
         public async Task Should_Error_Create_Invalid_Data()
         {
             InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
-            
+
             viewModel.date = DateTimeOffset.MinValue;
             viewModel.type = null;
             viewModel.referenceNo = null;
@@ -72,11 +72,36 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryDocument
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
+        [Fact]
+        public async Task Should_Success_Create_Multi_Data()
+        {
+            InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
+            List<InventoryDocumentViewModel> viewModels = new List<InventoryDocumentViewModel>() { viewModel };
+            HttpContent httpContent = new StringContent(JsonConvert.SerializeObject(viewModels).ToString(), Encoding.UTF8, MediaType);
+            httpContent.Headers.Add("x-timezone-offset", "0");
+            var response = await this.Client.PostAsync(URI + "/multi", httpContent);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        }
+
+        public async Task Should_Error_Create_Invalid_Multi_Data()
+        {
+            InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
+
+            viewModel.date = DateTimeOffset.MinValue;
+            viewModel.type = null;
+            viewModel.referenceNo = null;
+            viewModel.referenceType = null;
+            viewModel.storageId = 0;
+            List<InventoryDocumentViewModel> viewModels = new List<InventoryDocumentViewModel>() { viewModel };
+            var response = await this.Client.PostAsync(URI + "/multi", new StringContent(JsonConvert.SerializeObject(viewModels).ToString(), Encoding.UTF8, MediaType));
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
         //[Fact]
         //public async Task Should_Error_Create_Null_Item_Data()
         //{
         //    InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
-            
+
         //    viewModel.items = new List<InventoryDocumentItemViewModel> { null };
         //    var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
         //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -87,7 +112,7 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryDocument
         {
             InventoryDocumentViewModel viewModel = DataUtil.GetNewDataViewModel();
             viewModel.type = "IN";
-            viewModel.items[0].quantity=-1;
+            viewModel.items[0].quantity = -1;
             var response = await this.Client.PostAsync(URI, new StringContent(JsonConvert.SerializeObject(viewModel).ToString(), Encoding.UTF8, MediaType));
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }

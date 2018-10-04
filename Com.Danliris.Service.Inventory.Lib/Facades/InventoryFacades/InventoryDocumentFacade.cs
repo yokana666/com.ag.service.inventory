@@ -1,6 +1,5 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
-using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryDocumentViewModel;
 using Com.Moonlay.NetCore.Lib;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -14,7 +13,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
 {
     public class InventoryDocumentFacade
     {
-        private readonly InventoryDbContext dbContext;
+        public readonly InventoryDbContext dbContext;
         public readonly IServiceProvider serviceProvider;
         private readonly DbSet<InventoryDocument> dbSet;
 
@@ -127,76 +126,80 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
         public async Task<int> Create(InventoryDocument model, string username)
         {
             int Created = 0;
+            var internalTransaction = dbContext.Database.CurrentTransaction == null;
+            var transaction = !internalTransaction ? dbContext.Database.CurrentTransaction : dbContext.Database.BeginTransaction();
 
-            using (var transaction = this.dbContext.Database.BeginTransaction())
+            try
             {
-                try
+                InventoryMovementFacade movement = new InventoryMovementFacade(serviceProvider, dbContext);
+                model.No = await GenerateNo(model);
+
+                model._CreatedAgent = "Facade";
+                model._CreatedBy = username;
+                model._LastModifiedAgent = "Facade";
+                model._LastModifiedBy = username;
+                model._CreatedUtc = DateTime.UtcNow;
+                model._LastModifiedUtc = DateTime.UtcNow;
+
+                foreach (var item in model.Items)
                 {
-                    model.No = await GenerateNo(model);
+                    item._CreatedAgent = "Facade";
+                    item._CreatedBy = username;
+                    item._LastModifiedAgent = "Facade";
+                    item._LastModifiedBy = username;
+                    item._CreatedUtc = DateTime.UtcNow;
+                    item._LastModifiedUtc = DateTime.UtcNow;
 
-                    model._CreatedAgent = "Facade";
-                    model._CreatedBy = username;
-                    model._LastModifiedAgent = "Facade";
-                    model._LastModifiedBy = username;
-                    model._CreatedUtc = DateTime.UtcNow;
-                    model._LastModifiedUtc = DateTime.UtcNow;
 
-                    foreach (var item in model.Items)
+                }
+
+                this.dbSet.Add(model);
+                Created = await dbContext.SaveChangesAsync();
+                foreach (var item in model.Items)
+                {
+                    var qty = item.Quantity;
+                    if (model.Type == "OUT")
                     {
-                        item._CreatedAgent = "Facade";
-                        item._CreatedBy = username;
-                        item._LastModifiedAgent = "Facade";
-                        item._LastModifiedBy = username;
-                        item._CreatedUtc = DateTime.UtcNow;
-                        item._LastModifiedUtc = DateTime.UtcNow;
-
-
+                        qty = item.Quantity * -1;
                     }
+                    var SumQty = dbContext.InventoryMovements.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == item.ProductId && a.UomId == item.UomId).Sum(a => a.Quantity);
 
-                    this.dbSet.Add(model);
-                    Created = await dbContext.SaveChangesAsync();
+                    InventoryMovement movementModel = new InventoryMovement
+                    {
+                        ProductCode = item.ProductCode,
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        StorageCode = model.StorageCode,
+                        StorageId = model.StorageId,
+                        StorageName = model.StorageName,
+                        Before = SumQty,
+                        Quantity = qty,
+                        After = SumQty + qty,
+                        ReferenceNo = model.ReferenceNo,
+                        ReferenceType = model.ReferenceType,
+                        Type = model.Type,
+                        Date = model.Date,
+                        UomId = item.UomId,
+                        UomUnit = item.UomUnit,
+                        Remark = item.ProductRemark
+                    };
+                    await movement.Create(movementModel, username);
+                }
+                if (internalTransaction)
                     transaction.Commit();
 
-                    foreach (var item in model.Items)
-                    {
-                        var qty = item.Quantity;
-                        if (model.Type == "OUT")
-                        {
-                            qty = item.Quantity * -1;
-                        }
-                        var SumQty = dbContext.InventoryMovements.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == item.ProductId && a.UomId == item.UomId).Sum(a => a.Quantity);
-                        InventoryMovementFacade movement = new InventoryMovementFacade(this.serviceProvider, this.dbContext);
-                        InventoryMovement movementModel = new InventoryMovement
-                        {
-                            ProductCode = item.ProductCode,
-                            ProductId = item.ProductId,
-                            ProductName = item.ProductName,
-                            StorageCode = model.StorageCode,
-                            StorageId = model.StorageId,
-                            StorageName = model.StorageName,
-                            Before = SumQty,
-                            Quantity = qty,
-                            After = SumQty + qty,
-                            ReferenceNo = model.ReferenceNo,
-                            ReferenceType = model.ReferenceType,
-                            Type = model.Type,
-                            Date = model.Date,
-                            UomId = item.UomId,
-                            UomUnit = item.UomUnit,
-                            Remark = item.ProductRemark
-                        };
-                        await movement.Create(movementModel, username);
-                    }
-                }
-                catch (Exception e)
-                {
+                return Created;
+            }
+            catch (Exception e)
+            {
+                if (internalTransaction)
                     transaction.Rollback();
-                    throw new Exception(e.Message);
-                }
+                throw new Exception(e.Message);
             }
 
-            return Created;
         }
+
+
 
         async Task<string> GenerateNo(InventoryDocument model)
         {
@@ -229,6 +232,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
             //}
         }
 
-        
+
     }
 }

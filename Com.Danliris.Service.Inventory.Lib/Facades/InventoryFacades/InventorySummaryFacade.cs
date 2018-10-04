@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
@@ -109,46 +108,48 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades
         public async Task<int> Create(InventorySummary model, string username)
         {
             int Created = 0;
+            var internalTransaction = dbContext.Database.CurrentTransaction == null;
+            var transaction = !internalTransaction ? dbContext.Database.CurrentTransaction : dbContext.Database.BeginTransaction();
 
-            using (var transaction = this.dbContext.Database.BeginTransaction())
+            try
             {
-                try
+                var exist = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).FirstOrDefault();
+
+                if (exist == null)
                 {
-                    var exist = this.dbSet.Where(a => a._IsDeleted == false && a.StorageId == model.StorageId && a.ProductId == model.ProductId && a.UomId == model.UomId).FirstOrDefault();
+                    model.No = await GenerateNo(model);
+                    model._CreatedAgent = "Facade";
+                    model._CreatedBy = username;
+                    model._LastModifiedAgent = "Facade";
+                    model._LastModifiedBy = username;
+                    model._CreatedUtc = DateTime.UtcNow;
+                    model._LastModifiedUtc = DateTime.UtcNow;
 
-                    if (exist == null)
-                    {
-                        model.No = await GenerateNo(model);
-                        model._CreatedAgent = "Facade";
-                        model._CreatedBy = username;
-                        model._LastModifiedAgent = "Facade";
-                        model._LastModifiedBy = username;
-                        model._CreatedUtc = DateTime.UtcNow;
-                        model._LastModifiedUtc = DateTime.UtcNow;
+                    this.dbSet.Add(model);
+                }
+                else
+                {
+                    model._LastModifiedAgent = "Facade";
+                    model._LastModifiedBy = username;
+                    model._LastModifiedUtc = DateTime.UtcNow;
 
-                        this.dbSet.Add(model);
-                    }
-                    else
-                    {
-                        model._LastModifiedAgent = "Facade";
-                        model._LastModifiedBy = username;
-                        model._LastModifiedUtc = DateTime.UtcNow;
+                    exist.Quantity = model.Quantity;
+                    exist.StockPlanning = model.StockPlanning;
+                    this.dbSet.Update(exist);
+                }
+                Created = await dbContext.SaveChangesAsync();
 
-                        exist.Quantity = model.Quantity;
-                        exist.StockPlanning = model.StockPlanning;
-                        this.dbSet.Update(exist);
-                    }
-                    Created = await dbContext.SaveChangesAsync();
+                if (internalTransaction)
                     transaction.Commit();
-                }
-                catch (Exception e)
-                {
-                    transaction.Rollback();
-                    throw new Exception(e.Message);
-                }
-            }
 
-            return Created;
+                return Created;
+            }
+            catch (Exception e)
+            {
+                if (internalTransaction)
+                    transaction.Rollback();
+                throw new Exception(e.Message);
+            }
         }
 
         async Task<string> GenerateNo(InventorySummary model)

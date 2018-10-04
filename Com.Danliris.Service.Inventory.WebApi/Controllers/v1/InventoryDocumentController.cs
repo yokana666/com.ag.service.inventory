@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Services;
@@ -24,12 +25,13 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
         private readonly IMapper _mapper;
         private readonly InventoryDocumentFacade _facade;
         private readonly IdentityService identityService;
-
+        private readonly InventoryDbContext context;
         public InventoryDocumentController(IMapper mapper, InventoryDocumentFacade facade, IdentityService identityService)
         {
             _mapper = mapper;
             _facade = facade;
             this.identityService = identityService;
+            context = facade.dbContext;
         }
 
         [HttpGet]
@@ -63,8 +65,8 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                     }
                     InventoryDocumentViewModel viewModel = new InventoryDocumentViewModel
                     {
-                        Id=model.Id,
-                        no= model.No,
+                        Id = model.Id,
+                        no = model.No,
                         referenceNo = model.ReferenceNo,
                         referenceType = model.ReferenceType,
                         remark = model.Remark,
@@ -148,7 +150,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                 }
                 InventoryDocumentViewModel viewModel = new InventoryDocumentViewModel
                 {
-                    no=model.No,
+                    no = model.No,
                     referenceNo = model.ReferenceNo,
                     referenceType = model.ReferenceType,
                     remark = model.Remark,
@@ -183,7 +185,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
             }
         }
 
-        
+
 
         //[HttpPost]
         //public async Task<ActionResult> Post([FromBody] InventoryDocumentViewModel viewModel)
@@ -204,32 +206,32 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
 
             //InventoryDocument m = _mapper.Map<InventoryDocument>(vm);
             List<InventoryDocumentItem> items = new List<InventoryDocumentItem>();
-            foreach(var item in vm.items)
+            foreach (var item in vm.items)
             {
                 items.Add(new InventoryDocumentItem
                 {
-                    ProductCode=item.productCode,
-                    ProductId=item.productId,
-                    ProductName=item.productName,
-                    ProductRemark=item.remark,
-                    Quantity=item.quantity,
-                    StockPlanning=item.stockPlanning,
-                    UomId=item.uomId,
-                    UomUnit=item.uom,
-                    
+                    ProductCode = item.productCode,
+                    ProductId = item.productId,
+                    ProductName = item.productName,
+                    ProductRemark = item.remark,
+                    Quantity = item.quantity,
+                    StockPlanning = item.stockPlanning,
+                    UomId = item.uomId,
+                    UomUnit = item.uom,
+
                 });
             }
             InventoryDocument m = new InventoryDocument
             {
-                ReferenceNo=vm.referenceNo,
-                ReferenceType=vm.referenceType,
-                Remark=vm.remark,
-                StorageCode=vm.storageCode,
-                StorageId=Convert.ToInt32(vm.storageId),
-                StorageName=vm.storageName,
-                Date=vm.date,
-                Type=vm.type,
-                Items=items
+                ReferenceNo = vm.referenceNo,
+                ReferenceType = vm.referenceType,
+                Remark = vm.remark,
+                StorageCode = vm.storageCode,
+                StorageId = Convert.ToInt32(vm.storageId),
+                StorageName = vm.storageName,
+                Date = vm.date,
+                Type = vm.type,
+                Items = items
             };
 
             ValidateService validateService = (ValidateService)_facade.serviceProvider.GetService(typeof(ValidateService));
@@ -262,6 +264,90 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                 return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
             }
 
+        }
+
+        [HttpPost("multi")]
+        public async Task<IActionResult> MultiplePost([FromBody]List<InventoryDocumentViewModel> vms)
+        {
+            identityService.Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
+            identityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+            //InventoryDocument m = _mapper.Map<InventoryDocument>(vm);
+
+            List<InventoryDocument> modelList = vms.Select(x => new InventoryDocument()
+            {
+                Active = x.Active,
+                Date = x.date,
+                Id = x.Id,
+                No = x.no,
+                ReferenceNo = x.referenceNo,
+                ReferenceType = x.referenceType,
+                Remark = x.remark,
+                StorageCode = x.storageCode,
+                StorageId = x.storageId,
+                StorageName = x.storageName,
+                Type = x.type,
+                _CreatedBy = x._CreatedBy,
+                _CreatedAgent = x._CreatedAgent,
+                _CreatedUtc = x._CreatedUtc,
+                _IsDeleted = x._IsDeleted,
+                _LastModifiedAgent = x._LastModifiedAgent,
+                _LastModifiedBy = x._LastModifiedBy,
+                _LastModifiedUtc = x._LastModifiedUtc,
+                Items = x.items.Select(y => new InventoryDocumentItem()
+                {
+                    Active = y.Active,
+                    Id = y.Id,
+                    ProductCode = y.productCode,
+                    ProductId = y.productId,
+                    ProductName = y.productName,
+                    ProductRemark = y.remark,
+                    Quantity = y.quantity,
+                    StockPlanning = y.stockPlanning,
+                    UomId = y.uomId,
+                    UomUnit = y.uom
+                }).ToList()
+            }).ToList();
+            
+            using (var transaction = _facade.dbContext.Database.BeginTransaction())
+            {
+                ValidateService validateService = (ValidateService)_facade.serviceProvider.GetService(typeof(ValidateService));
+
+                try
+                {
+                    foreach (var vm in vms)
+                    {
+                        validateService.Validate(vm);
+                    }
+                    //int clientTimeZoneOffset = int.Parse(Request.Headers["x-timezone-offset"].First());
+
+
+                    var result = await Task.WhenAll(modelList.Select(x => _facade.Create(x, identityService.Username)));
+
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, General.CREATED_STATUS_CODE, General.OK_MESSAGE)
+                        .Ok();
+                    transaction.Commit();
+                    return Created(String.Concat(Request.Path, "/", 0), Result);
+                }
+                catch (ServiceValidationExeption e)
+                {
+                    transaction.Rollback();
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, General.BAD_REQUEST_STATUS_CODE, General.BAD_REQUEST_MESSAGE)
+                        .Fail(e);
+                    return BadRequest(Result);
+
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                        .Fail();
+                    return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
+                }
+            }
         }
     }
 }
