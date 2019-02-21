@@ -10,21 +10,21 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils
     {
         public InventoryDocumentItem GetNewData() => new InventoryDocumentItem
         {
-            ProductId = "ProductId",
+            ProductId = 1,
             ProductCode = "ProductCode",
             ProductName = "ProductName",
             Quantity = 10,
-            UomId = "UomId",
+            UomId = 1,
             UomUnit = "Uom",
             StockPlanning=0,
             
         };
         public InventoryDocumentItemViewModel GetNewDataViewModel() => new InventoryDocumentItemViewModel
         {
-            productId =  "ProductId",
+            productId =  1,
             productCode = "ProductCode",
             productName = "ProductName",
-            uomId = "UomId",
+            uomId = 1,
             uom = "Uom",
             quantity=10,
             stockPlanning=0,

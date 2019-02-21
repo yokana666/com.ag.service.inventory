@@ -42,7 +42,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils
             {
                 date = DateTimeOffset.Now,
                 storageCode = "test01",
-                storageId = "2",
+                storageId = 2,
                 storageName = "Test",
                 referenceNo = "Test001",
                 referenceType = "TestType",
