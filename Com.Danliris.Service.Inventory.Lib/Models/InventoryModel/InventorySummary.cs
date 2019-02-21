@@ -20,5 +20,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
         public string StorageName { get; set; }
         public double Quantity { get; set; }
         public double StockPlanning { get; set; }
+        public string Uid { get; set; }
     }
 }

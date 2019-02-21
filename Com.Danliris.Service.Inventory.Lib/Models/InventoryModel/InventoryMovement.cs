@@ -29,5 +29,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
         public double After { get; set; }
         public string Remark { get; set; }
         public string Type { get; set; }
+
+        public string Uid { get; set; }
     }
 }
