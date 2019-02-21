@@ -1,6 +1,7 @@
 ﻿using Com.Moonlay.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
@@ -20,6 +21,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
         public string StorageName { get; set; }
         public double Quantity { get; set; }
         public double StockPlanning { get; set; }
+        [MaxLength(255)]
         public string Uid { get; set; }
     }
 }
