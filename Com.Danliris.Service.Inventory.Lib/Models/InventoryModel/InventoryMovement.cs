@@ -30,6 +30,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.InventoryModel
         public string Remark { get; set; }
         public string Type { get; set; }
 
-        public Guid Uid { get; set; }
+        public string Uid { get; set; }
     }
 }
