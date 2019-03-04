@@ -52,15 +52,15 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel
                         itemErrorCount++;
                         itemError += "productId: 'Barang harus diisi', ";
                     }
-                    else
-                    {
-                        var itemsExist = items.Where(i => i.productId != null && i.uomId != null && i.productId.Equals(item.productId) && i.uomId.Equals(item.uomId)).Count();
-                        if (itemsExist > 1)
-                        {
-                            itemErrorCount++;
-                            itemError += "productId: 'Barang dan Satuan sudah digunakan', ";
-                        }
-                    }
+                    //else
+                    //{
+                    //    var itemsExist = items.Where(i => i.productId != null && i.uomId != null && i.productId.Equals(item.productId) && i.uomId.Equals(item.uomId)).Count();
+                    //    if (itemsExist > 1)
+                    //    {
+                    //        itemErrorCount++;
+                    //        itemError += "productId: 'Barang dan Satuan sudah digunakan', ";
+                    //    }
+                    //}
 
                     if (type=="ADJ" && item.quantity == 0)
                     {
