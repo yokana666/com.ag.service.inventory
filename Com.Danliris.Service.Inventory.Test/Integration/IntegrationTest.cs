@@ -1,4 +1,6 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
+﻿using Com.Danliris.Service.Inventory.Lib;
+using Com.Danliris.Service.Inventory.Lib.Models.DataIntegrationLog;
+using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.MongoModels;
 using MongoDB.Bson;
 using System;
@@ -63,6 +65,19 @@ namespace Com.Danliris.Service.Inventory.Test.Integration
         public void Should_Succes_Transform()
         {
             var sqlDocument = new InventoryDocument(InventoryDocument);
+
+            var migrationLog = new InventoryIntegrationLogModel()
+            {
+                LastIntegrationDate = DateTime.Now,
+                Remark = "remark"
+            };
+
+            var settings = new MongoDbSettings()
+            {
+                ConnectionString = "connection",
+                Database = "database"
+            };
+
             Assert.NotNull(sqlDocument);
         }
     }
