@@ -63,7 +63,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Facades
                 catch (Exception e)
                 {
                     transaction.Rollback();
-                    throw new Exception("Insert Error");
+                    throw new Exception("Insert Error : " + e.Message);
                 }
             }
 

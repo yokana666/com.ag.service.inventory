@@ -74,9 +74,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
             MaterialDistributionNote model = new MaterialDistributionNote();
             PropertyCopier<MaterialDistributionNoteViewModel, MaterialDistributionNote>.Copy(viewModel, model);
 
-            model.UnitId = viewModel.Unit._id;
-            model.UnitCode = viewModel.Unit.code;
-            model.UnitName = viewModel.Unit.name;
+            model.UnitId = viewModel.Unit.Id.ToString();
+            model.UnitCode = viewModel.Unit.Code;
+            model.UnitName = viewModel.Unit.Name;
 
             model.MaterialDistributionNoteItems = new List<MaterialDistributionNoteItem>();
             foreach (MaterialDistributionNoteItemViewModel mdni in viewModel.MaterialDistributionNoteItems)
@@ -90,14 +90,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     MaterialDistributionNoteDetail materialDistributionNoteDetail = new MaterialDistributionNoteDetail();
                     PropertyCopier<MaterialDistributionNoteDetailViewModel, MaterialDistributionNoteDetail>.Copy(mdnd, materialDistributionNoteDetail);
 
-                    materialDistributionNoteDetail.ProductionOrderId = mdnd.ProductionOrder._id;
-                    materialDistributionNoteDetail.ProductionOrderNo = mdnd.ProductionOrder.orderNo;
-                    materialDistributionNoteDetail.ProductionOrderIsCompleted = mdnd.ProductionOrder.isCompleted;
+                    materialDistributionNoteDetail.ProductionOrderId = mdnd.ProductionOrder.Id;
+                    materialDistributionNoteDetail.ProductionOrderNo = mdnd.ProductionOrder.OrderNo;
+                    materialDistributionNoteDetail.ProductionOrderIsCompleted = mdnd.ProductionOrder.IsCompleted;
                     materialDistributionNoteDetail.DistributedLength = (double)mdnd.DistributedLength;
 
-                    materialDistributionNoteDetail.ProductId = mdnd.Product._id;
-                    materialDistributionNoteDetail.ProductCode = mdnd.Product.code;
-                    materialDistributionNoteDetail.ProductName = mdnd.Product.name;
+                    materialDistributionNoteDetail.ProductId = mdnd.Product.Id;
+                    materialDistributionNoteDetail.ProductCode = mdnd.Product.Code;
+                    materialDistributionNoteDetail.ProductName = mdnd.Product.Name;
 
                     materialDistributionNoteDetail.SupplierId = mdnd.Supplier._id;
                     materialDistributionNoteDetail.SupplierCode = mdnd.Supplier.code;
@@ -119,9 +119,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
             UnitViewModel Unit = new UnitViewModel()
             {
-                _id = model.UnitId,
-                code = model.UnitCode,
-                name = model.UnitName
+                Id = model.UnitId,
+                Code = model.UnitCode,
+                Name = model.UnitName
             };
 
             viewModel.Unit = Unit;
@@ -142,16 +142,16 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
                         ProductionOrderViewModel productionOrder = new ProductionOrderViewModel
                         {
-                            _id = mdnd.ProductionOrderId,
-                            orderNo = mdnd.ProductionOrderNo,
-                            isCompleted = mdnd.ProductionOrderIsCompleted,
+                            Id = mdnd.ProductionOrderId,
+                            OrderNo = mdnd.ProductionOrderNo,
+                            IsCompleted = mdnd.ProductionOrderIsCompleted,
                         };
 
                         ProductViewModel product = new ProductViewModel
                         {
-                            _id = mdnd.ProductId,
-                            code = mdnd.ProductCode,
-                            name = mdnd.ProductName
+                            Id = mdnd.ProductId,
+                            Code = mdnd.ProductCode,
+                            Name = mdnd.ProductName
                         };
 
                         SupplierViewModel supplier = new SupplierViewModel
@@ -414,7 +414,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 catch (Exception e)
                 {
                     transaction.Rollback();
-                    throw new ServiceValidationExeption(null, null);
+                    throw e;
                 }
             }
             return Created;

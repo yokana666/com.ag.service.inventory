@@ -26,9 +26,9 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingV
             #region Product
 
             this.Product = new ProductViewModel();
-            this.Product._id = model.ProductId;
-            this.Product.code = model.ProductCode;
-            this.Product.name = model.ProductName;
+            this.Product.Id = model.ProductId;
+            this.Product.Code = model.ProductCode;
+            this.Product.Name = model.ProductName;
 
             #endregion Product
         }
@@ -40,9 +40,9 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingV
 
             #region Product
 
-            model.ProductId = this.Product._id;
-            model.ProductCode = this.Product.code;
-            model.ProductName = this.Product.name;
+            model.ProductId = this.Product.Id;
+            model.ProductCode = this.Product.Code;
+            model.ProductName = this.Product.Name;
 
             #endregion Product
 

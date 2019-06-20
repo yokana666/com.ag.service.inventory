@@ -56,9 +56,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUti
                 MachineCode = machine.code,
                 MachineName = machine.name,
 
-                ProductId = unit.items[0].product._id,
-                ProductCode = unit.items[0].product.code,
-                ProductName = unit.items[0].product.name,
+                ProductId = unit.items[0].product.Id,
+                ProductCode = unit.items[0].product.Code,
+                ProductName = unit.items[0].product.Name,
 
                 SupplierId = unit.supplier._id,
                 SupplierCode = unit.supplier.code,

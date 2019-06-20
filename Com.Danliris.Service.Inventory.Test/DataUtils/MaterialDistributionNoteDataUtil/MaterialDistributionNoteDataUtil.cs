@@ -46,9 +46,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNote
 
             MaterialDistributionNote TestData = new MaterialDistributionNote
             {
-                UnitId = fp._id,
-                UnitCode = fp.code,
-                UnitName = fp.name,
+                UnitId = fp.Id,
+                UnitCode = fp.Code,
+                UnitName = fp.Name,
                 Type = "PRODUKSI",
                 IsApproved = false,
                 IsDisposition = false,
