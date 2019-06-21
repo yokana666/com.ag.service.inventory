@@ -49,7 +49,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
                         var storageName = this.Unit.Name.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
                         MaterialsRequestNoteService Service = (MaterialsRequestNoteService)validationContext.GetService(typeof(MaterialsRequestNoteService));
                         InventorySummaryFacade InventorySummaryFacade = (InventorySummaryFacade)validationContext.GetService(typeof(InventorySummaryFacade));
-                        List<string> inventorySummaries = InventorySummaryFacade.GetProductCodeForMaterialRequestNote(storageName);
+                        //List<string> inventorySummaries = InventorySummaryFacade.GetProductCodeForMaterialRequestNote(storageName);
 
                         //HttpClient httpClient = new HttpClient();
                         //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Service.Token);
@@ -69,21 +69,21 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
                         //var json = result.Single(p => p.Key.Equals("data")).Value;
                         //List<InventorySummaryViewModel> inventorySummaries = JsonConvert.DeserializeObject<List<InventorySummaryViewModel>>(json.ToString());
                         
-                        if (!(inventorySummaries.Count.Equals(0)))
-                        {
-                            //InventorySummaryViewModel inventorySummary = inventorySummaries.SingleOrDefault(p => p.productCode.Equals(materialsRequestNote_Item.Product.Code) && p.uom.Equals("MTR"));
-                            var inventorySummary = inventorySummaries.SingleOrDefault(p => products.Contains(p));
-                            if (inventorySummary == null)
-                            {
-                                Count++;
-                                materialsRequestNote_ItemsError += "ProductId: 'Barang tidak ada pada inventori summeries', ";
-                            }
-                        }
-                        else
-                        {
-                            Count++;
-                            materialsRequestNote_ItemsError += "ProductId: 'Barang tidak ada pada inventori summeries', ";
-                        }
+                        //if (!(inventorySummaries.Count.Equals(0)))
+                        //{
+                        //    //InventorySummaryViewModel inventorySummary = inventorySummaries.SingleOrDefault(p => p.productCode.Equals(materialsRequestNote_Item.Product.Code) && p.uom.Equals("MTR"));
+                        //    var inventorySummary = inventorySummaries.SingleOrDefault(p => products.Contains(p));
+                        //    if (inventorySummary == null)
+                        //    {
+                        //        Count++;
+                        //        materialsRequestNote_ItemsError += "ProductId: 'Barang tidak ada pada inventori summeries', ";
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Count++;
+                        //    materialsRequestNote_ItemsError += "ProductId: 'Barang tidak ada pada inventori summeries', ";
+                        //}
                     }
                     if (string.IsNullOrWhiteSpace(materialsRequestNote_Item.Grade))
                     {

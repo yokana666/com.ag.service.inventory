@@ -312,7 +312,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                     var dbModel = await ReadModelById(Id);
 
                     dbModel.Remark = Model.Remark;
-
+                    Updated = await UpdateAsync(dbModel.Id, dbModel);
                     var deletedDetails = dbModel.MaterialsRequestNote_Items.Where(x => !Model.MaterialsRequestNote_Items.Any(y => x.Id == y.Id));
                     var updatedDetails = dbModel.MaterialsRequestNote_Items.Where(x => Model.MaterialsRequestNote_Items.Any(y => x.Id == y.Id));
                     var addedDetails = Model.MaterialsRequestNote_Items.Where(x => !dbModel.MaterialsRequestNote_Items.Any(y => y.Id == x.Id));
@@ -320,7 +320,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                     List<string> newProductionOrderIds = new List<string>();
                     foreach (var item in deletedDetails)
                     {
-                        await materialsRequestNote_ItemService.DeleteModel(item.Id);
+                        Updated += await materialsRequestNote_ItemService.DeleteModel(item.Id);
                         deletedProductionOrderIds.Add(item.ProductionOrderId);
                     }
 
@@ -349,9 +349,18 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                         item.OrderTypeId = selectedDetail.OrderTypeId;
                         item.OrderTypeName = selectedDetail.OrderTypeName;
 
-                        await materialsRequestNote_ItemService.UpdateModel(item.Id, item);
+                        Updated += await materialsRequestNote_ItemService.UpdateModel(item.Id, item);
 
                     }
+
+                    foreach(var item in addedDetails)
+                    {
+                        item.MaterialsRequestNoteId = Id;
+                        Updated += await materialsRequestNote_ItemService.CreateModel(item);
+                        newProductionOrderIds.Add(item.ProductionOrderId);
+                    }
+                    UpdateIsRequestedProductionOrder(deletedProductionOrderIds, "DELETE");
+                    UpdateIsRequestedProductionOrder(newProductionOrderIds, "CREATE");
 
                     //HashSet<object> materialsRequestNote_Items = new HashSet<object>(materialsRequestNote_ItemService.DbSet
                     //    .Where(w => w.MaterialsRequestNoteId.Equals(Id))
@@ -360,7 +369,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
 
                     //Updated = await this.UpdateAsync(Id, Model);
 
-                    
+
                     //List<MaterialsRequestNote_Item> itemForUpdateInventory = new List<MaterialsRequestNote_Item>();
 
                     //foreach (dynamic materialsRequestNote_Item in materialsRequestNote_Items)
@@ -425,7 +434,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServic
                     MaterialsRequestNote Model = await this.ReadModelById(Id);
                     Deleted = await this.DeleteAsync(Id);
 
-
+                    
                     HashSet<object> materialsRequestNote_Items = new HashSet<object>(materialsRequestNote_ItemService.DbSet
                     .Where(w => w.MaterialsRequestNoteId.Equals(Id))
                     .AsNoTracking());
