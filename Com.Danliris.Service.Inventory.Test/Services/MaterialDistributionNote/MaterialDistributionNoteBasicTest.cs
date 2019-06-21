@@ -10,15 +10,15 @@ using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteData
 
 namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
 {
-    [Collection("ServiceProviderFixture Collection")]
-    public class MaterialDistributionNoteBasicTest : BasicServiceTest<InventoryDbContext, MaterialDistributionNoteService, Model.MaterialDistributionNote, MaterialDistributionNoteDataUtil>
-    {
-        private static List<string> Keys = new List<string>();
-        private IServiceProvider serviceProvider { get; set; }
+    //[Collection("ServiceProviderFixture Collection")]
+    //public class MaterialDistributionNoteBasicTest : BasicServiceTest<InventoryDbContext, MaterialDistributionNoteService, Model.MaterialDistributionNote, MaterialDistributionNoteDataUtil>
+    //{
+    //    private static List<string> Keys = new List<string>();
+    //    private IServiceProvider serviceProvider { get; set; }
 
-        public MaterialDistributionNoteBasicTest(ServiceProviderFixture fixture) : base(fixture, Keys)
-        {
-            serviceProvider = fixture.ServiceProvider;
-        }
-    }
+    //    public MaterialDistributionNoteBasicTest(ServiceProviderFixture fixture) : base(fixture, Keys)
+    //    {
+    //        serviceProvider = fixture.ServiceProvider;
+    //    }
+    //}
 }
