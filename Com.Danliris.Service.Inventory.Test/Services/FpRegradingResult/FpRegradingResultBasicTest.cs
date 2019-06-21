@@ -9,15 +9,15 @@ using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
 {
-    [Collection("ServiceProviderFixture Collection")]
-    public class FpRegradingResultBasicTest : BasicServiceTest<InventoryDbContext, FpRegradingResultDocsService, FpRegradingResultDocs, FpRegradingResultDataUtil>
-    {
-        private static List<string> Keys = new List<string>();
-        private IServiceProvider serviceProvider { get; set; }
+    //[Collection("ServiceProviderFixture Collection")]
+    //public class FpRegradingResultBasicTest : BasicServiceTest<InventoryDbContext, FpRegradingResultDocsService, FpRegradingResultDocs, FpRegradingResultDataUtil>
+    //{
+    //    private static List<string> Keys = new List<string>();
+    //    private IServiceProvider serviceProvider { get; set; }
 
-        public FpRegradingResultBasicTest(ServiceProviderFixture fixture) : base(fixture, Keys)
-        {
-            serviceProvider = fixture.ServiceProvider;
-        }
-    }
+    //    public FpRegradingResultBasicTest(ServiceProviderFixture fixture) : base(fixture, Keys)
+    //    {
+    //        serviceProvider = fixture.ServiceProvider;
+    //    }
+    //}
 }
