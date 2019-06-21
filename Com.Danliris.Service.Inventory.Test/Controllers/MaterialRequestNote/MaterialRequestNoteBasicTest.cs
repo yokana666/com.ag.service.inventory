@@ -11,15 +11,15 @@ using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Controllers.MaterialRequestNote
 {
-    [Collection("TestServerFixture Collection")]
-    public class MaterialRequestNoteBasicTest : BasicControllerTest<InventoryDbContext, MaterialsRequestNoteService, MaterialsRequestNote, MaterialsRequestNoteViewModel, MaterialRequestNoteDataUtil>
-    {
-        private static string URI = "v1/materials-request-notes";
-        private static List<string> CreateValidationAttributes = new List<string> { "UnitId", "RequestType", "MaterialsRequestNote_Items" };
-        private static List<string> UpdateValidationAttributes = new List<string> { "UnitId", "RequestType", "MaterialsRequestNote_Items" };
+    //[Collection("TestServerFixture Collection")]
+    //public class MaterialRequestNoteBasicTest : BasicControllerTest<InventoryDbContext, MaterialsRequestNoteService, MaterialsRequestNote, MaterialsRequestNoteViewModel, MaterialRequestNoteDataUtil>
+    //{
+    //    private static string URI = "v1/materials-request-notes";
+    //    private static List<string> CreateValidationAttributes = new List<string> { "UnitId", "RequestType", "MaterialsRequestNote_Items" };
+    //    private static List<string> UpdateValidationAttributes = new List<string> { "UnitId", "RequestType", "MaterialsRequestNote_Items" };
 
-        public MaterialRequestNoteBasicTest(TestServerFixture fixture) : base(fixture, URI, CreateValidationAttributes, UpdateValidationAttributes)
-        {
-        }
-    }
+    //    public MaterialRequestNoteBasicTest(TestServerFixture fixture) : base(fixture, URI, CreateValidationAttributes, UpdateValidationAttributes)
+    //    {
+    //    }
+    //}
 }
