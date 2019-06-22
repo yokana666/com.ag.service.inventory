@@ -8,7 +8,7 @@ using Com.Danliris.Service.Inventory.Lib.MongoRepositories.InventoryDocument;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -57,8 +57,6 @@ namespace Com.Danliris.Service.Inventory.WebApi
         public void RegisterServices(IServiceCollection services)
         {
             services
-                .AddScoped<MaterialsRequestNoteService>()
-                .AddScoped<MaterialsRequestNote_ItemService>()
                 .AddScoped<MaterialDistributionNoteService>()
                 .AddTransient<MaterialDistributionNoteItemService>()
                 .AddTransient<StockTransferNoteService>()
@@ -68,6 +66,10 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<FpRegradingResultDocsService>()
                 .AddTransient<FPReturnInvToPurchasingService>()
                 .AddTransient<FPReturnInvToPurchasingDetailService>()
+                .AddTransient<IMaterialRequestNoteService, NewMaterialRequestNoteService>()
+                .AddScoped<IIdentityService, IdentityService>()
+                .AddScoped<IValidateService, ValidateService>()
+                .AddScoped<IHttpService, HttpService>()
                 .AddScoped<IdentityService>()
                 .AddScoped<HttpClientService>()
                 .AddScoped<ValidateService>();

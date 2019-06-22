@@ -63,14 +63,14 @@ namespace Com.Danliris.Service.Inventory.Test
                 .ConfigureServices(services =>
                 {
                     services
-                        .AddTransient<MaterialRequestNoteDataUtil>()
-                        .AddTransient<MaterialRequestNoteItemDataUtil>()
+                        //.AddTransient<MaterialRequestNoteDataUtil>()
+                        //.AddTransient<MaterialRequestNoteItemDataUtil>()
 
                         .AddTransient<FpRegradingResultDataUtil>()
                         .AddTransient<FpRegradingResultDetailsDataUtil>()
 
-                        .AddTransient<MaterialDistributionNoteDataUtil>()
-                        .AddTransient<MaterialDistributionNoteItemDataUtil>()
+                        //.AddTransient<MaterialDistributionNoteDataUtil>()
+                        //.AddTransient<MaterialDistributionNoteItemDataUtil>()
                         .AddTransient<MaterialDistributionNoteDetailDataUtil>()
 
                         .AddTransient<StockTransferNoteDataUtil>()

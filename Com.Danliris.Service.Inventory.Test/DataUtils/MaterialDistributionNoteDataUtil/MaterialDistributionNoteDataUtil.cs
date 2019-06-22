@@ -13,58 +13,58 @@ using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil
 {
-    public class MaterialDistributionNoteDataUtil : BasicDataUtil<InventoryDbContext, MaterialDistributionNoteService, MaterialDistributionNote>, IEmptyData<MaterialDistributionNoteViewModel>
-    {
-        private readonly HttpClientTestService client;
-        private readonly MaterialDistributionNoteItemDataUtil materialDistributionNoteItemDataUtil;
+    //public class MaterialDistributionNoteDataUtil : BasicDataUtil<InventoryDbContext, MaterialDistributionNoteService, MaterialDistributionNote>, IEmptyData<MaterialDistributionNoteViewModel>
+    //{
+    //    private readonly HttpClientTestService client;
+    //    private readonly MaterialDistributionNoteItemDataUtil materialDistributionNoteItemDataUtil;
 
-        public MaterialDistributionNoteDataUtil(InventoryDbContext dbContext, MaterialDistributionNoteService service, HttpClientTestService client, MaterialDistributionNoteItemDataUtil materialDistributionNoteItemDataUtil) : base(dbContext, service)
-        {
-            this.client = client;
-            this.materialDistributionNoteItemDataUtil = materialDistributionNoteItemDataUtil;
-        }
+    //    public MaterialDistributionNoteDataUtil(InventoryDbContext dbContext, MaterialDistributionNoteService service, HttpClientTestService client, MaterialDistributionNoteItemDataUtil materialDistributionNoteItemDataUtil) : base(dbContext, service)
+    //    {
+    //        this.client = client;
+    //        this.materialDistributionNoteItemDataUtil = materialDistributionNoteItemDataUtil;
+    //    }
 
-        public MaterialDistributionNoteViewModel GetEmptyData()
-        {
-            MaterialDistributionNoteViewModel Data = new MaterialDistributionNoteViewModel();
+    //    public MaterialDistributionNoteViewModel GetEmptyData()
+    //    {
+    //        MaterialDistributionNoteViewModel Data = new MaterialDistributionNoteViewModel();
 
-            Data.Type = string.Empty;
-            Data.Unit = new UnitViewModel();
-            Data.MaterialDistributionNoteItems = new List<MaterialDistributionNoteItemViewModel> {
-                    new MaterialDistributionNoteItemViewModel {
-                        MaterialDistributionNoteDetails = new List<MaterialDistributionNoteDetailViewModel>() { new MaterialDistributionNoteDetailViewModel()
-                    }
-                }
-            };
+    //        Data.Type = string.Empty;
+    //        Data.Unit = new UnitViewModel();
+    //        Data.MaterialDistributionNoteItems = new List<MaterialDistributionNoteItemViewModel> {
+    //                new MaterialDistributionNoteItemViewModel {
+    //                    MaterialDistributionNoteDetails = new List<MaterialDistributionNoteDetailViewModel>() { new MaterialDistributionNoteDetailViewModel()
+    //                }
+    //            }
+    //        };
 
-            return Data;
-        }
+    //        return Data;
+    //    }
 
-        public override MaterialDistributionNote GetNewData()
-        {
-            UnitViewModel fp = UnitDataUtil.GetFinishingUnit(client);
+    //    public override MaterialDistributionNote GetNewData()
+    //    {
+    //        UnitViewModel fp = UnitDataUtil.GetFinishingUnit(client);
 
-            MaterialDistributionNote TestData = new MaterialDistributionNote
-            {
-                UnitId = fp.Id,
-                UnitCode = fp.Code,
-                UnitName = fp.Name,
-                Type = "PRODUKSI",
-                IsApproved = false,
-                IsDisposition = false,
-                MaterialDistributionNoteItems = new List<MaterialDistributionNoteItem> { materialDistributionNoteItemDataUtil.GetNewData() }
-            };
+    //        MaterialDistributionNote TestData = new MaterialDistributionNote
+    //        {
+    //            UnitId = fp.Id,
+    //            UnitCode = fp.Code,
+    //            UnitName = fp.Name,
+    //            Type = "PRODUKSI",
+    //            IsApproved = false,
+    //            IsDisposition = false,
+    //            MaterialDistributionNoteItems = new List<MaterialDistributionNoteItem> { materialDistributionNoteItemDataUtil.GetNewData() }
+    //        };
 
-            return TestData;
-        }
+    //        return TestData;
+    //    }
 
 
-        public override async Task<MaterialDistributionNote> GetTestData()
-        {
-            MaterialDistributionNote Data = GetNewData();
-            this.Service.Token = HttpClientTestService.Token;
-            await this.Service.CreateModel(Data);
-            return Data;
-        }
-    }
+    //    public override async Task<MaterialDistributionNote> GetTestData()
+    //    {
+    //        MaterialDistributionNote Data = GetNewData();
+    //        this.Service.Token = HttpClientTestService.Token;
+    //        await this.Service.CreateModel(Data);
+    //        return Data;
+    //    }
+    //}
 }

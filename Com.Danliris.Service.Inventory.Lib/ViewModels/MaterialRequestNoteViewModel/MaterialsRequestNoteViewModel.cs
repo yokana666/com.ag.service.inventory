@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Newtonsoft.Json;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
@@ -47,7 +46,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
                     {
                         //string inventorySummaryURI = "inventory/inventory-summary?order=%7B%7D&page=1&size=1000000000&";
                         var storageName = this.Unit.Name.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
-                        MaterialsRequestNoteService Service = (MaterialsRequestNoteService)validationContext.GetService(typeof(MaterialsRequestNoteService));
+                        //MaterialsRequestNoteService Service = (MaterialsRequestNoteService)validationContext.GetService(typeof(MaterialsRequestNoteService));
                         InventorySummaryFacade InventorySummaryFacade = (InventorySummaryFacade)validationContext.GetService(typeof(InventorySummaryFacade));
                         //List<string> inventorySummaries = InventorySummaryFacade.GetProductCodeForMaterialRequestNote(storageName);
 

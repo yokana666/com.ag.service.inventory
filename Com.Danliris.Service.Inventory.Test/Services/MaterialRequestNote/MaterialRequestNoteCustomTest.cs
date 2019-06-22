@@ -1,15 +1,4 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
-using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
-using Com.Danliris.Service.Inventory.Test.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using static Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices.MaterialsRequestNoteService;
-using model = Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
-
-namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
+﻿namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
 {
     //[Collection("ServiceProviderFixture Collection")]
     //public class MaterialRequestNoteCustomTest
