@@ -117,7 +117,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
         [Fact]
         public async Task Should_Fail_DeleteAsync_Null()
         {
-            NewMaterialRequestNoteService service = new NewMaterialRequestNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewMaterialRequestNoteService service = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
             NewMaterialRequestNoteService utilService = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
 
             await Assert.ThrowsAnyAsync<Exception>(() => service.DeleteAsync(0));

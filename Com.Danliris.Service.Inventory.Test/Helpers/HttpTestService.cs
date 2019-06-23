@@ -17,7 +17,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
         }
         public Task<HttpResponseMessage> GetAsync(string url)
         {
-            return Task.Run(() => new HttpResponseMessage());
+            return Task.Run(() => new HttpResponseMessage() { Content = new StringContent("{\"data\" : [{'Id':1, '_id':1, 'Unit':'unit', 'code':'code', 'name':'name'}]}")});
         }
 
         public Task<HttpResponseMessage> PostAsync(string url, HttpContent content)

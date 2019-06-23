@@ -1,0 +1,319 @@
+﻿using Com.Danliris.Service.Inventory.Lib;
+using Com.Danliris.Service.Inventory.Test.Helpers;
+using Model = Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Xunit;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
+using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
+using System.Runtime.CompilerServices;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using Com.Danliris.Service.Inventory.Lib.Services;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Threading.Tasks;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
+using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
+using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
+using System.Linq;
+
+namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
+{
+    
+    public class MaterialDistributionNoteServiceTest 
+    {
+        private const string ENTITY = "MaterialDistributionNote";
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public string GetCurrentMethod()
+        {
+            StackTrace st = new StackTrace();
+            StackFrame sf = st.GetFrame(1);
+
+            return string.Concat(sf.GetMethod().Name, "_", ENTITY);
+        }
+
+        private InventoryDbContext _dbContext(string testName)
+        {
+            DbContextOptionsBuilder<InventoryDbContext> optionsBuilder = new DbContextOptionsBuilder<InventoryDbContext>();
+            optionsBuilder
+                .UseInMemoryDatabase(testName)
+                .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+
+            InventoryDbContext dbContext = new InventoryDbContext(optionsBuilder.Options);
+
+            return dbContext;
+        }
+
+        private MaterialDistributionNoteDataUtil _dataUtil(NewMaterialDistributionNoteService service, NewMaterialRequestNoteService mrnService)
+        {
+
+            GetServiceProvider();
+            return new MaterialDistributionNoteDataUtil(service, mrnService);
+        }
+
+        private Mock<IServiceProvider> GetServiceProvider()
+        {
+            var serviceProvider = new Mock<IServiceProvider>();
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IHttpService)))
+                .Returns(new HttpTestService());
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IIdentityService)))
+                .Returns(new IdentityService() { Token = "Token", Username = "Test" });
+            
+            return serviceProvider;
+        }
+
+        private Mock<IServiceProvider> GetFailServiceProvider()
+        {
+            var serviceProvider = new Mock<IServiceProvider>();
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IHttpService)))
+                .Returns(new HttpFailTestService());
+
+            
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IIdentityService)))
+                .Returns(new IdentityService() { Token = "Token", Username = "Test" });
+            
+
+            return serviceProvider;
+        }
+
+        private MaterialRequestNoteDataUtil _dataUtilMrn(NewMaterialRequestNoteService service)
+        {
+
+            GetServiceProvider();
+            return new MaterialRequestNoteDataUtil(service);
+        }
+
+        [Fact]
+        public async Task Should_Success_CreateAsync()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
+            serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
+                .Returns(serviceMrn);
+            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+                .Returns(inventoryDocumentFacade);
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = _dataUtil(service, serviceMrn).GetNewData();
+            foreach (var item in data.MaterialDistributionNoteItems)
+            {
+                item.MaterialRequestNoteId = mrn.Id;
+                item.MaterialRequestNoteCreatedDateUtc = mrn._CreatedUtc;
+                item.MaterialRequestNoteCode = mrn.Code;
+            }
+            var Response = await service.CreateAsync(data);
+            Assert.NotEqual(0, Response);
+        }
+
+        [Fact]
+        public async Task Should_Fail_CreateAsync()
+        {
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            var data = _dataUtil(service, serviceMrn).GetNewData();
+            await Assert.ThrowsAnyAsync<Exception>(() => service.CreateAsync(data));
+        }
+
+        [Fact]
+        public async Task Should_Success_DeleteAsync()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
+            serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
+                .Returns(serviceMrn);
+            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+                .Returns(inventoryDocumentFacade);
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(service, serviceMrn).GetTestData();
+            var Response = await service.DeleteAsync(data.Id);
+            Assert.NotEqual(0, Response);
+        }
+
+        [Fact]
+        public async Task Should_Fail_DeleteAsync()
+        {
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            
+            await Assert.ThrowsAnyAsync<Exception>(() => service.DeleteAsync(0));
+        }
+
+        [Fact]
+        public void Should_Success_GetPdfReport()
+        {
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            var data = _dataUtil(service, serviceMrn).GetTestData();
+            var response = service.GetPdfReport(null, null, null, DateTime.UtcNow, 7);
+            Assert.NotEmpty(response);
+        }
+
+        [Fact]
+        public void Should_Success_GetReport()
+        {
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            var data = _dataUtil(service, serviceMrn).GetTestData();
+            var response = service.GetReport(null, null, DateTime.UtcNow, 1, 25, "{}", 7);
+            Assert.NotNull(response);
+        }
+
+        [Fact]
+        public void Should_Success_MapToModel()
+        {
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            var data = _dataUtil(service, serviceMrn).GetEmptyData();
+            
+
+            var model = service.MapToModel(data);
+
+            Assert.NotNull(model);
+        }
+
+        [Fact]
+        public async Task Should_Success_MapToViewModel()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
+            serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
+                .Returns(serviceMrn);
+            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+                .Returns(inventoryDocumentFacade);
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(service, serviceMrn).GetTestData();
+            var model = service.MapToViewModel(data);
+
+            Assert.NotNull(model);
+        }
+
+        [Fact]
+        public async Task Should_Success_Read()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
+            serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
+                .Returns(serviceMrn);
+            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+                .Returns(inventoryDocumentFacade);
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(service, serviceMrn).GetTestData();
+            var model = service.Read(1, 25, "{}", null, null, "{}");
+
+            Assert.NotNull(model);
+        }
+
+        [Fact]
+        public async Task Should_Success_ReadById()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
+            serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
+                .Returns(serviceMrn);
+            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+                .Returns(inventoryDocumentFacade);
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(service, serviceMrn).GetTestData();
+            var model = await service.ReadByIdAsync(data.Id);
+
+            Assert.NotNull(model);
+        }
+
+        [Fact]
+        public async Task Should_Success_Update()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
+            serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
+                .Returns(serviceMrn);
+            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+                .Returns(inventoryDocumentFacade);
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(service, serviceMrn).GetTestData();
+            var vm = service.MapToViewModel(data);
+            var testData = service.MapToModel(vm);
+            testData.MaterialDistributionNoteItems.Add(new Model.MaterialDistributionNoteItem()
+            {
+                MaterialDistributionNoteDetails = new List<Model.MaterialDistributionNoteDetail>()
+                {
+                    new Model.MaterialDistributionNoteDetail()
+                }
+            });
+            testData.UnitName = "a";
+            
+            var response = await service.UpdateAsync(testData.Id, testData);
+
+            Assert.NotEqual(0, response);
+
+            var newData3 = await service.ReadByIdAsync(data.Id);
+            var vm3 = service.MapToViewModel(newData3);
+            var testData3 = service.MapToModel(vm);
+            var dItem = testData3.MaterialDistributionNoteItems.FirstOrDefault();
+            dItem.MaterialDistributionNoteDetails = new List<Model.MaterialDistributionNoteDetail>()
+            {
+                new Model.MaterialDistributionNoteDetail()
+                {
+                    
+                }
+            };
+            var newResponse3 = await service.UpdateAsync(testData3.Id, testData3);
+
+            var newData = await service.ReadByIdAsync(data.Id);
+            var vm2 = service.MapToViewModel(newData);
+            var testData2 = service.MapToModel(vm);
+            testData2.MaterialDistributionNoteItems.Clear();
+            var newResponse = await service.UpdateAsync(testData2.Id, testData2);
+        }
+
+        [Fact]
+        public async Task Should_Fail_UpdateAsync()
+        {
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+
+            await Assert.ThrowsAnyAsync<Exception>(() => service.UpdateAsync(99, new Model.MaterialDistributionNote()));
+        }
+
+        [Fact]
+        public async Task Should_Success_UpdateIsApprove()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
+            serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
+                .Returns(serviceMrn);
+            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+                .Returns(inventoryDocumentFacade);
+            NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(service, serviceMrn).GetTestData();
+            var response = service.UpdateIsApprove(new List<int>() { data.Id });
+
+            Assert.True(response);
+        }
+        
+
+    }
+}

@@ -70,9 +70,9 @@ namespace Com.Danliris.Service.Inventory.Test
                 {
                     options.UseSqlServer(connectionString);
                 }, ServiceLifetime.Transient)
-                .AddTransient<MaterialDistributionNoteService>(provider => new MaterialDistributionNoteService(provider))
-                .AddTransient<MaterialDistributionNoteItemService>(provider => new MaterialDistributionNoteItemService(provider))
-                .AddTransient<MaterialDistributionNoteDetailService>(provider => new MaterialDistributionNoteDetailService(provider))
+                //.AddTransient<MaterialDistributionNoteService>(provider => new MaterialDistributionNoteService(provider))
+                //.AddTransient<MaterialDistributionNoteItemService>(provider => new MaterialDistributionNoteItemService(provider))
+                //.AddTransient<MaterialDistributionNoteDetailService>(provider => new MaterialDistributionNoteDetailService(provider))
                 .AddTransient<StockTransferNoteService>(provider => new StockTransferNoteService(provider))
                 .AddTransient<StockTransferNote_ItemService>(provider => new StockTransferNote_ItemService(provider))
                 .AddTransient<FPReturnInvToPurchasingService>(provider => new FPReturnInvToPurchasingService(provider))
@@ -84,7 +84,7 @@ namespace Com.Danliris.Service.Inventory.Test
                 .AddTransient<FpRegradingResultDataUtil>()
                 .AddTransient<FpRegradingResultDetailsDataUtil>()
                 //.AddTransient<MaterialDistributionNoteDataUtil>()
-                .AddTransient<MaterialDistributionNoteDetailDataUtil>()
+                //.AddTransient<MaterialDistributionNoteDetailDataUtil>()
                 .AddTransient<StockTransferNoteDataUtil>()
                 .AddTransient<StockTransferNoteItemDataUtil>()
                 .AddTransient<FPReturnInvToPurchasingDataUtil>()

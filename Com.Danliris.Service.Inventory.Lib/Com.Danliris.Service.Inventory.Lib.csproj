@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteDetailService.cs" />
+    <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteItemService.cs" />
+    <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteService.cs" />
     <Compile Remove="Services\MaterialRequestNoteServices\MaterialsRequestNoteService.cs" />
     <Compile Remove="Services\MaterialRequestNoteServices\MaterialsRequestNote_ItemService.cs" />
   </ItemGroup>

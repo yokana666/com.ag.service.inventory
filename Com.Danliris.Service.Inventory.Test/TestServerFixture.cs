@@ -71,7 +71,7 @@ namespace Com.Danliris.Service.Inventory.Test
 
                         //.AddTransient<MaterialDistributionNoteDataUtil>()
                         //.AddTransient<MaterialDistributionNoteItemDataUtil>()
-                        .AddTransient<MaterialDistributionNoteDetailDataUtil>()
+                        //.AddTransient<MaterialDistributionNoteDetailDataUtil>()
 
                         .AddTransient<StockTransferNoteDataUtil>()
                         .AddTransient<StockTransferNoteItemDataUtil>()

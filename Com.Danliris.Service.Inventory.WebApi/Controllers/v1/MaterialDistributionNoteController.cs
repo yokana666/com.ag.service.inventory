@@ -1,6 +1,7 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
 using Com.Danliris.Service.Inventory.Lib.PDFTemplates;
+using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel;
 using Com.Danliris.Service.Inventory.WebApi.Helpers;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
 {
@@ -17,20 +19,18 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/material-distribution-notes")]
     [Authorize]
-    public class MaterialDistributionNoteController : BasicController<InventoryDbContext, MaterialDistributionNoteService, MaterialDistributionNoteViewModel, MaterialDistributionNote>
+    public class MaterialDistributionNoteController : BaseController<MaterialDistributionNote, MaterialDistributionNoteViewModel, IMaterialDistributionService>
     {
-        private static readonly string ApiVersion = "1.0";
-        public MaterialDistributionNoteController(MaterialDistributionNoteService service) : base(service, ApiVersion)
+        public MaterialDistributionNoteController(IIdentityService identityService, IValidateService validateService, IMaterialDistributionService service) : base(identityService, validateService, service, "1.0.0")
         {
 
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]List<int> Ids)
+        public IActionResult Puts([FromBody]List<int> Ids)
         {
             try
             {
-                Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
 
                 if (this.Service.UpdateIsApprove(Ids))
                 {
@@ -43,16 +43,19 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
             }
             catch (Exception e)
             {
-                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
+                Dictionary<string, object> Result =
+                       new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                       .Fail();
+                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
 
         [HttpGet("pdf/{id}")]
-        public IActionResult GetPDF([FromRoute]int Id)
+        public async Task<IActionResult> GetPDF([FromRoute]int Id)
         {
             try
             {
-                var model = Service.ReadModelById(Id).Result;
+                var model = await Service.ReadByIdAsync(Id);
                 var viewModel = Service.MapToViewModel(model);
 
                 MaterialDistributionNotePdfTemplate PdfTemplate = new MaterialDistributionNotePdfTemplate();

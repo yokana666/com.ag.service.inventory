@@ -1,70 +1,105 @@
-﻿using Com.Danliris.Service.Inventory.Lib;
-using Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
+﻿using Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
+using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel;
 using Com.Danliris.Service.Inventory.Test.Helpers;
-using Com.Danliris.Service.Inventory.Test.Interfaces;
+using System;
 using System.Collections.Generic;
-using Com.Danliris.Service.Inventory.Lib.Helpers;
-using Newtonsoft.Json;
-using Com.Danliris.Service.Inventory.Test.DataUtils.IntegrationDataUtil;
-using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil
 {
-    //public class MaterialDistributionNoteDataUtil : BasicDataUtil<InventoryDbContext, MaterialDistributionNoteService, MaterialDistributionNote>, IEmptyData<MaterialDistributionNoteViewModel>
-    //{
-    //    private readonly HttpClientTestService client;
-    //    private readonly MaterialDistributionNoteItemDataUtil materialDistributionNoteItemDataUtil;
+    public class MaterialDistributionNoteDataUtil
+    {
+        private readonly NewMaterialDistributionNoteService Service;
+        private readonly NewMaterialRequestNoteService mrnService;
+        public MaterialDistributionNoteDataUtil(NewMaterialDistributionNoteService service, NewMaterialRequestNoteService newMaterialRequestNoteService)
+        {
+            Service = service;
+            mrnService = newMaterialRequestNoteService;
+        }
 
-    //    public MaterialDistributionNoteDataUtil(InventoryDbContext dbContext, MaterialDistributionNoteService service, HttpClientTestService client, MaterialDistributionNoteItemDataUtil materialDistributionNoteItemDataUtil) : base(dbContext, service)
-    //    {
-    //        this.client = client;
-    //        this.materialDistributionNoteItemDataUtil = materialDistributionNoteItemDataUtil;
-    //    }
+        public MaterialDistributionNoteViewModel GetEmptyData()
+        {
+            MaterialDistributionNoteViewModel Data = new MaterialDistributionNoteViewModel();
 
-    //    public MaterialDistributionNoteViewModel GetEmptyData()
-    //    {
-    //        MaterialDistributionNoteViewModel Data = new MaterialDistributionNoteViewModel();
+            Data.Type = string.Empty;
+            Data.Unit = new UnitViewModel()
+            {
+                Id = "1"
+            };
+            Data.MaterialDistributionNoteItems = new List<MaterialDistributionNoteItemViewModel> {
+                    new MaterialDistributionNoteItemViewModel {
+                        MaterialDistributionNoteDetails = new List<MaterialDistributionNoteDetailViewModel>() { new MaterialDistributionNoteDetailViewModel()
+                        {
+                            Product = new ProductViewModel(),
+                            ProductionOrder = new ProductionOrderViewModel(),
+                            Supplier = new SupplierViewModel()
+                        }
+                    }
+                }
+            };
 
-    //        Data.Type = string.Empty;
-    //        Data.Unit = new UnitViewModel();
-    //        Data.MaterialDistributionNoteItems = new List<MaterialDistributionNoteItemViewModel> {
-    //                new MaterialDistributionNoteItemViewModel {
-    //                    MaterialDistributionNoteDetails = new List<MaterialDistributionNoteDetailViewModel>() { new MaterialDistributionNoteDetailViewModel()
-    //                }
-    //            }
-    //        };
+            return Data;
+        }
 
-    //        return Data;
-    //    }
+        public MaterialDistributionNote GetNewData()
+        {
 
-    //    public override MaterialDistributionNote GetNewData()
-    //    {
-    //        UnitViewModel fp = UnitDataUtil.GetFinishingUnit(client);
+            MaterialDistributionNote TestData = new MaterialDistributionNote
+            {
+                UnitId = "1",
+                UnitCode = "code",
+                UnitName = "name",
+                Type = "PRODUKSI",
+                IsApproved = false,
+                IsDisposition = false,
+                MaterialDistributionNoteItems = new List<MaterialDistributionNoteItem> {
+                    new MaterialDistributionNoteItem()
+                    {
+                        MaterialRequestNoteCode = "code",
+                        MaterialRequestNoteCreatedDateUtc = DateTime.UtcNow,
+                        MaterialDistributionNoteDetails = new List<MaterialDistributionNoteDetail>()
+                        {
+                            new MaterialDistributionNoteDetail()
+                            {
+                                DistributedLength = 1,
+                                Grade = "a",
+                                ProductCode = "code",
+                                ProductId = "1",
+                                MaterialsRequestNoteItemId = 1,
+                                MaterialRequestNoteItemLength = 1,
+                                ProductionOrderId = "1",
+                                ProductionOrderNo = "no",
+                                ProductName = "name",
+                                SupplierCode = "code",
+                                SupplierId = "1",
+                                SupplierName = "name"
+                            }
+                        }
+                    }
+                }
+            };
 
-    //        MaterialDistributionNote TestData = new MaterialDistributionNote
-    //        {
-    //            UnitId = fp.Id,
-    //            UnitCode = fp.Code,
-    //            UnitName = fp.Name,
-    //            Type = "PRODUKSI",
-    //            IsApproved = false,
-    //            IsDisposition = false,
-    //            MaterialDistributionNoteItems = new List<MaterialDistributionNoteItem> { materialDistributionNoteItemDataUtil.GetNewData() }
-    //        };
-
-    //        return TestData;
-    //    }
+            return TestData;
+        }
 
 
-    //    public override async Task<MaterialDistributionNote> GetTestData()
-    //    {
-    //        MaterialDistributionNote Data = GetNewData();
-    //        this.Service.Token = HttpClientTestService.Token;
-    //        await this.Service.CreateModel(Data);
-    //        return Data;
-    //    }
-    //}
+        public async Task<MaterialDistributionNote> GetTestData()
+        {
+            MaterialRequestNoteDataUtil.MaterialRequestNoteDataUtil materialRequestNoteDataUtil = new MaterialRequestNoteDataUtil.MaterialRequestNoteDataUtil(mrnService);
+            var mrn = await materialRequestNoteDataUtil.GetTestData();
+
+            MaterialDistributionNote Data = GetNewData();
+            foreach(var item in Data.MaterialDistributionNoteItems)
+            {
+                item.MaterialRequestNoteId = mrn.Id;
+                item.MaterialRequestNoteCreatedDateUtc = mrn._CreatedUtc;
+                item.MaterialRequestNoteCode = mrn.Code;
+            }
+            await this.Service.CreateAsync(Data);
+            return Data;
+        }
+    }
 }

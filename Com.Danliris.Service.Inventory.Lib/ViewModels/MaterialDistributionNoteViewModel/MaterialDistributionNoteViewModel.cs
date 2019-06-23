@@ -8,6 +8,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
+using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel
 {
@@ -50,11 +52,13 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                 if (Count.Equals(0))
                 {
                     /* Get Inventory Summaries */
-                    string inventorySummaryURI = "inventory/inventory-summary?order=%7B%7D&page=1&size=1000000000&";
+                    //string inventorySummaryURI = "inventory/inventory-summary?order=%7B%7D&page=1&size=1000000000&";
 
-                    MaterialDistributionNoteService Service = (MaterialDistributionNoteService)validationContext.GetService(typeof(MaterialDistributionNoteService));
-                    HttpClient httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Service.Token);
+                    //MaterialDistributionNoteService Service = (MaterialDistributionNoteService)validationContext.GetService(typeof(MaterialDistributionNoteService));
+                    //HttpClient httpClient = new HttpClient();
+                    //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Service.Token);
+                    InventorySummaryFacade InventorySummaryFacade = (InventorySummaryFacade)validationContext.GetService(typeof(InventorySummaryFacade));
+                    
 
                     List<string> products = new List<string>();
                     foreach (MaterialDistributionNoteItemViewModel mdni in this.MaterialDistributionNoteItems)
@@ -63,13 +67,13 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                     }
 
                     var storageName = this.Unit.Name.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
+                    List<InventorySummary> inventorySummaries = InventorySummaryFacade.GetByStorageAndMTR(storageName);
+                    //Dictionary<string, object> filter = new Dictionary<string, object> { { "storageName", storageName }, { "uom", "MTR" }, { "productCode", new Dictionary<string, object> { { "$in", products.ToArray() } } } };
+                    //var response = httpClient.GetAsync($@"{APIEndpoint.Inventory}{inventorySummaryURI}filter=" + JsonConvert.SerializeObject(filter)).Result.Content.ReadAsStringAsync();
+                    //Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
 
-                    Dictionary<string, object> filter = new Dictionary<string, object> { { "storageName", storageName }, { "uom", "MTR" }, { "productCode", new Dictionary<string, object> { { "$in", products.ToArray() } } } };
-                    var response = httpClient.GetAsync($@"{APIEndpoint.Inventory}{inventorySummaryURI}filter=" + JsonConvert.SerializeObject(filter)).Result.Content.ReadAsStringAsync();
-                    Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
-
-                    var json = result.Single(p => p.Key.Equals("data")).Value;
-                    List<InventorySummaryViewModel> inventorySummaries = JsonConvert.DeserializeObject<List<InventorySummaryViewModel>>(json.ToString());
+                    //var json = result.Single(p => p.Key.Equals("data")).Value;
+                    //List<InventorySummaryViewModel> inventorySummaries = JsonConvert.DeserializeObject<List<InventorySummaryViewModel>>(json.ToString());
 
                     foreach (MaterialDistributionNoteItemViewModel mdni in this.MaterialDistributionNoteItems)
                     {
@@ -92,7 +96,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                                     continue;
                                 }
 
-                                InventorySummaryViewModel inventorySummary = inventorySummaries.SingleOrDefault(p => p.productCode.Equals(mdnd.Product.Code) && p.uom.Equals("MTR"));
+                                var inventorySummary = inventorySummaries.FirstOrDefault(p => p.ProductCode.Equals(mdnd.Product.Code));
 
                                 materialDistributionNoteDetailError += "{";
                                 
@@ -124,14 +128,14 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                                         CountDetail++;
                                         materialDistributionNoteDetailError += "ReceivedLength: 'Length must be greater than zero', ";
                                     }
-                                    else if (mdnd.ReceivedLength > inventorySummary.quantity)
+                                    else if (mdnd.ReceivedLength > inventorySummary.Quantity)
                                     {
                                         CountDetail++;
                                         materialDistributionNoteDetailError += "ReceivedLength: 'Length must be less than or equal than stock', ";
                                     }
                                     else
                                     {
-                                        inventorySummary.quantity -= (double)mdnd.ReceivedLength;
+                                        inventorySummary.Quantity -= (double)mdnd.ReceivedLength;
                                     }
 
                                     if (mdnd.Supplier == null || string.IsNullOrWhiteSpace(mdnd.Supplier._id))
