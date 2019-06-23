@@ -97,6 +97,10 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNote
                 item.MaterialRequestNoteId = mrn.Id;
                 item.MaterialRequestNoteCreatedDateUtc = mrn._CreatedUtc;
                 item.MaterialRequestNoteCode = mrn.Code;
+                foreach(var detail in item.MaterialDistributionNoteDetails)
+                {
+                    detail.MaterialsRequestNoteItemId = mrn.Id;
+                }
             }
             await this.Service.CreateAsync(Data);
             return Data;
