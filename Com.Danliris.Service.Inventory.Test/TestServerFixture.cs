@@ -80,7 +80,7 @@ namespace Com.Danliris.Service.Inventory.Test
                         .AddTransient<FPReturnInvToPurchasingDetailDataUtil>()
 
                         .AddTransient<InventoryDocumentDataUtil>()
-                        .AddTransient<InventoryDocumentItemDataUtil>()
+                        //.AddTransient<InventoryDocumentItemDataUtil>()
 
                         .AddTransient<InventoryMovementDataUtil>()
 

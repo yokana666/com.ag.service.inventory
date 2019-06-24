@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Facades;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.IntegrationServices;
 using Com.Danliris.Service.Inventory.Lib.MongoRepositories.InventoryDocument;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
@@ -46,13 +46,13 @@ namespace Com.Danliris.Service.Inventory.WebApi
         public void RegisterFacades(IServiceCollection services)
         {
             services
-                .AddTransient<FPReturnInvToPurchasingFacade>()
+                .AddTransient<FPReturnInvToPurchasingFacade>();
                 //.AddTransient<FpRegradingResultDocsReportFacade>()
-                .AddTransient<InventoryDocumentFacade>()
-                .AddTransient<InventoryMovementFacade>()
-                .AddTransient<InventorySummaryFacade>()
-                .AddTransient<InventoryMovementReportFacade>()
-                .AddTransient<InventorySummaryReportFacade>();
+                //.AddTransient<InventoryDocumentFacade>()
+                //.AddTransient<InventoryMovementFacade>()
+                //.AddTransient<InventorySummaryFacade>()
+                //.AddTransient<InventoryMovementReportFacade>()
+                //.AddTransient<InventorySummaryReportFacade>();
         }
 
         public void RegisterServices(IServiceCollection services)
@@ -71,6 +71,9 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<IMaterialRequestNoteService, NewMaterialRequestNoteService>()
                 .AddTransient<IMaterialDistributionService, NewMaterialDistributionNoteService>()
                 .AddTransient<IFpRegradingResultDocsService, NewFpRegradingResultDocsService>()
+                .AddTransient<IInventoryDocumentService, InventoryDocumentService>()
+                .AddTransient<IInventoryMovementService, InventoryMovementService>()
+                .AddTransient<IInventorySummaryService, InventorySummaryService>()
                 .AddScoped<IIdentityService, IdentityService>()
                 .AddScoped<IValidateService, ValidateService>()
                 .AddScoped<IHttpService, HttpService>()

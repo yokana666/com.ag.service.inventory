@@ -1,12 +1,7 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
-using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel
 {
@@ -47,7 +42,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
                         //string inventorySummaryURI = "inventory/inventory-summary?order=%7B%7D&page=1&size=1000000000&";
                         var storageName = this.Unit.Name.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
                         //MaterialsRequestNoteService Service = (MaterialsRequestNoteService)validationContext.GetService(typeof(MaterialsRequestNoteService));
-                        InventorySummaryFacade InventorySummaryFacade = (InventorySummaryFacade)validationContext.GetService(typeof(InventorySummaryFacade));
+                        //InventorySummaryFacade InventorySummaryFacade = (InventorySummaryFacade)validationContext.GetService(typeof(InventorySummaryFacade));
                         //List<string> inventorySummaries = InventorySummaryFacade.GetProductCodeForMaterialRequestNote(storageName);
 
                         //HttpClient httpClient = new HttpClient();
@@ -60,14 +55,14 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteView
                             products.Add(item.Product.Code);
                         }
 
-                        
+
                         Dictionary<string, object> filter = new Dictionary<string, object> { { "storageName", storageName }, { "uom", "MTR" }, { "productCode", new Dictionary<string, object> { { "$in", products.ToArray() } } } };
                         //var response = httpClient.GetAsync($@"{APIEndpoint.Inventory}{inventorySummaryURI}filter=" + JsonConvert.SerializeObject(filter)).Result.Content.ReadAsStringAsync();
                         //Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
 
                         //var json = result.Single(p => p.Key.Equals("data")).Value;
                         //List<InventorySummaryViewModel> inventorySummaries = JsonConvert.DeserializeObject<List<InventorySummaryViewModel>>(json.ToString());
-                        
+
                         //if (!(inventorySummaries.Count.Equals(0)))
                         //{
                         //    //InventorySummaryViewModel inventorySummary = inventorySummaries.SingleOrDefault(p => p.productCode.Equals(materialsRequestNote_Item.Product.Code) && p.uom.Equals("MTR"));

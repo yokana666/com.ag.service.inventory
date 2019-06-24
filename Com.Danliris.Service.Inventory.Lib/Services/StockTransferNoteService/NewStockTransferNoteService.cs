@@ -1,7 +1,7 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
-using Com.Danliris.Service.Inventory.Lib.Helpers;
+﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.StockTransferNoteViewModel;
 using Com.Moonlay.Models;
@@ -259,7 +259,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService
                     dbModel.TargetStorageCode = model.TargetStorageCode;
                     dbModel.TargetStorageId = model.TargetStorageId;
                     dbModel.TargetStorageName = model.TargetStorageName;
-                    
+
                     dbModel.FlagForUpdate(IdentityService.Username, UserAgent);
                     //DbSet.Update(dbModel);
 
@@ -354,7 +354,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService
         public async Task<int> CreateInventoryDocument(StockTransferNote Model, string Type, string Context)
         {
             StockTransferNoteViewModel ViewModel = MapToViewModel(Model);
-            
+
             IHttpService httpClient = (IHttpService)this.ServiceProvider.GetService(typeof(IHttpService));
 
             /* Create Inventory Document */
@@ -387,8 +387,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService
                 Items = inventoryDocumentItems
             };
 
-            InventoryDocumentFacade inventoryDocumentFacade = (InventoryDocumentFacade)ServiceProvider.GetService(typeof(InventoryDocumentFacade));
-            return await inventoryDocumentFacade.Create(inventoryDocument, IdentityService.Username);
+            var inventoryDocumentFacade = ServiceProvider.GetService<IInventoryDocumentService>();
+            return await inventoryDocumentFacade.Create(inventoryDocument);
         }
 
         public async Task<bool> UpdateIsApprove(int Id)

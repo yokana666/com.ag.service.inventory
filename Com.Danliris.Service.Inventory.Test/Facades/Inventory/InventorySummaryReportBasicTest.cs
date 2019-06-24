@@ -1,80 +1,86 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
+﻿using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
+using Com.Danliris.Service.Inventory.Test.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
 {
-    [Collection("ServiceProviderFixture Collection")]
     public class InventorySummaryReportBasicTest
     {
-        private IServiceProvider ServiceProvider { get; set; }
+        private const string ENTITY = "InventorySummary";
 
-        public InventorySummaryReportBasicTest(ServiceProviderFixture fixture)
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public string GetCurrentMethod()
         {
-            ServiceProvider = fixture.ServiceProvider;
+            StackTrace st = new StackTrace();
+            StackFrame sf = st.GetFrame(1);
 
-            IdentityService identityService = (IdentityService)ServiceProvider.GetService(typeof(IdentityService));
-            identityService.Username = "Unit Test";
-        }
-        private InventorySummaryDataUtil DataUtil
-        {
-            get { return (InventorySummaryDataUtil)ServiceProvider.GetService(typeof(InventorySummaryDataUtil)); }
-        }
-        private InventorySummaryReportFacade Facade
-        {
-            get { return (InventorySummaryReportFacade)ServiceProvider.GetService(typeof(InventorySummaryReportFacade)); }
+            return string.Concat(sf.GetMethod().Name, "_", ENTITY);
         }
 
-        [Fact]
-        public async void Should_Success_Get_Report_Data()
+        private InventoryDbContext _dbContext(string testName)
         {
-            InventorySummary model = await DataUtil.GetTestData("Unit test");
-            var Response = Facade.GetReport(model.StorageCode, model.ProductCode, 1, 25, "{}", 7);
-            Assert.NotEqual(Response.Item2, 0);
+            DbContextOptionsBuilder<InventoryDbContext> optionsBuilder = new DbContextOptionsBuilder<InventoryDbContext>();
+            optionsBuilder
+                .UseInMemoryDatabase(testName)
+                .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+
+            InventoryDbContext dbContext = new InventoryDbContext(optionsBuilder.Options);
+
+            return dbContext;
         }
 
-        [Fact]
-        public async void Should_Success_Get_Report_Data_Null_Parameter()
+        private InventorySummaryDataUtil _dataUtil(InventorySummaryService service)
         {
-            InventorySummary model = await DataUtil.GetTestData("Unit test");
-            var Response = Facade.GetReport("", "", 1, 25, "{}", 7);
-            Assert.NotEqual(Response.Item2, 0);
+
+            GetServiceProvider();
+            return new InventorySummaryDataUtil(service);
         }
 
-        [Fact]
-        public async void Should_Success_Get_Report_Data_Excel()
+        private Mock<IServiceProvider> GetServiceProvider()
         {
-            InventorySummary model = await DataUtil.GetTestData("Unit test");
-            var Response = Facade.GenerateExcel(model.StorageCode, model.ProductCode, 7);
-            Assert.IsType(typeof(System.IO.MemoryStream), Response);
+            var serviceProvider = new Mock<IServiceProvider>();
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IHttpService)))
+                .Returns(new HttpTestService());
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IIdentityService)))
+                .Returns(new IdentityService() { Token = "Token", Username = "Test" });
+
+            return serviceProvider;
         }
 
-        [Fact]
-        public async void Should_Success_Get_Report_Data_Excel_Null_Parameter()
+        private Mock<IServiceProvider> GetFailServiceProvider()
         {
-            InventorySummary model = await DataUtil.GetTestData("Unit test");
-            var Response = Facade.GenerateExcel("", "", 7);
-            Assert.IsType(typeof(System.IO.MemoryStream), Response);
+            var serviceProvider = new Mock<IServiceProvider>();
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IHttpService)))
+                .Returns(new HttpFailTestService());
+
+
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IIdentityService)))
+                .Returns(new IdentityService() { Token = "Token", Username = "Test" });
+
+
+            return serviceProvider;
         }
 
-        [Fact]
-        public async void Should_Success_Get_Summaries_By_ProductID()
-        {
-            InventorySummary model = await DataUtil.GetTestData("Unit test");
-            
-            List<int> productId = new List<int>() { model.ProductId };
-            Dictionary<string, object> postedProduct = new Dictionary<string, object>
-            {
-                { "ProductId", productId }
-            };
-            string product = JsonConvert.SerializeObject(postedProduct);
-            var Response = Facade.GetInventorySummaries(product);
-            Assert.NotEqual(Response.Count, 0);
-        }
+        
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
@@ -98,12 +98,20 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             var serviceProvider = GetServiceProvider();
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
             var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
             serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
                 .Returns(serviceMrn);
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
-                .Returns(inventoryDocumentFacade);
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = _dataUtil(service, serviceMrn).GetNewData();
             foreach (var item in data.MaterialDistributionNoteItems)
@@ -130,12 +138,20 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             var serviceProvider = GetServiceProvider();
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
             var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
             serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
                 .Returns(serviceMrn);
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
-                .Returns(inventoryDocumentFacade);
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service, serviceMrn).GetTestData();
             var Response = await service.DeleteAsync(data.Id);
@@ -189,12 +205,22 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             var serviceProvider = GetServiceProvider();
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
             var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
             serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
                 .Returns(serviceMrn);
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
-                .Returns(inventoryDocumentFacade);
+            //serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            //    .Returns(inventoryDocumentFacade);
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service, serviceMrn).GetTestData();
             var model = service.MapToViewModel(data);
@@ -207,12 +233,22 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             var serviceProvider = GetServiceProvider();
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
             var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
             serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
                 .Returns(serviceMrn);
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
-                .Returns(inventoryDocumentFacade);
+            //serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            //    .Returns(inventoryDocumentFacade);
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service, serviceMrn).GetTestData();
             var model = service.Read(1, 25, "{}", null, null, "{}");
@@ -225,12 +261,22 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             var serviceProvider = GetServiceProvider();
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
             var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
             serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
                 .Returns(serviceMrn);
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
-                .Returns(inventoryDocumentFacade);
+            //serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            //    .Returns(inventoryDocumentFacade);
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service, serviceMrn).GetTestData();
             var model = await service.ReadByIdAsync(data.Id);
@@ -243,12 +289,22 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             var serviceProvider = GetServiceProvider();
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
             var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
             serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
                 .Returns(serviceMrn);
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
-                .Returns(inventoryDocumentFacade);
+            //serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            //    .Returns(inventoryDocumentFacade);
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service, serviceMrn).GetTestData();
             var vm = service.MapToViewModel(data);
@@ -301,12 +357,22 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             var serviceProvider = GetServiceProvider();
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
             var mrn = await _dataUtilMrn(serviceMrn).GetTestData();
             serviceProvider.Setup(x => x.GetService(typeof(IMaterialRequestNoteService)))
                 .Returns(serviceMrn);
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
-                .Returns(inventoryDocumentFacade);
+            //serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            //    .Returns(inventoryDocumentFacade);
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service, serviceMrn).GetTestData();
             var response = service.UpdateIsApprove(new List<int>() { data.Id });

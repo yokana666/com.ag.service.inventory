@@ -1,15 +1,10 @@
 ﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
-using Newtonsoft.Json;
-using System;
+using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
-using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel
 {
@@ -57,8 +52,8 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                     //MaterialDistributionNoteService Service = (MaterialDistributionNoteService)validationContext.GetService(typeof(MaterialDistributionNoteService));
                     //HttpClient httpClient = new HttpClient();
                     //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Service.Token);
-                    InventorySummaryFacade InventorySummaryFacade = (InventorySummaryFacade)validationContext.GetService(typeof(InventorySummaryFacade));
-                    
+                    var inventorySummaryFacade = validationContext.GetService<IInventorySummaryService>();
+
 
                     List<string> products = new List<string>();
                     foreach (MaterialDistributionNoteItemViewModel mdni in this.MaterialDistributionNoteItems)
@@ -67,7 +62,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                     }
 
                     var storageName = this.Unit.Name.Equals("PRINTING") ? "Gudang Greige Printing" : "Gudang Greige Finishing";
-                    List<InventorySummary> inventorySummaries = InventorySummaryFacade.GetByStorageAndMTR(storageName);
+                    List<InventorySummary> inventorySummaries = inventorySummaryFacade.GetByStorageAndMTR(storageName);
                     //Dictionary<string, object> filter = new Dictionary<string, object> { { "storageName", storageName }, { "uom", "MTR" }, { "productCode", new Dictionary<string, object> { { "$in", products.ToArray() } } } };
                     //var response = httpClient.GetAsync($@"{APIEndpoint.Inventory}{inventorySummaryURI}filter=" + JsonConvert.SerializeObject(filter)).Result.Content.ReadAsStringAsync();
                     //Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
@@ -99,7 +94,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNote
                                 var inventorySummary = inventorySummaries.FirstOrDefault(p => p.ProductCode.Equals(mdnd.Product.Code));
 
                                 materialDistributionNoteDetailError += "{";
-                                
+
                                 if (inventorySummary == null)
                                 {
                                     CountDetail++;

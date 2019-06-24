@@ -1,60 +1,85 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
+﻿using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
+using Com.Danliris.Service.Inventory.Test.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Moq;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
 {
-    [Collection("ServiceProviderFixture Collection")]
     public class InventoryBasicTest
     {
-        private IServiceProvider ServiceProvider { get; set; }
+        private const string ENTITY = "InventoryDocument";
 
-        public InventoryBasicTest(ServiceProviderFixture fixture)
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public string GetCurrentMethod()
         {
-            ServiceProvider = fixture.ServiceProvider;
+            StackTrace st = new StackTrace();
+            StackFrame sf = st.GetFrame(1);
 
-            IdentityService identityService = (IdentityService)ServiceProvider.GetService(typeof(IdentityService));
-            identityService.Username = "Unit Test";
+            return string.Concat(sf.GetMethod().Name, "_", ENTITY);
         }
 
-        private InventoryDocumentDataUtil DataUtil
+        private InventoryDbContext _dbContext(string testName)
         {
-            get { return (InventoryDocumentDataUtil)ServiceProvider.GetService(typeof(InventoryDocumentDataUtil)); }
+            DbContextOptionsBuilder<InventoryDbContext> optionsBuilder = new DbContextOptionsBuilder<InventoryDbContext>();
+            optionsBuilder
+                .UseInMemoryDatabase(testName)
+                .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+
+            InventoryDbContext dbContext = new InventoryDbContext(optionsBuilder.Options);
+
+            return dbContext;
         }
 
-        private InventoryDocumentFacade Facade
+        private InventoryDocumentDataUtil _dataUtil(InventoryDocumentService service)
         {
-            get { return (InventoryDocumentFacade)ServiceProvider.GetService(typeof(InventoryDocumentFacade)); }
+
+            GetServiceProvider();
+            return new InventoryDocumentDataUtil(service);
         }
 
-        [Fact]
-        public async void Should_Success_Get_Data()
+        private Mock<IServiceProvider> GetServiceProvider()
         {
-            await DataUtil.GetTestData("Unit test");
-            Tuple<List<InventoryDocument>, int, Dictionary<string, string>> Response =  Facade.Read();
-            Assert.NotEqual(Response.Item1.Count, 0);
+            var serviceProvider = new Mock<IServiceProvider>();
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IHttpService)))
+                .Returns(new HttpTestService());
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IIdentityService)))
+                .Returns(new IdentityService() { Token = "Token", Username = "Test" });
+
+            return serviceProvider;
         }
 
-
-        [Fact]
-        public async void Should_Success_Get_Data_By_Id()
+        private Mock<IServiceProvider> GetFailServiceProvider()
         {
-            InventoryDocument model = await DataUtil.GetTestData("Unit test");
-            var Response = Facade.ReadModelById((int)model.Id);
-            Assert.NotNull(Response);
+            var serviceProvider = new Mock<IServiceProvider>();
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IHttpService)))
+                .Returns(new HttpFailTestService());
+
+
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IIdentityService)))
+                .Returns(new IdentityService() { Token = "Token", Username = "Test" });
+
+
+            return serviceProvider;
         }
 
-        [Fact]
-        public async void Should_Success_Create_Data()
-        {
-            InventoryDocument model = DataUtil.GetNewData();
-            var Response = await Facade.Create(model, "Unit Test");
-            Assert.NotEqual(Response, 0);
-        }
+        
     }
 }

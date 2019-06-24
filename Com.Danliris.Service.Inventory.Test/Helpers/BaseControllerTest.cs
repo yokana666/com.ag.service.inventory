@@ -95,7 +95,7 @@ namespace Com.Danliris.Service.Inventory.Test.Helpers
         public void Get_WithoutException_ReturnOK()
         {
             var mocks = GetMocks();
-            mocks.Service.Setup(f => f.Read(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<TModel>(new List<TModel>(), 0, new Dictionary<string, string>(), new List<string>()));
+            mocks.Service.Setup(f => f.Read(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<TModel>(new List<TModel>() { Model }, 0, new Dictionary<string, string>(), new List<string>()));
             mocks.Service.Setup(f => f.MapToViewModel(It.IsAny<TModel>())).Returns(ViewModel);
             int statusCode = GetStatusCodeGet(mocks);
             Assert.Equal((int)HttpStatusCode.OK, statusCode);

@@ -1,8 +1,8 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
-using Com.Danliris.Service.Inventory.Lib.Helpers;
+﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel;
@@ -245,7 +245,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     materialDistributionNoteDetail.ProductionOrderId = mdnd.ProductionOrder.Id;
                     materialDistributionNoteDetail.ProductionOrderNo = mdnd.ProductionOrder.OrderNo;
                     materialDistributionNoteDetail.ProductionOrderIsCompleted = mdnd.ProductionOrder.IsCompleted;
-                    materialDistributionNoteDetail.DistributedLength =mdnd.DistributedLength.GetValueOrDefault();
+                    materialDistributionNoteDetail.DistributedLength = mdnd.DistributedLength.GetValueOrDefault();
 
                     materialDistributionNoteDetail.ProductId = mdnd.Product.Id;
                     materialDistributionNoteDetail.ProductCode = mdnd.Product.Code;
@@ -433,14 +433,14 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                     foreach (var item in deletedItems)
                     {
                         item.FlagForDelete(IdentityService.Username, UserAgent);
-                        foreach(var detail in item.MaterialDistributionNoteDetails)
+                        foreach (var detail in item.MaterialDistributionNoteDetails)
                         {
                             detail.FlagForDelete(IdentityService.Username, UserAgent);
                         }
 
                     }
 
-                    foreach(var item in updatedItems)
+                    foreach (var item in updatedItems)
                     {
                         var selectedItem = model.MaterialDistributionNoteItems.FirstOrDefault(x => x.Id == item.Id);
 
@@ -459,7 +459,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
                         }
 
-                        foreach(var detail in updatedDetails)
+                        foreach (var detail in updatedDetails)
                         {
                             var selectedDetail = selectedItem.MaterialDistributionNoteDetails.FirstOrDefault(x => x.Id == detail.Id);
 
@@ -498,7 +498,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                         item.MaterialDistributionNoteId = id;
                         item.FlagForCreate(IdentityService.Username, UserAgent);
                         item.FlagForUpdate(IdentityService.Username, UserAgent);
-                        foreach(var detail in item.MaterialDistributionNoteDetails)
+                        foreach (var detail in item.MaterialDistributionNoteDetails)
                         {
                             detail.FlagForCreate(IdentityService.Username, UserAgent);
                             detail.FlagForUpdate(IdentityService.Username, UserAgent);
@@ -623,8 +623,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 Items = list
             };
 
-            InventoryDocumentFacade inventoryDocumentFacade = (InventoryDocumentFacade)ServiceProvider.GetService(typeof(InventoryDocumentFacade));
-            return await inventoryDocumentFacade.Create(inventoryDocument, IdentityService.Username);
+            var inventoryDocumentFacade = ServiceProvider.GetService<IInventoryDocumentService>();
+            return await inventoryDocumentFacade.Create(inventoryDocument);
         }
 
         public async Task<MaterialDistributionNote> CustomCodeGenerator(MaterialDistributionNote Model)

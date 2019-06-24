@@ -1,7 +1,7 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
-using Com.Danliris.Service.Inventory.Lib.Helpers;
+﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.FpRegradingResultDocs;
 using Com.Moonlay.Models;
@@ -12,8 +12,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs
 {
@@ -311,7 +311,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs
                     dbModel.SupplierId = model.SupplierId;
                     dbModel.TotalLength = model.TotalLength;
                     dbModel.UnitName = model.UnitName;
-                    
+
                     dbModel.FlagForUpdate(IdentityService.Username, UserAgent);
                     //DbSet.Update(dbModel);
 
@@ -338,7 +338,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs
                         item.Remark = selectedItem.Remark;
                         item.Retur = selectedItem.Retur;
                         item.FlagForUpdate(IdentityService.Username, UserAgent);
-                        
+
                     }
 
                     foreach (var item in addedItems)
@@ -346,7 +346,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs
                         item.FpReturProInvDocsId = id;
                         item.FlagForCreate(IdentityService.Username, UserAgent);
                         item.FlagForUpdate(IdentityService.Username, UserAgent);
-                        
+
                     }
                     updated = await DbContext.SaveChangesAsync();
                     transaction.Commit();
@@ -411,8 +411,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs
                 Items = inventoryDocumentItems
             };
 
-            InventoryDocumentFacade inventoryDocumentFacade = (InventoryDocumentFacade)ServiceProvider.GetService(typeof(InventoryDocumentFacade));
-            return await inventoryDocumentFacade.Create(inventoryDocument, IdentityService.Username);
+            var inventoryDocumentFacade = ServiceProvider.GetService<IInventoryDocumentService>();
+            return await inventoryDocumentFacade.Create(inventoryDocument);
         }
 
         public async Task<Models.FpRegradingResultDocs> CustomCodeGenerator(Models.FpRegradingResultDocs Model)
@@ -454,7 +454,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs
             //Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Filter);
             //string unitName = FilterDictionary["UnitName"].ToString();
             //string supplierId = FilterDictionary["SupplierId"].ToString();
-            IQueryable <Models.FpRegradingResultDocs> Query = this.DbContext.fpRegradingResultDocs.Where(p => p._IsDeleted == false && p.IsReturnedToPurchasing == false);
+            IQueryable<Models.FpRegradingResultDocs> Query = this.DbContext.fpRegradingResultDocs.Where(p => p._IsDeleted == false && p.IsReturnedToPurchasing == false);
 
             List<string> SearchAttributes = new List<string>()
             {

@@ -1,16 +1,10 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Facades;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
-using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
-using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
 using Com.Danliris.Service.Inventory.Test.DataUtils.FPReturnInvToPurchasingDataUtil;
 using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
-using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
-using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUtil;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -90,19 +84,19 @@ namespace Com.Danliris.Service.Inventory.Test
                 //.AddTransient<FPReturnInvToPurchasingDataUtil>()
                 .AddTransient<FPReturnInvToPurchasingDetailDataUtil>()
 
-                .AddTransient<InventoryDocumentFacade>()
+                //.AddTransient<InventoryDocumentFacade>()
                 .AddTransient<InventoryDocumentDataUtil>()
-                .AddTransient<InventoryDocumentItemDataUtil>()
+                //.AddTransient<InventoryDocumentItemDataUtil>()
 
-                .AddTransient<InventoryMovementFacade>()
+                //.AddTransient<InventoryMovementFacade>()
                 .AddTransient<InventoryMovementDataUtil>()
 
-                .AddTransient<InventorySummaryFacade>()
+                //.AddTransient<InventorySummaryFacade>()
                 .AddTransient<InventorySummaryDataUtil>()
 
-                .AddTransient<InventoryMovementReportFacade>()
+                //.AddTransient<InventoryMovementReportFacade>()
 
-                .AddTransient<InventorySummaryReportFacade>()
+                //.AddTransient<InventorySummaryReportFacade>()
 
                 .AddSingleton<TestHelpers.HttpClientTestService>(provider => new TestHelpers.HttpClientTestService(provider))
                 .AddSingleton<HttpClientService>()

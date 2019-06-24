@@ -1,6 +1,6 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
@@ -85,9 +85,16 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_CreateAsync()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = _dataUtil(service).GetNewData();
@@ -108,9 +115,16 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_DeleteAsync()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
@@ -143,9 +157,16 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_MapToViewModel()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
@@ -158,9 +179,16 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_Read()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
@@ -173,9 +201,16 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_ReadById()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
@@ -188,9 +223,16 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_Update()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
@@ -232,9 +274,16 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_ReadModelByNotUser()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
@@ -247,27 +296,41 @@ namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
         public async Task Should_Success_UpdateIsApproved()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
-            
+
             var response = await service.UpdateIsApprove(data.Id);
 
             Assert.True(response);
 
-            
+
         }
 
         [Fact]
         public async Task Should_Fail_UpdateIsApproved()
         {
             var serviceProvider = GetServiceProvider();
-            InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
 
-            serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
             NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();

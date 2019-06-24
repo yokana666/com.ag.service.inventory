@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Facades\InventoryFacades\**" />
+    <EmbeddedResource Remove="Facades\InventoryFacades\**" />
+    <None Remove="Facades\InventoryFacades\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Facades\FpRegradingResultDocsReportFacade.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDetailsDocsService.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDocsService.cs" />
