@@ -1,26 +1,24 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
-using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib.Services;
-using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
-using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
+using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
+using Com.Danliris.Service.Inventory.Test.DataUtils.StockTransferNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
+namespace Com.Danliris.Service.Inventory.Test.Services.StockTransferNote
 {
 
-    public class FpRegradingResultServiceTest 
+    public class StockTransferNoteServiceTest
     {
-        private const string ENTITY = "FpRegradingResult";
+        private const string ENTITY = "StockTransferNote";
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public string GetCurrentMethod()
@@ -43,11 +41,11 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
             return dbContext;
         }
 
-        private FpRegradingResultDataUtil _dataUtil(NewFpRegradingResultDocsService service)
+        private StockTransferNoteDataUtil _dataUtil(NewStockTransferNoteService service)
         {
 
             GetServiceProvider();
-            return new FpRegradingResultDataUtil(service);
+            return new StockTransferNoteDataUtil(service);
         }
 
         private Mock<IServiceProvider> GetServiceProvider()
@@ -88,12 +86,12 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
         {
             var serviceProvider = GetServiceProvider();
             InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
-            
+
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = _dataUtil(service).GetNewData();
-            
+
             var Response = await service.CreateAsync(data);
             Assert.NotEqual(0, Response);
         }
@@ -101,7 +99,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
         [Fact]
         public async Task Should_Fail_CreateAsync()
         {
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
             var data = _dataUtil(service).GetNewData();
             await Assert.ThrowsAnyAsync<Exception>(() => service.CreateAsync(data));
         }
@@ -114,7 +112,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
 
             var Response = await service.DeleteAsync(data.Id);
@@ -124,19 +122,19 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
         [Fact]
         public async Task Should_Fail_DeleteAsync()
         {
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
-            
+            NewStockTransferNoteService service = new NewStockTransferNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+
             await Assert.ThrowsAnyAsync<Exception>(() => service.DeleteAsync(0));
         }
 
         [Fact]
         public void Should_Success_MapToModel()
         {
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
-            var data = _dataUtil(service).GetEmptyData();
+            NewStockTransferNoteService service = new NewStockTransferNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            var data = _dataUtil(service).GetNewData();
+            var vm = service.MapToViewModel(data);
 
-
-            var model = service.MapToModel(data);
+            var model = service.MapToModel(vm);
 
             Assert.NotNull(model);
         }
@@ -149,7 +147,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
             var model = service.MapToViewModel(data);
 
@@ -164,7 +162,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
             var model = service.Read(1, 25, "{}", null, null, "{}");
 
@@ -179,7 +177,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
             var model = await service.ReadByIdAsync(data.Id);
 
@@ -194,32 +192,31 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
             var vm = service.MapToViewModel(data);
             var testData = service.MapToModel(vm);
-            testData.Details.Add(new FpRegradingResultDocsDetails
+            testData.StockTransferNoteItems.Add(new Lib.Models.StockTransferNoteModel.StockTransferNote_Item
             {
-                Grade = "a",
-                Length = 12,
                 ProductCode = "code",
                 ProductId = "1",
                 ProductName = "name",
-                Quantity = 1,
-                Remark = "remar",
-                Retur = "retur"
+                StockQuantity = 2,
+                TransferedQuantity = 2,
+                UomId = "2",
+                UomUnit = "unitA"
             });
-            testData.UnitName = "a";
+            testData.TargetStorageName = "a";
 
             var response = await service.UpdateAsync(testData.Id, testData);
 
             Assert.NotEqual(0, response);
 
-            
+
             var newData = await service.ReadByIdAsync(data.Id);
             var vm2 = service.MapToViewModel(newData);
             var testData2 = service.MapToModel(vm2);
-            testData2.Details.Clear();
+            testData2.StockTransferNoteItems.Clear();
             var newResponse = await service.UpdateAsync(testData2.Id, testData2);
             Assert.NotEqual(0, newResponse);
         }
@@ -227,53 +224,57 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
         [Fact]
         public async Task Should_Fail_UpdateAsync()
         {
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
-            await Assert.ThrowsAnyAsync<Exception>(() => service.UpdateAsync(99, new Lib.Models.FpRegradingResultDocs()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
+            await Assert.ThrowsAnyAsync<Exception>(() => service.UpdateAsync(99, new Lib.Models.StockTransferNoteModel.StockTransferNote()));
         }
 
         [Fact]
-        public async Task Should_Success_ReadNo()
+        public async Task Should_Success_ReadModelByNotUser()
         {
             var serviceProvider = GetServiceProvider();
             InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
-            var model = service.ReadNo();
+            var model = service.ReadModelByNotUser(1, 25, "{}", null, null, "{}");
 
             Assert.NotNull(model);
         }
 
         [Fact]
-        public async Task Should_Success_UpdateIsReturnedToPurchasing()
+        public async Task Should_Success_UpdateIsApproved()
         {
             var serviceProvider = GetServiceProvider();
             InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
-            var response = service.UpdateIsReturnedToPurchasing(data.Id, true);
+            
+            var response = await service.UpdateIsApprove(data.Id);
 
-            Assert.NotEqual(0, response);
+            Assert.True(response);
+
+            
         }
 
         [Fact]
-        public async Task Should_Success_GetReport()
+        public async Task Should_Fail_UpdateIsApproved()
         {
             var serviceProvider = GetServiceProvider();
             InventoryDocumentFacade inventoryDocumentFacade = new InventoryDocumentFacade(serviceProvider.Object, _dbContext(GetCurrentMethod()));
 
             serviceProvider.Setup(s => s.GetService(typeof(InventoryDocumentFacade)))
                 .Returns(inventoryDocumentFacade);
-            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            NewStockTransferNoteService service = new NewStockTransferNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
-            var model = service.GetReport(null, null, null, null, null, null, null, 1, 25, "{}");
 
-            Assert.NotNull(model);
+            await Assert.ThrowsAnyAsync<Exception>(() => service.UpdateIsApprove(99));
+
+
         }
     }
 }

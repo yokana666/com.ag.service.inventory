@@ -11,6 +11,7 @@
     <Compile Remove="DataUtils\MaterialDistributionNoteDataUtil\MaterialDistributionNoteDetailDataUtil.cs" />
     <Compile Remove="DataUtils\MaterialDistributionNoteDataUtil\MaterialDistributionNoteItemDataUtil.cs" />
     <Compile Remove="DataUtils\MaterialRequestNoteDataUtil\MaterialRequestNoteItemDataUtil.cs" />
+    <Compile Remove="DataUtils\StockTransferNoteDataUtil\StockTransferNoteItemDataUtil.cs" />
     <Compile Remove="Services\MaterialRequestNote\MaterialRequestNoteCustomTest.cs" />
   </ItemGroup>
 
