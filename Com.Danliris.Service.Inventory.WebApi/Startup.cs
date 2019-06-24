@@ -6,6 +6,7 @@ using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.IntegrationServices;
 using Com.Danliris.Service.Inventory.Lib.MongoRepositories.InventoryDocument;
 using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
@@ -46,7 +47,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
         {
             services
                 .AddTransient<FPReturnInvToPurchasingFacade>()
-                .AddTransient<FpRegradingResultDocsReportFacade>()
+                //.AddTransient<FpRegradingResultDocsReportFacade>()
                 .AddTransient<InventoryDocumentFacade>()
                 .AddTransient<InventoryMovementFacade>()
                 .AddTransient<InventorySummaryFacade>()
@@ -62,12 +63,13 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<StockTransferNoteService>()
                 .AddTransient<StockTransferNote_ItemService>()
                 //.AddTransient<MaterialDistributionNoteDetailService>()
-                .AddTransient<FpRegradingResultDetailsDocsService>()
-                .AddTransient<FpRegradingResultDocsService>()
+                //.AddTransient<FpRegradingResultDetailsDocsService>()
+                //.AddTransient<FpRegradingResultDocsService>()
                 .AddTransient<FPReturnInvToPurchasingService>()
                 .AddTransient<FPReturnInvToPurchasingDetailService>()
                 .AddTransient<IMaterialRequestNoteService, NewMaterialRequestNoteService>()
                 .AddTransient<IMaterialDistributionService, NewMaterialDistributionNoteService>()
+                .AddTransient<IFpRegradingResultDocsService, NewFpRegradingResultDocsService>()
                 .AddScoped<IIdentityService, IdentityService>()
                 .AddScoped<IValidateService, ValidateService>()
                 .AddScoped<IHttpService, HttpService>()

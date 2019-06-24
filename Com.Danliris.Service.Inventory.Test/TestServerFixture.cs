@@ -66,8 +66,8 @@ namespace Com.Danliris.Service.Inventory.Test
                         //.AddTransient<MaterialRequestNoteDataUtil>()
                         //.AddTransient<MaterialRequestNoteItemDataUtil>()
 
-                        .AddTransient<FpRegradingResultDataUtil>()
-                        .AddTransient<FpRegradingResultDetailsDataUtil>()
+                        //.AddTransient<FpRegradingResultDataUtil>()
+                        //.AddTransient<FpRegradingResultDetailsDataUtil>()
 
                         //.AddTransient<MaterialDistributionNoteDataUtil>()
                         //.AddTransient<MaterialDistributionNoteItemDataUtil>()
@@ -76,7 +76,7 @@ namespace Com.Danliris.Service.Inventory.Test
                         .AddTransient<StockTransferNoteDataUtil>()
                         .AddTransient<StockTransferNoteItemDataUtil>()
 
-                        .AddTransient<FPReturnInvToPurchasingDataUtil>()
+                        //.AddTransient<FPReturnInvToPurchasingDataUtil>()
                         .AddTransient<FPReturnInvToPurchasingDetailDataUtil>()
 
                         .AddTransient<InventoryDocumentDataUtil>()

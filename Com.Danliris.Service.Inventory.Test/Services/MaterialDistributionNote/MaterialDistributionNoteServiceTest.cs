@@ -1,28 +1,27 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
+using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
+using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
+using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
+using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
-using Model = Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Moq;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
-using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNoteDataUtil;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using Moq;
-using Com.Danliris.Service.Inventory.Lib.Services;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Threading.Tasks;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
-using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Xunit;
+using Model = Com.Danliris.Service.Inventory.Lib.Models.MaterialDistributionNoteModel;
 
 namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
 {
-    
-    public class MaterialDistributionNoteServiceTest 
+
+    public class MaterialDistributionNoteServiceTest
     {
         private const string ENTITY = "MaterialDistributionNote";
 
@@ -65,7 +64,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
             serviceProvider
                 .Setup(x => x.GetService(typeof(IIdentityService)))
                 .Returns(new IdentityService() { Token = "Token", Username = "Test" });
-            
+
             return serviceProvider;
         }
 
@@ -77,12 +76,12 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
                 .Setup(x => x.GetService(typeof(IHttpService)))
                 .Returns(new HttpFailTestService());
 
-            
+
 
             serviceProvider
                 .Setup(x => x.GetService(typeof(IIdentityService)))
                 .Returns(new IdentityService() { Token = "Token", Username = "Test" });
-            
+
 
             return serviceProvider;
         }
@@ -148,7 +147,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
         {
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetFailServiceProvider().Object, _dbContext(GetCurrentMethod()));
-            
+
             await Assert.ThrowsAnyAsync<Exception>(() => service.DeleteAsync(0));
         }
 
@@ -178,7 +177,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
             NewMaterialRequestNoteService serviceMrn = new NewMaterialRequestNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
             NewMaterialDistributionNoteService service = new NewMaterialDistributionNoteService(GetServiceProvider().Object, _dbContext(GetCurrentMethod()));
             var data = _dataUtil(service, serviceMrn).GetEmptyData();
-            
+
 
             var model = service.MapToModel(data);
 
@@ -262,7 +261,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
                 }
             });
             testData.UnitName = "a";
-            
+
             var response = await service.UpdateAsync(testData.Id, testData);
 
             Assert.NotEqual(0, response);
@@ -275,16 +274,17 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
             {
                 new Model.MaterialDistributionNoteDetail()
                 {
-                    
+
                 }
             };
             var newResponse3 = await service.UpdateAsync(testData3.Id, testData3);
-
+            Assert.NotEqual(0, newResponse3);
             var newData = await service.ReadByIdAsync(data.Id);
             var vm2 = service.MapToViewModel(newData);
             var testData2 = service.MapToModel(vm);
             testData2.MaterialDistributionNoteItems.Clear();
             var newResponse = await service.UpdateAsync(testData2.Id, testData2);
+            Assert.NotEqual(0, newResponse);
         }
 
         [Fact]
@@ -313,7 +313,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialDistributionNote
 
             Assert.True(response);
         }
-        
+
 
     }
 }

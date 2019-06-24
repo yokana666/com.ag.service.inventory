@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataUtils\FpRegradingResultDataUtil\FpRegradingResultDetailsDataUtil.cs" />
     <Compile Remove="DataUtils\MaterialDistributionNoteDataUtil\MaterialDistributionNoteDetailDataUtil.cs" />
     <Compile Remove="DataUtils\MaterialDistributionNoteDataUtil\MaterialDistributionNoteItemDataUtil.cs" />
     <Compile Remove="DataUtils\MaterialRequestNoteDataUtil\MaterialRequestNoteItemDataUtil.cs" />

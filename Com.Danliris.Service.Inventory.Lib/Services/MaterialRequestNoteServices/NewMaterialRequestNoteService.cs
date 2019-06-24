@@ -282,6 +282,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
 
 
                     dbModel.Remark = model.Remark;
+                    dbModel.IsCompleted = model.IsCompleted;
+                    dbModel.IsDistributed = model.IsDistributed;
+                    dbModel.RequestType = model.RequestType;
+                    dbModel.Type = model.Type;
+                    dbModel.UnitCode = model.UnitCode;
+                    dbModel.UnitId = model.UnitId;
+                    dbModel.UnitName = model.UnitName;
                     dbModel.FlagForUpdate(IdentityService.Username, UserAgent);
                     //DbSet.Update(dbModel);
                     Updated = await DbContext.SaveChangesAsync();
@@ -321,7 +328,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
                         item.OrderTypeCode = selectedDetail.OrderTypeCode;
                         item.OrderTypeId = selectedDetail.OrderTypeId;
                         item.OrderTypeName = selectedDetail.OrderTypeName;
-
+                        
                         Updated += await UpdateItem(item);
 
                     }

@@ -200,7 +200,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
             testData2.MaterialsRequestNote_Items.Clear();
             var newResponse = await utilService.UpdateAsync(testData2.Id, testData2);
 
-            Assert.NotEqual(0, response);
+            Assert.NotEqual(0, newResponse);
         }
 
         [Fact]

@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Facades\FpRegradingResultDocsReportFacade.cs" />
+    <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDetailsDocsService.cs" />
+    <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDocsService.cs" />
     <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteDetailService.cs" />
     <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteItemService.cs" />
     <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteService.cs" />
