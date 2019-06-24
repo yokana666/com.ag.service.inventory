@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Compile Remove="Facades\FpRegradingResultDocsReportFacade.cs" />
+    <Compile Remove="Helpers\BasicService.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDetailsDocsService.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDocsService.cs" />
     <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteDetailService.cs" />
