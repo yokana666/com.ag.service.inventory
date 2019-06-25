@@ -11,7 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Helpers\BaseViewModel.cs" />
     <Compile Remove="Helpers\BasicService.cs" />
+    <Compile Remove="Interfaces\ICreateable.cs" />
+    <Compile Remove="Interfaces\IDeleteable.cs" />
+    <Compile Remove="Interfaces\IGeneralUploadService.cs" />
+    <Compile Remove="Interfaces\IReadable.cs" />
+    <Compile Remove="Interfaces\IReadByIdable.cs" />
+    <Compile Remove="Interfaces\IToModelable.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDetailsDocsService.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDocsService.cs" />
     <Compile Remove="Services\FPReturnInvToPurchasingService\FPReturnInvToPurchasingDetailService.cs" />

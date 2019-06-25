@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="DataUtils\FpRegradingResultDataUtil\FpRegradingResultDetailsDataUtil.cs" />
+    <Compile Remove="DataUtils\FPReturnInvToPurchasingDataUtil\FPReturnInvToPurchasingDetailDataUtil.cs" />
     <Compile Remove="DataUtils\InventoryDataUtils\InventoryDocumentItemDataUtil.cs" />
     <Compile Remove="DataUtils\MaterialDistributionNoteDataUtil\MaterialDistributionNoteDetailDataUtil.cs" />
     <Compile Remove="DataUtils\MaterialDistributionNoteDataUtil\MaterialDistributionNoteItemDataUtil.cs" />
