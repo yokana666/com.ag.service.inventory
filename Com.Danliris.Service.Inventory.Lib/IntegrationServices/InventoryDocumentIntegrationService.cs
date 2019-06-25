@@ -1,9 +1,10 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
-using Com.Danliris.Service.Inventory.Lib.Models.DataIntegrationLog;
+﻿using Com.Danliris.Service.Inventory.Lib.Models.DataIntegrationLog;
 using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.MongoModels;
 using Com.Danliris.Service.Inventory.Lib.MongoRepositories.InventoryDocument;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,9 +54,9 @@ namespace Com.Danliris.Service.Inventory.Lib.IntegrationServices
                         item.UomId = uomFromSummary == null ? 0 : uomFromSummary.UomId;
                     }
 
-                    var inventoryDocumentFacade = new InventoryDocumentFacade(_serviceProvider, _dbContext);
+                    var inventoryDocumentFacade = _serviceProvider.GetService<IInventoryDocumentService>();
 
-                    await inventoryDocumentFacade.Create(inventoryDocument, inventoryDocument._CreatedBy);
+                    await inventoryDocumentFacade.Create(inventoryDocument);
                 }
 
                 lastIntegrationLog.LastIntegrationDate = DateTimeOffset.Now;
