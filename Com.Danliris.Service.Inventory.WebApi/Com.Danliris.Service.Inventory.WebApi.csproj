@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Helpers\BaseDelete.cs" />
+    <Compile Remove="Helpers\BaseGet.cs" />
+    <Compile Remove="Helpers\BaseGetById.cs" />
+    <Compile Remove="Helpers\BasePost.cs" />
     <Compile Remove="Helpers\BasicController.cs" />
   </ItemGroup>
 

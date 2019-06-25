@@ -37,7 +37,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
         }
 
         [HttpGet]
-        public IActionResult Get(int Page = 1, int Size = 25, string Order = "{}", [Bind(Prefix = "Select[]")]List<string> Select = null, string Keyword = null, string Filter = "{}")
+        public virtual IActionResult Get(int Page = 1, int Size = 25, string Order = "{}", [Bind(Prefix = "Select[]")]List<string> Select = null, string Keyword = null, string Filter = "{}")
         {
             try
             {
@@ -58,7 +58,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] TViewModel viewModel)
+        public virtual async Task<ActionResult> Post([FromBody] TViewModel viewModel)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public virtual async Task<IActionResult> GetById([FromRoute] int id)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
         }
 
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] TViewModel viewModel)
+        public virtual async Task<IActionResult> Put([FromRoute] int id, [FromBody] TViewModel viewModel)
         {
             try
             {
@@ -160,7 +160,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Helpers
         }
 
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public virtual async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
             {

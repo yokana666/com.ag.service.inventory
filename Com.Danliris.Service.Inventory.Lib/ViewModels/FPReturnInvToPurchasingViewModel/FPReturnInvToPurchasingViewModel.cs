@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingViewModel
 {
-    public class FPReturnInvToPurchasingViewModel : BaseViewModel<FPReturnInvToPurchasing>, IValidatableObject
+    public class FPReturnInvToPurchasingViewModel : BasicViewModel, IValidatableObject
     {
         public string No { get; set; }
         public UnitViewModel Unit { get; set; }
@@ -18,62 +18,6 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingV
 
         public FPReturnInvToPurchasingViewModel() { }
 
-        public FPReturnInvToPurchasingViewModel(FPReturnInvToPurchasing model)
-        {
-            PropertyCopier<FPReturnInvToPurchasing, FPReturnInvToPurchasingViewModel>.Copy(model, this);
-
-            #region Unit
-
-            this.Unit = new UnitViewModel();
-            this.Unit.Name = model.UnitName;
-
-            #endregion Unit
-
-            #region Supplier
-
-            this.Supplier = new SupplierViewModel();
-            this.Supplier._id = model.SupplierId;
-            this.Supplier.code = model.SupplierCode;
-            this.Supplier.name = model.SupplierName;
-
-            #endregion Supplier
-
-            this.FPReturnInvToPurchasingDetails = new List<FPReturnInvToPurchasingDetailViewModel>();
-            foreach (FPReturnInvToPurchasingDetail detail in model.FPReturnInvToPurchasingDetails)
-            {
-                FPReturnInvToPurchasingDetailViewModel detailVM = new FPReturnInvToPurchasingDetailViewModel(detail);
-                this.FPReturnInvToPurchasingDetails.Add(detailVM);
-            }
-        }
-
-        public override FPReturnInvToPurchasing ToModel()
-        {
-            FPReturnInvToPurchasing model = new FPReturnInvToPurchasing();
-            PropertyCopier<FPReturnInvToPurchasingViewModel, FPReturnInvToPurchasing>.Copy(this, model);
-
-            #region Unit
-
-            model.UnitName = this.Unit.Name;
-
-            #endregion Unit
-
-            #region Supplier
-
-            model.SupplierId = this.Supplier._id;
-            model.SupplierCode = this.Supplier.code;
-            model.SupplierName = this.Supplier.name;
-
-            #endregion Supplier
-
-            model.FPReturnInvToPurchasingDetails = new List<FPReturnInvToPurchasingDetail>();
-            foreach (FPReturnInvToPurchasingDetailViewModel detailVM in this.FPReturnInvToPurchasingDetails)
-            {
-                FPReturnInvToPurchasingDetail detail = detailVM.ToModel();
-                model.FPReturnInvToPurchasingDetails.Add(detail);
-            }
-
-            return model;
-        }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

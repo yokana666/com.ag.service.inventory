@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingViewModel
 {
-    public class FPReturnInvToPurchasingDetailViewModel : BaseViewModel<FPReturnInvToPurchasingDetail>
+    public class FPReturnInvToPurchasingDetailViewModel : BasicViewModel
     {
         public int FPReturnInvToPurchasingId { get; set; }
         public int FPRegradingResultDocsId { get; set; }
@@ -19,34 +19,5 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingV
 
         public FPReturnInvToPurchasingDetailViewModel() { }
 
-        public FPReturnInvToPurchasingDetailViewModel(FPReturnInvToPurchasingDetail model)
-        {
-            PropertyCopier<FPReturnInvToPurchasingDetail, FPReturnInvToPurchasingDetailViewModel>.Copy(model, this);
-
-            #region Product
-
-            this.Product = new ProductViewModel();
-            this.Product.Id = model.ProductId;
-            this.Product.Code = model.ProductCode;
-            this.Product.Name = model.ProductName;
-
-            #endregion Product
-        }
-
-        public override FPReturnInvToPurchasingDetail ToModel()
-        {
-            FPReturnInvToPurchasingDetail model = new FPReturnInvToPurchasingDetail();
-            PropertyCopier<FPReturnInvToPurchasingDetailViewModel, FPReturnInvToPurchasingDetail>.Copy(this, model);
-
-            #region Product
-
-            model.ProductId = this.Product.Id;
-            model.ProductCode = this.Product.Code;
-            model.ProductName = this.Product.Name;
-
-            #endregion Product
-
-            return model;
-        }
     }
 }

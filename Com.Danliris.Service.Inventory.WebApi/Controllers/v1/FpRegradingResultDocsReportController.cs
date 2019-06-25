@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Com.Danliris.Service.Inventory.Lib.Facades;
-using Com.Danliris.Service.Inventory.WebApi.Helpers;
+﻿using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
-using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.WebApi.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
 {

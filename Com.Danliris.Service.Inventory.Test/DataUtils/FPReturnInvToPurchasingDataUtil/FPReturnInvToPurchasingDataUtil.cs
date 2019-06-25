@@ -1,16 +1,4 @@
-﻿using Com.Danliris.Service.Inventory.Lib.Facades;
-using Com.Danliris.Service.Inventory.Lib.Models;
-using Com.Danliris.Service.Inventory.Lib.Models.FPReturnInvToPurchasingModel;
-using Com.Danliris.Service.Inventory.Lib.ViewModels;
-using Com.Danliris.Service.Inventory.Lib.ViewModels.FPReturnInvToPurchasingViewModel;
-using Com.Danliris.Service.Inventory.Test.Helpers;
-using Com.Danliris.Service.Inventory.Test.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Com.Danliris.Service.Inventory.Test.DataUtils.FPReturnInvToPurchasingDataUtil
+﻿namespace Com.Danliris.Service.Inventory.Test.DataUtils.FPReturnInvToPurchasingDataUtil
 {
     //public class FPReturnInvToPurchasingDataUtil : BaseDataUtil<FPReturnInvToPurchasing, FPReturnInvToPurchasingFacade>, IEmptyData<FPReturnInvToPurchasingViewModel>
     //{

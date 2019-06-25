@@ -5,16 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Facades\InventoryFacades\**" />
-    <EmbeddedResource Remove="Facades\InventoryFacades\**" />
-    <None Remove="Facades\InventoryFacades\**" />
+    <Compile Remove="Facades\**" />
+    <EmbeddedResource Remove="Facades\**" />
+    <None Remove="Facades\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Facades\FpRegradingResultDocsReportFacade.cs" />
     <Compile Remove="Helpers\BasicService.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDetailsDocsService.cs" />
     <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDocsService.cs" />
+    <Compile Remove="Services\FPReturnInvToPurchasingService\FPReturnInvToPurchasingDetailService.cs" />
+    <Compile Remove="Services\FPReturnInvToPurchasingService\FPReturnInvToPurchasingService.cs" />
     <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteDetailService.cs" />
     <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteItemService.cs" />
     <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteService.cs" />

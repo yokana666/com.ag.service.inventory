@@ -394,8 +394,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
                 {
                     foreach (MaterialDistributionNoteDetail detail in item.MaterialDistributionNoteDetails)
                     {
-                        var RequestNoteItem = RequestNoteItems.SingleOrDefault(p => p.Id == detail.MaterialsRequestNoteItemId);
-                        detail.IsCompleted = RequestNoteItem.IsCompleted;
+                        var RequestNoteItem = RequestNoteItems.FirstOrDefault(p => p.Id == detail.MaterialsRequestNoteItemId);
+                        if (RequestNoteItem != null)
+                            detail.IsCompleted = RequestNoteItem.IsCompleted;
                     }
                 }
             }
