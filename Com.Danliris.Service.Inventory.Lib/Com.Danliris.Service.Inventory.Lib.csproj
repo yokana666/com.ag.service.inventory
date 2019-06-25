@@ -5,17 +5,46 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Facades\**" />
+    <EmbeddedResource Remove="Facades\**" />
+    <None Remove="Facades\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helpers\BaseViewModel.cs" />
+    <Compile Remove="Helpers\BasicService.cs" />
+    <Compile Remove="Interfaces\ICreateable.cs" />
+    <Compile Remove="Interfaces\IDeleteable.cs" />
+    <Compile Remove="Interfaces\IGeneralUploadService.cs" />
+    <Compile Remove="Interfaces\IReadable.cs" />
+    <Compile Remove="Interfaces\IReadByIdable.cs" />
+    <Compile Remove="Interfaces\IToModelable.cs" />
+    <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDetailsDocsService.cs" />
+    <Compile Remove="Services\FpRegradingResultDocs\FpRegradingResultDocsService.cs" />
+    <Compile Remove="Services\FPReturnInvToPurchasingService\FPReturnInvToPurchasingDetailService.cs" />
+    <Compile Remove="Services\FPReturnInvToPurchasingService\FPReturnInvToPurchasingService.cs" />
+    <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteDetailService.cs" />
+    <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteItemService.cs" />
+    <Compile Remove="Services\MaterialDistributionNoteService\MaterialDistributionNoteService.cs" />
+    <Compile Remove="Services\MaterialRequestNoteServices\MaterialsRequestNoteService.cs" />
+    <Compile Remove="Services\MaterialRequestNoteServices\MaterialsRequestNote_ItemService.cs" />
+    <Compile Remove="Services\StockTransferNoteService\StockTransferNoteService.cs" />
+    <Compile Remove="Services\StockTransferNoteService\StockTransferNote_ItemService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="Com.Moonlay.EntityFrameworkCore" Version="1.0.0-alpha-10122017-003" />
     <PackageReference Include="Com.Moonlay.NetCore.Lib" Version="1.0.0-alpha-20171102-001" />
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.4.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="MlkPwgen" Version="0.3.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.7.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.2" />
   </ItemGroup>
 
