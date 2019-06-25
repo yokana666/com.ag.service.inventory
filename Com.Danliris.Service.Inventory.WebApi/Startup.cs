@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.Text;
 
 namespace Com.Danliris.Service.Inventory.WebApi
@@ -135,7 +136,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddJsonFormatters();
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddCors(options => options.AddPolicy("InventoryPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
