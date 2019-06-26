@@ -1,12 +1,15 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
 using Com.Danliris.Service.Inventory.Test.DataUtils.MaterialRequestNoteDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -277,6 +280,50 @@ namespace Com.Danliris.Service.Inventory.Test.Services.MaterialRequestNote
             var data = await _dataUtil(service).GetTestData();
             var response = service.GetReport(null, null, null, null, null, null, null, 1, 25, "{}", 6);
             Assert.True(true);
+        }
+
+        [Fact]
+        public async Task Should_Success_ValidateVM()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService utilService = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(utilService).GetTestData();
+
+            var vm = utilService.MapToViewModel(data);
+            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+            var response = vm.Validate(validationContext);
+
+            Assert.True(response.Count() == 0);
+
+
+        }
+
+        [Fact]
+        public void Should_Success_ValidateNullVM()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService utilService = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var vm = new MaterialsRequestNoteViewModel();
+            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+            var response = vm.Validate(validationContext);
+
+            Assert.True(response.Count() > 0);
+
+
+        }
+
+        [Fact]
+        public void Should_Success_ValidateNullDetailVM()
+        {
+            var serviceProvider = GetServiceProvider();
+            NewMaterialRequestNoteService utilService = new NewMaterialRequestNoteService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var vm = new MaterialsRequestNoteViewModel() { RequestType = "a", MaterialsRequestNote_Items = new List<MaterialsRequestNote_ItemViewModel>() { new MaterialsRequestNote_ItemViewModel() } };
+            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+            var response = vm.Validate(validationContext);
+
+            Assert.True(response.Count() > 0);
+
+
         }
     }
 }
