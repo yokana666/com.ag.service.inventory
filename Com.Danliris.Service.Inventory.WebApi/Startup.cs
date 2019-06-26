@@ -3,8 +3,6 @@ using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Facades;
 using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
-using Com.Danliris.Service.Inventory.Lib.IntegrationServices;
-using Com.Danliris.Service.Inventory.Lib.MongoRepositories.InventoryDocument;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
@@ -87,17 +85,17 @@ namespace Com.Danliris.Service.Inventory.WebApi
                     options.DefaultApiVersion = new ApiVersion(1, 0);
                 });
 
-            services.Configure<MongoDbSettings>(options =>
-                {
-                    options.ConnectionString = Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"];
-                    options.Database = Configuration.GetConnectionString("MongoDatabase") ?? Configuration["MongoDatabase"];
-                });
+            //services.Configure<MongoDbSettings>(options =>
+            //    {
+            //        options.ConnectionString = Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"];
+            //        options.Database = Configuration.GetConnectionString("MongoDatabase") ?? Configuration["MongoDatabase"];
+            //    });
 
-            services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"]));
+            //services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"]));
 
-            services.AddTransient<IMongoDbContext, MongoDbMigrationContext>();
-            services.AddTransient<IInventoryDocumentIntegrationService, InventoryDocumentIntegrationService>();
-            services.AddTransient<IInventoryDocumentMongoRepository, InventoryDocumentMongoRepository>();
+            //services.AddTransient<IMongoDbContext, MongoDbMigrationContext>();
+            //services.AddTransient<IInventoryDocumentIntegrationService, InventoryDocumentIntegrationService>();
+            //services.AddTransient<IInventoryDocumentMongoRepository, InventoryDocumentMongoRepository>();
 
 
             this.RegisterServices(services);
