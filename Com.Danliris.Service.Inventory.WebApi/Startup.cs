@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Com.Danliris.Service.Inventory.Lib;
-using Com.Danliris.Service.Inventory.Lib.Facades;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
-using Com.Danliris.Service.Inventory.Lib.Services.MaterialsRequestNoteServices;
+using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.Text;
 
 namespace Com.Danliris.Service.Inventory.WebApi
@@ -37,34 +38,44 @@ namespace Com.Danliris.Service.Inventory.WebApi
             APIEndpoint.Inventory = Configuration.GetValue<string>("InventoryEndpoint") ?? Configuration["InventoryEndpoint"];
             APIEndpoint.Production = Configuration.GetValue<string>("ProductionEndpoint") ?? Configuration["ProductionEndpoint"];
             APIEndpoint.Purchasing = Configuration.GetValue<string>("PurchasingEndpoint") ?? Configuration["PurchasingEndpoint"];
+            APIEndpoint.Sales = Configuration.GetValue<string>("SalesEndpoint") ?? Configuration["SalesEndpoint"];
         }
 
         public void RegisterFacades(IServiceCollection services)
         {
-            services
-                .AddTransient<FPReturnInvToPurchasingFacade>()
-                .AddTransient<FpRegradingResultDocsReportFacade>()
-                .AddTransient<InventoryDocumentFacade>()
-                .AddTransient<InventoryMovementFacade>()
-                .AddTransient<InventorySummaryFacade>()
-                .AddTransient<InventoryMovementReportFacade>()
-                .AddTransient<InventorySummaryReportFacade>();
+            //services
+            //    .AddTransient<FPReturnInvToPurchasingFacade>();
+            //.AddTransient<FpRegradingResultDocsReportFacade>()
+            //.AddTransient<InventoryDocumentFacade>()
+            //.AddTransient<InventoryMovementFacade>()
+            //.AddTransient<InventorySummaryFacade>()
+            //.AddTransient<InventoryMovementReportFacade>()
+            //.AddTransient<InventorySummaryReportFacade>();
         }
 
         public void RegisterServices(IServiceCollection services)
         {
             services
-                .AddScoped<MaterialsRequestNoteService>()
-                .AddScoped<MaterialsRequestNote_ItemService>()
-                .AddScoped<MaterialDistributionNoteService>()
-                .AddTransient<MaterialDistributionNoteItemService>()
-                .AddTransient<StockTransferNoteService>()
-                .AddTransient<StockTransferNote_ItemService>()
-                .AddTransient<MaterialDistributionNoteDetailService>()
-                .AddTransient<FpRegradingResultDetailsDocsService>()
-                .AddTransient<FpRegradingResultDocsService>()
-                .AddTransient<FPReturnInvToPurchasingService>()
-                .AddTransient<FPReturnInvToPurchasingDetailService>()
+                //.AddScoped<MaterialDistributionNoteService>()
+                //.AddTransient<MaterialDistributionNoteItemService>()
+                //.AddTransient<StockTransferNoteService>()
+                //.AddTransient<StockTransferNote_ItemService>()
+                //.AddTransient<MaterialDistributionNoteDetailService>()
+                //.AddTransient<FpRegradingResultDetailsDocsService>()
+                //.AddTransient<FpRegradingResultDocsService>()
+                //.AddTransient<FPReturnInvToPurchasingService>()
+                //.AddTransient<FPReturnInvToPurchasingDetailService>()
+                .AddTransient<IStockTransferNoteService, NewStockTransferNoteService>()
+                .AddTransient<IMaterialRequestNoteService, NewMaterialRequestNoteService>()
+                .AddTransient<IMaterialDistributionService, NewMaterialDistributionNoteService>()
+                .AddTransient<IFpRegradingResultDocsService, NewFpRegradingResultDocsService>()
+                .AddTransient<IInventoryDocumentService, InventoryDocumentService>()
+                .AddTransient<IInventoryMovementService, InventoryMovementService>()
+                .AddTransient<IInventorySummaryService, InventorySummaryService>()
+                .AddTransient<IFPReturnInvToPurchasingService, NewFPReturnInvToPurchasingService>()
+                .AddScoped<IIdentityService, IdentityService>()
+                .AddScoped<IValidateService, ValidateService>()
+                .AddScoped<IHttpService, HttpService>()
                 .AddScoped<IdentityService>()
                 .AddScoped<HttpClientService>()
                 .AddScoped<ValidateService>();
@@ -123,7 +134,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddJsonFormatters();
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddCors(options => options.AddPolicy("InventoryPolicy", builder =>
             {
                 builder.AllowAnyOrigin()

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Com.Danliris.Service.Inventory.Lib.Facades;
-using Com.Danliris.Service.Inventory.Lib.Facades.InventoryFacades;
+﻿using Com.Danliris.Service.Inventory.Lib.Services;
+using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.WebApi.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
 {
@@ -16,12 +14,17 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
     [Authorize]
     public class InventorySummaryReportController : Controller
     {
-        private string ApiVersion = "1.0.0";
-        private readonly InventorySummaryReportFacade inventorySummaryReportFacade;
+        protected IIdentityService IdentityService;
+        protected readonly IValidateService ValidateService;
+        protected readonly IInventorySummaryService Service;
+        protected readonly string ApiVersion;
 
-        public InventorySummaryReportController(InventorySummaryReportFacade inventorySummaryReportFacade)
+        public InventorySummaryReportController(IIdentityService identityService, IValidateService validateService, IInventorySummaryService service)
         {
-            this.inventorySummaryReportFacade = inventorySummaryReportFacade;
+            IdentityService = identityService;
+            ValidateService = validateService;
+            Service = service;
+            ApiVersion = "1.0.0";
         }
 
         [HttpGet]
@@ -37,7 +40,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
             try
             {
 
-                var data = inventorySummaryReportFacade.GetReport(storageCode, productCode, page, size, Order, offset);
+                var data = Service.GetReport(storageCode, productCode, page, size, Order, offset);
 
                 return Ok(new
                 {
@@ -66,7 +69,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
                 byte[] xlsInBytes;
                 int offset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
 
-                var xls = inventorySummaryReportFacade.GenerateExcel(storageCode, productCode, offset);
+                var xls = Service.GenerateExcel(storageCode, productCode, offset);
 
                 string filename = String.Format("Kartu Stok - {0}.xlsx", DateTime.UtcNow.ToString("ddMMyyyy"));
 
@@ -89,7 +92,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
         {
             try
             {
-                var result = inventorySummaryReportFacade.GetInventorySummaries(productIds);
+                var result = Service.GetInventorySummaries(productIds);
                 return Ok(new
                 {
                     apiVersion = ApiVersion,
@@ -112,7 +115,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
         {
             try
             {
-                var result = inventorySummaryReportFacade.GetSummaryByParams(storageId, productId, uomId);
+                var result = Service.GetSummaryByParams(storageId, productId, uomId);
                 return Ok(new
                 {
                     apiVersion = ApiVersion,
