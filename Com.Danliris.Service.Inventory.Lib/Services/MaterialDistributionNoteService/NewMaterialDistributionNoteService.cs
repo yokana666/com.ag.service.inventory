@@ -5,6 +5,7 @@ using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialDistributionNoteViewModel;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
@@ -62,7 +63,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteSe
 
                     IMaterialRequestNoteService materialsRequestNoteService = ServiceProvider.GetService<IMaterialRequestNoteService>();
 
-                    List<InventorySummaryViewModel> data = new List<InventorySummaryViewModel>();
+                    List<ViewModels.InventoryViewModel.InventorySummaryViewModel> data = new List<ViewModels.InventoryViewModel.InventorySummaryViewModel>();
 
 
                     foreach (MaterialDistributionNoteItem materialDistributionNoteItem in model.MaterialDistributionNoteItems)

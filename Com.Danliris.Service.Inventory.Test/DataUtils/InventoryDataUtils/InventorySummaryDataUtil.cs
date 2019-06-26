@@ -41,6 +41,7 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils
                 productCode = "ProductCode1",
                 productName = "ProductName1",
                 quantity = 1,
+                stockPlanning = "1",
                 uom = "UomUnit1",
             };
         }

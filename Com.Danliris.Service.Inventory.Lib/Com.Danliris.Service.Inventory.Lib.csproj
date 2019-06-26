@@ -6,8 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="Facades\**" />
+    <Compile Remove="ViewModels\InventoryDocumentViewModel\**" />
     <EmbeddedResource Remove="Facades\**" />
+    <EmbeddedResource Remove="ViewModels\InventoryDocumentViewModel\**" />
     <None Remove="Facades\**" />
+    <None Remove="ViewModels\InventoryDocumentViewModel\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +33,7 @@
     <Compile Remove="Services\MaterialRequestNoteServices\MaterialsRequestNote_ItemService.cs" />
     <Compile Remove="Services\StockTransferNoteService\StockTransferNoteService.cs" />
     <Compile Remove="Services\StockTransferNoteService\StockTransferNote_ItemService.cs" />
+    <Compile Remove="ViewModels\InventorySummaryViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

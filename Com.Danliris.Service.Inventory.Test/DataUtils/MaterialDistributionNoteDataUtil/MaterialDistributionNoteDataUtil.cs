@@ -75,7 +75,9 @@ namespace Com.Danliris.Service.Inventory.Test.DataUtils.MaterialDistributionNote
                                 ProductName = "name",
                                 SupplierCode = "code",
                                 SupplierId = "1",
-                                SupplierName = "name"
+                                SupplierName = "name",
+                                ReceivedLength = 1,
+                                Quantity = 1
                             }
                         }
                     }
