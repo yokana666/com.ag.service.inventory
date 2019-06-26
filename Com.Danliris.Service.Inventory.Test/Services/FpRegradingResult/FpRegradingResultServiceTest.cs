@@ -3,13 +3,17 @@ using Com.Danliris.Service.Inventory.Lib.Models;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
 using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
+using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Test.DataUtils.FpRegradingResultDataUtil;
 using Com.Danliris.Service.Inventory.Test.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
@@ -298,11 +302,11 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
         public async Task Should_Success_UpdateIsReturnedToPurchasing()
         {
             var serviceProvider = GetServiceProvider();
-            
+
             InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
                 .Returns(inventorySummaryService);
-            
+
             InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
                 .Returns(inventoryMovementService);
@@ -310,7 +314,7 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
             InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
                 .Returns(inventoryDocumentFacade);
-            
+
             NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = await _dataUtil(service).GetTestData();
             var response = service.UpdateIsReturnedToPurchasing(data.Id, true);
@@ -338,6 +342,89 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpRegradingResult
             var model = service.GetReport(null, null, null, null, null, null, null, 1, 25, "{}");
 
             Assert.NotNull(model);
+        }
+
+        [Fact]
+        public async Task Should_Success_ValidateVM()
+        {
+            var serviceProvider = GetServiceProvider();
+
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
+
+            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(service).GetTestData();
+
+            var vm = service.MapToViewModel(data);
+            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+            var response = vm.Validate(validationContext);
+
+            Assert.True(response.Count() == 0);
+
+
+        }
+
+        [Fact]
+        public async Task Should_Success_ValidateNullVMAsync()
+        {
+            var serviceProvider = GetServiceProvider();
+
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
+
+            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var vm = new FpRegradingResultDocsViewModel() { Details = new List<FpRegradingResultDetailsDocsViewModel>() };
+            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+            var response = vm.Validate(validationContext);
+
+            Assert.True(response.Count() > 0);
+
+
+        }
+
+        [Fact]
+        public async Task Should_Success_ValidateNullDetailVMAsync()
+        {
+            var serviceProvider = GetServiceProvider();
+
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryMovementService)))
+                .Returns(inventoryMovementService);
+
+            InventoryDocumentService inventoryDocumentFacade = new InventoryDocumentService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventoryDocumentService)))
+                .Returns(inventoryDocumentFacade);
+
+            NewFpRegradingResultDocsService service = new NewFpRegradingResultDocsService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var vm = new FpRegradingResultDocsViewModel() { Details = new List<FpRegradingResultDetailsDocsViewModel>() { new FpRegradingResultDetailsDocsViewModel() } };
+            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+            var response = vm.Validate(validationContext);
+
+            Assert.True(response.Count() > 0);
+
+
         }
     }
 }
