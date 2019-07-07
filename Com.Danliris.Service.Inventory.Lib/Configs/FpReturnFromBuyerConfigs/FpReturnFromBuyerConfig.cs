@@ -11,7 +11,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Configs.FpReturnFromBuyerConfigs
     {
         public void Configure(EntityTypeBuilder<FpReturnFromBuyerModel> builder)
         {
-            throw new NotImplementedException();
+            builder
+                .HasMany(h => h.Details)
+                .WithOne(w => w.FpReturnFromBuyer)
+                .HasForeignKey(f => f.FpReturnFromBuyerId)
+                .IsRequired();
         }
     }
 }

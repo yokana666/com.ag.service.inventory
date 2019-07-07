@@ -27,6 +27,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.FpReturnFromBuyers
         public string UOM { get; set; }
         public int UOMId { get; set; }
         public double Weight { get; set; }
+        public int FpReturnFromBuyerDetailId { get; set; }
+        public virtual FpReturnFromBuyerDetailModel FpReturnFromBuyerDetail { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             throw new NotImplementedException();

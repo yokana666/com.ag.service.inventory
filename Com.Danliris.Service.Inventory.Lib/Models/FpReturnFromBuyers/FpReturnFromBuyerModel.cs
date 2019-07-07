@@ -15,6 +15,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.FpReturnFromBuyers
         [MaxLength(255)]
         public string BuyerName { get; set; }
         [MaxLength(255)]
+        public string Code { get; set; }
+        [MaxLength(255)]
         public string CodeProduct { get; set; }
         [MaxLength(255)]
         public string CoverLetter { get; set; }
@@ -30,6 +32,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.FpReturnFromBuyers
         public string StorageCode { get; set; }
         [MaxLength(255)]
         public string StorageName { get; set; }
+        public bool IsVoid { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             throw new NotImplementedException();
