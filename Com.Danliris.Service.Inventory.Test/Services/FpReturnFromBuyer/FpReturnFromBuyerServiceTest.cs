@@ -200,5 +200,69 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpReturnFromBuyer
             var data = await DataUtil(utilService).GetTestData();
             await Assert.ThrowsAnyAsync<Exception>(() => service.VoidDocumentById(0));
         }
+
+
+        [Fact]
+        public void Should_Succes_Map_To_ViewModel()
+        {
+            var viewModel = new FpReturnFromBuyerViewModel()
+            {
+                Buyer = new BuyerViewModel()
+                {
+                    Code = "BuyerCode",
+                    Id = 1,
+                    Name = "BuyerName"
+                },
+                Code = "Code",
+                CodeProduct = "CodeProduct",
+                CoverLetter = "CoverLetter",
+                Date = DateTime.Now,
+                Destination = "Destination",
+                Details = new List<FpReturnFromBuyerDetailViewModel>()
+                {
+                    new FpReturnFromBuyerDetailViewModel()
+                    {
+                        Items = new List<FpReturnFromBuyerItemViewModel>()
+                        {
+                            new FpReturnFromBuyerItemViewModel()
+                            {
+                                ColorWay = "ColorWay",
+                                DesignCode = "DesignCode",
+                                DesignNumber = "DesignNumber",
+                                Length = 1,
+                                ProductCode = "ProductCode",
+                                ProductId = 1,
+                                ProductName = "ProductName",
+                                Remark = "",
+                                ReturnQuantity = 1,
+                                UOM = "UOM",
+                                UOMId = 1,
+                                Weight = 1
+                            }
+                        },
+                        ProductionOrder = new ProductionOrderIntegrationViewModel()
+                        {
+                            DistributedQuantity = 1,
+                            IsCompleted = false,
+                            OrderNo = "OrderNo",
+                            Id = 1,
+                            OrderQuantity = 1,
+                            OrderType = new OrderTypeIntegrationViewModel()
+                            {
+                                Code = "OrderTypeCode",
+                                Id = 1,
+                                Name = "OrderTypeName"
+                            }
+                        }
+                    }
+                }
+            };
+
+            FpReturnFromBuyerService service = new FpReturnFromBuyerService(DbContext(GetCurrentMethod()), GetServiceProvider().Object, GetInventoryDocumentService().Object);
+
+            var model = service.MapToModel(viewModel);
+
+            Assert.NotNull(model);
+        }
     }
 }
