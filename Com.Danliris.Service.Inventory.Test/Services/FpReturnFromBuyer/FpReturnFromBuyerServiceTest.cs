@@ -255,6 +255,13 @@ namespace Com.Danliris.Service.Inventory.Test.Services.FpReturnFromBuyer
                             }
                         }
                     }
+                },
+                SpkNo = "SpkNo",
+                Storage = new StorageIntegrationViewModel()
+                {
+                    code = "StorageCode",
+                    name ="StorageName",
+                    _id = 1
                 }
             };
 
