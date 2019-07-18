@@ -319,5 +319,45 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.Inventory
                          });
             return Query;
         }
+
+        public async Task<int> RefreshInventoryMovement()
+        {
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    int result = 0;
+                    List<InventoryMovement> dbMovement = await DbContext.InventoryMovements.ToListAsync();
+
+                    foreach (var groupedItem in dbMovement.GroupBy(x => new { x.StorageId, x.ProductId, x.UomId }).ToList())
+                    {
+                        var orderedItem = groupedItem.OrderBy(x => x._CreatedUtc).ToList();
+                        result += orderedItem.Count;
+                        for (int i = 1; i < orderedItem.Count; i++)
+                        {
+                            var item = orderedItem[i];
+                            var previousItem = orderedItem[i - 1];
+                            item.Before = previousItem.After;
+                            item.After = item.Before + item.Quantity;
+                        }
+                    }
+
+                    //var result = await _dbContext.SaveChangesAsync();
+                    //transaction.Commit();
+                    
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw e;
+                }
+                finally
+                {
+                    DbContext.Dispose();
+                }
+            }
+
+        }
     }
 }

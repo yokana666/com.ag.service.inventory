@@ -60,22 +60,6 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.Integration
             Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
         }
 
-        [Fact]
-        public async Task Refresh_WithoutException_ReturnOk()
-        {
-            Mock<IInventoryDocumentIntegrationService> mock = new Mock<IInventoryDocumentIntegrationService>();
-            mock.Setup(s => s.RefreshInventoryMovement()).ReturnsAsync(1);
-            var response = await GetController(mock).RefreshMovement();
-            Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
-        }
-
-        [Fact]
-        public async Task Refresh_WithException_InternalServer()
-        {
-            Mock<IInventoryDocumentIntegrationService> mock = new Mock<IInventoryDocumentIntegrationService>();
-            mock.Setup(s => s.RefreshInventoryMovement()).ThrowsAsync(new Exception());
-            var response = await GetController(mock).RefreshMovement();
-            Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
-        }
+        
     }
 }
