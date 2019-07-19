@@ -75,5 +75,7 @@ namespace Com.Danliris.Service.Inventory.Lib.IntegrationServices
         {
             return extractedData.Select(mongoInventoryMovement => new InventoryDocument(mongoInventoryMovement)).ToList();
         }
+
+        
     }
 }

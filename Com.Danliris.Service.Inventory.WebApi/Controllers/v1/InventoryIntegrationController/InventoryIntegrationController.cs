@@ -39,5 +39,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.InventoryIntegrat
                 return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
+
+        
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
-using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
@@ -10,6 +9,7 @@ using Moq;
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
@@ -79,6 +79,17 @@ namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
             return serviceProvider;
         }
 
-        
+        [Fact]
+        public async Task Should_Success_RefreshMovememnt()
+        {
+            var serviceProvider = GetServiceProvider();
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(inventoryMovementService).GetTestData();
+            var result = await inventoryMovementService.RefreshInventoryMovement();
+            Assert.NotEqual(0, result);
+        }
     }
 }

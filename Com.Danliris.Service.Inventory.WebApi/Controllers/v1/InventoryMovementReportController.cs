@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
 {
@@ -83,6 +84,26 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1
             {
                 Dictionary<string, object> Result =
                     new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpGet("refresh-movement")]
+        public async Task<IActionResult> RefreshMovement()
+        {
+            try
+            {
+                var count = await Service.RefreshInventoryMovement();
+                Dictionary<string, object> Result =
+                    new ResultFormatter("1.0", General.OK_STATUS_CODE, General.OK_MESSAGE)
+                    .Ok(count);
+                return Ok(Result);
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter("1.0", General.INTERNAL_ERROR_STATUS_CODE, e.Message)
                     .Fail();
                 return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
             }

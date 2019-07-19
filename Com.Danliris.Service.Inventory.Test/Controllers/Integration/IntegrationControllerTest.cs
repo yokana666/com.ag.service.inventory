@@ -59,5 +59,7 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.Integration
             var response = await GetController(mock).Integrate();
             Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
         }
+
+        
     }
 }
