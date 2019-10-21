@@ -16,5 +16,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.Inventory
         InventoryMovement ReadModelById(int id);
         Tuple<List<InventoryMovementViewModel>, int> GetReport(string storageCode, string productCode, string type, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset);
         MemoryStream GenerateExcel(string storageCode, string productCode, string type, DateTime? dateFrom, DateTime? dateTo, int offset);
+        Task<int> RefreshInventoryMovement();
     }
 }

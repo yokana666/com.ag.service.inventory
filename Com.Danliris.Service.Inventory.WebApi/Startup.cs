@@ -3,6 +3,7 @@ using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
+using Com.Danliris.Service.Inventory.Lib.Services.FpReturnFromBuyers;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
 using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
@@ -72,6 +73,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<IInventoryDocumentService, InventoryDocumentService>()
                 .AddTransient<IInventoryMovementService, InventoryMovementService>()
                 .AddTransient<IInventorySummaryService, InventorySummaryService>()
+                .AddTransient<IFpReturnFromBuyerService, FpReturnFromBuyerService>()
                 .AddTransient<IFPReturnInvToPurchasingService, NewFPReturnInvToPurchasingService>()
                 .AddScoped<IIdentityService, IdentityService>()
                 .AddScoped<IValidateService, ValidateService>()

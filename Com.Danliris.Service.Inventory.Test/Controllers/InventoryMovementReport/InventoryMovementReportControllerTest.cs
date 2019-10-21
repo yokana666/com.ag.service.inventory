@@ -127,5 +127,23 @@ namespace Com.Danliris.Service.Inventory.Test.Controllers.InventoryMovementRepor
             var response = controller.GetXlsAll(null, null, null, null, null);
             Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
         }
+
+        [Fact]
+        public async Task Refresh_WithoutException_ReturnOk()
+        {
+            var mocks = GetMocks();
+            mocks.Service.Setup(s => s.RefreshInventoryMovement()).ReturnsAsync(1);
+            var response = await GetController(mocks).RefreshMovement();
+            Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Refresh_WithException_InternalServer()
+        {
+            var mocks = GetMocks();
+            mocks.Service.Setup(s => s.RefreshInventoryMovement()).ThrowsAsync(new Exception());
+            var response = await GetController(mocks).RefreshMovement();
+            Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Com.Danliris.Service.Inventory.Lib;
-using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Test.DataUtils.InventoryDataUtils;
@@ -87,7 +86,7 @@ namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
             InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
                 .Returns(inventorySummaryService);
-            
+
             InventoryMovementService service = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
             var data = _dataUtil(service).GetNewData();
 
@@ -198,6 +197,19 @@ namespace Com.Danliris.Service.Inventory.Test.Facades.Inventory
             var model = service.ReadModelById(data.Id);
 
             Assert.NotNull(model);
+        }
+
+        [Fact]
+        public async Task Should_Success_RefreshMovememnt()
+        {
+            var serviceProvider = GetServiceProvider();
+            InventorySummaryService inventorySummaryService = new InventorySummaryService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            serviceProvider.Setup(s => s.GetService(typeof(IInventorySummaryService)))
+                .Returns(inventorySummaryService);
+            InventoryMovementService inventoryMovementService = new InventoryMovementService(serviceProvider.Object, _dbContext(GetCurrentMethod()));
+            var data = await _dataUtil(inventoryMovementService).GetTestData();
+            var result = await inventoryMovementService.RefreshInventoryMovement();
+            Assert.NotEqual(0, result);
         }
     }
 }
