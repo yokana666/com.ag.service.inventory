@@ -31,7 +31,7 @@ namespace Com.Danliris.Service.Inventory.WebApi.Controllers.v1.BasicControllers
         {
             try
             {
-
+                VerifyUser();
                 if (this.Service.UpdateIsApprove(Ids))
                 {
                     return NoContent();

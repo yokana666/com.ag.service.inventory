@@ -3,6 +3,7 @@ using Com.Danliris.Service.Inventory.Lib.Models.InventoryModel;
 using Com.Danliris.Service.Inventory.Lib.Models.StockTransferNoteModel;
 using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
+using Com.Danliris.Service.Inventory.Lib.ViewModels.InventoryViewModel;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.StockTransferNoteViewModel;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
@@ -124,10 +125,10 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService
                 StockTransferNote_Item stockTransferNoteItem = new StockTransferNote_Item();
                 PropertyCopier<StockTransferNote_ItemViewModel, StockTransferNote_Item>.Copy(stn, stockTransferNoteItem);
 
-                stockTransferNoteItem.ProductId = stn.Summary.productId;
+                stockTransferNoteItem.ProductId = stn.Summary.productId.ToString();
                 stockTransferNoteItem.ProductCode = stn.Summary.productCode;
                 stockTransferNoteItem.ProductName = stn.Summary.productName;
-                stockTransferNoteItem.UomId = stn.Summary.uomId;
+                stockTransferNoteItem.UomId = stn.Summary.uomId.ToString();
                 stockTransferNoteItem.UomUnit = stn.Summary.uom;
                 stockTransferNoteItem.StockQuantity = stn.Summary.quantity;
                 stockTransferNoteItem.TransferedQuantity = stn.TransferedQuantity != null ? (double)stn.TransferedQuantity : 0;
@@ -167,14 +168,13 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService
                 {
                     StockTransferNote_ItemViewModel stockTransferNoteItemViewModel = new StockTransferNote_ItemViewModel();
                     PropertyCopier<StockTransferNote_Item, StockTransferNote_ItemViewModel>.Copy(stn, stockTransferNoteItemViewModel);
-
                     InventorySummaryViewModel Summary = new InventorySummaryViewModel()
                     {
-                        productId = stn.ProductId,
+                        productId = int.TryParse(stn.ProductId, out int prdId) ? prdId : 0,
                         productCode = stn.ProductCode,
                         productName = stn.ProductName,
                         quantity = stn.StockQuantity,
-                        uomId = stn.UomId,
+                        uomId = int.TryParse(stn.UomId, out int unitId) ? unitId : 0,
                         uom = stn.UomUnit
                     };
 
@@ -364,11 +364,11 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.StockTransferNoteService
             {
                 InventoryDocumentItem inventoryDocumentItem = new InventoryDocumentItem
                 {
-                    ProductId = int.Parse(stni.Summary.productId),
+                    ProductId = stni.Summary.productId,
                     ProductCode = stni.Summary.productCode,
                     ProductName = stni.Summary.productName,
                     Quantity = stni.TransferedQuantity != null ? (double)stni.TransferedQuantity : 0,
-                    UomId = int.Parse(stni.Summary.uomId),
+                    UomId = stni.Summary.uomId,
                     UomUnit = stni.Summary.uom
                 };
 

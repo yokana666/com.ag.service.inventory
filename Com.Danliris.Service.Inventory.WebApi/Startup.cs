@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Com.Danliris.Service.Inventory.Lib;
 using Com.Danliris.Service.Inventory.Lib.Helpers;
-using Com.Danliris.Service.Inventory.Lib.IntegrationServices;
-using Com.Danliris.Service.Inventory.Lib.MongoRepositories.InventoryDocument;
 using Com.Danliris.Service.Inventory.Lib.Services;
 using Com.Danliris.Service.Inventory.Lib.Services.FpRegradingResultDocs;
+using Com.Danliris.Service.Inventory.Lib.Services.FpReturnFromBuyers;
 using Com.Danliris.Service.Inventory.Lib.Services.FPReturnInvToPurchasingService;
 using Com.Danliris.Service.Inventory.Lib.Services.Inventory;
 using Com.Danliris.Service.Inventory.Lib.Services.MaterialDistributionNoteService;
@@ -20,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.Text;
 
 namespace Com.Danliris.Service.Inventory.WebApi
@@ -73,6 +73,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddTransient<IInventoryDocumentService, InventoryDocumentService>()
                 .AddTransient<IInventoryMovementService, InventoryMovementService>()
                 .AddTransient<IInventorySummaryService, InventorySummaryService>()
+                .AddTransient<IFpReturnFromBuyerService, FpReturnFromBuyerService>()
                 .AddTransient<IFPReturnInvToPurchasingService, NewFPReturnInvToPurchasingService>()
                 .AddScoped<IIdentityService, IdentityService>()
                 .AddScoped<IValidateService, ValidateService>()
@@ -97,17 +98,17 @@ namespace Com.Danliris.Service.Inventory.WebApi
                     options.DefaultApiVersion = new ApiVersion(1, 0);
                 });
 
-            services.Configure<MongoDbSettings>(options =>
-                {
-                    options.ConnectionString = Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"];
-                    options.Database = Configuration.GetConnectionString("MongoDatabase") ?? Configuration["MongoDatabase"];
-                });
+            //services.Configure<MongoDbSettings>(options =>
+            //    {
+            //        options.ConnectionString = Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"];
+            //        options.Database = Configuration.GetConnectionString("MongoDatabase") ?? Configuration["MongoDatabase"];
+            //    });
 
-            services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"]));
+            //services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(Configuration.GetConnectionString("MongoConnection") ?? Configuration["MongoConnection"]));
 
-            services.AddTransient<IMongoDbContext, MongoDbMigrationContext>();
-            services.AddTransient<IInventoryDocumentIntegrationService, InventoryDocumentIntegrationService>();
-            services.AddTransient<IInventoryDocumentMongoRepository, InventoryDocumentMongoRepository>();
+            //services.AddTransient<IMongoDbContext, MongoDbMigrationContext>();
+            //services.AddTransient<IInventoryDocumentIntegrationService, InventoryDocumentIntegrationService>();
+            //services.AddTransient<IInventoryDocumentMongoRepository, InventoryDocumentMongoRepository>();
 
 
             this.RegisterServices(services);
@@ -135,7 +136,7 @@ namespace Com.Danliris.Service.Inventory.WebApi
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddJsonFormatters();
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddCors(options => options.AddPolicy("InventoryPolicy", builder =>
             {
                 builder.AllowAnyOrigin()

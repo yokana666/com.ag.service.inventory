@@ -4,14 +4,16 @@ using Com.Danliris.Service.Inventory.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Inventory.Lib.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190705070401_FpReturFromBuyer")]
+    partial class FpReturFromBuyer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -464,9 +466,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
                     b.Property<string>("BuyerName")
                         .HasMaxLength(255);
 
-                    b.Property<string>("Code")
-                        .HasMaxLength(255);
-
                     b.Property<string>("CodeProduct")
                         .HasMaxLength(255);
 
@@ -477,8 +476,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Migrations
 
                     b.Property<string>("Destination")
                         .HasMaxLength(255);
-
-                    b.Property<bool>("IsVoid");
 
                     b.Property<string>("SpkNo")
                         .HasMaxLength(255);

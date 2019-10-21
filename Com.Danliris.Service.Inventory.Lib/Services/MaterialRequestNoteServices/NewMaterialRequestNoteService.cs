@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Com.Danliris.Service.Inventory.Lib.Helpers;
+﻿using Com.Danliris.Service.Inventory.Lib.Helpers;
 using Com.Danliris.Service.Inventory.Lib.Models.MaterialsRequestNoteModel;
 using Com.Danliris.Service.Inventory.Lib.ViewModels;
 using Com.Danliris.Service.Inventory.Lib.ViewModels.MaterialsRequestNoteViewModel;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
-using Com.Moonlay.NetCore.Lib.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteServices
 {
@@ -52,7 +51,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
                     model = await this.CustomCodeGenerator(model);
                     model.FlagForCreate(IdentityService.Username, UserAgent);
                     model.FlagForUpdate(IdentityService.Username, UserAgent);
-                    foreach(var item in model.MaterialsRequestNote_Items)
+                    foreach (var item in model.MaterialsRequestNote_Items)
                     {
                         item.FlagForCreate(IdentityService.Username, UserAgent);
                         item.FlagForUpdate(IdentityService.Username, UserAgent);
@@ -62,7 +61,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
 
                     Created = await DbContext.SaveChangesAsync();
 
-                    
+
                     UpdateIsRequestedProductionOrder(productionOrderIds, "CREATE");
                     transaction.Commit();
                 }
@@ -90,12 +89,12 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
 
                     Deleted = await DbContext.SaveChangesAsync();
 
-                    foreach(var item in Model.MaterialsRequestNote_Items)
+                    foreach (var item in Model.MaterialsRequestNote_Items)
                     {
                         await DeleteItem(item);
                         productionOrderIds.Add(item.ProductionOrderId);
                     }
-                    
+
 
                     UpdateIsRequestedProductionOrder(productionOrderIds, "DELETE");
                     transaction.Commit();
@@ -263,94 +262,96 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
             return await this.DbSet
                 .Include(d => d.MaterialsRequestNote_Items)
                 .FirstOrDefaultAsync(d => d.Id.Equals(id) && d._IsDeleted.Equals(false));
-                
+
         }
 
         public async Task<int> UpdateAsync(int id, MaterialsRequestNote model)
         {
-            
+
             int Updated = 0;
-            using (var transaction = this.DbContext.Database.BeginTransaction())
+            var internalTransaction = DbContext.Database.CurrentTransaction == null;
+            var transaction = !internalTransaction ? DbContext.Database.CurrentTransaction : DbContext.Database.BeginTransaction();
+
+            try
             {
-                try
+
+                var dbModel = await ReadByIdAsync(id);
+
+                if (dbModel == null)
+                    throw new Exception("data not found");
+
+
+                dbModel.Remark = model.Remark;
+                dbModel.IsCompleted = model.IsCompleted;
+                dbModel.IsDistributed = model.IsDistributed;
+                dbModel.RequestType = model.RequestType;
+                dbModel.Type = model.Type;
+                dbModel.UnitCode = model.UnitCode;
+                dbModel.UnitId = model.UnitId;
+                dbModel.UnitName = model.UnitName;
+                dbModel.FlagForUpdate(IdentityService.Username, UserAgent);
+                //DbSet.Update(dbModel);
+                Updated = await DbContext.SaveChangesAsync();
+
+                var deletedDetails = dbModel.MaterialsRequestNote_Items.Where(x => !model.MaterialsRequestNote_Items.Any(y => x.Id == y.Id));
+                var updatedDetails = dbModel.MaterialsRequestNote_Items.Where(x => model.MaterialsRequestNote_Items.Any(y => x.Id == y.Id));
+                var addedDetails = model.MaterialsRequestNote_Items.Where(x => !dbModel.MaterialsRequestNote_Items.Any(y => y.Id == x.Id));
+                List<string> deletedProductionOrderIds = new List<string>();
+                List<string> newProductionOrderIds = new List<string>();
+                foreach (var item in deletedDetails)
                 {
+                    Updated += await DeleteItem(item);
+                    deletedProductionOrderIds.Add(item.ProductionOrderId);
+                }
 
-                    var dbModel = await ReadByIdAsync(id);
+                foreach (var item in updatedDetails)
+                {
+                    var selectedDetail = model.MaterialsRequestNote_Items.FirstOrDefault(x => x.Id == item.Id);
 
-                    if (dbModel == null)
-                        throw new Exception("data not found");
-
-
-                    dbModel.Remark = model.Remark;
-                    dbModel.IsCompleted = model.IsCompleted;
-                    dbModel.IsDistributed = model.IsDistributed;
-                    dbModel.RequestType = model.RequestType;
-                    dbModel.Type = model.Type;
-                    dbModel.UnitCode = model.UnitCode;
-                    dbModel.UnitId = model.UnitId;
-                    dbModel.UnitName = model.UnitName;
-                    dbModel.FlagForUpdate(IdentityService.Username, UserAgent);
-                    //DbSet.Update(dbModel);
-                    Updated = await DbContext.SaveChangesAsync();
-
-                    var deletedDetails = dbModel.MaterialsRequestNote_Items.Where(x => !model.MaterialsRequestNote_Items.Any(y => x.Id == y.Id));
-                    var updatedDetails = dbModel.MaterialsRequestNote_Items.Where(x => model.MaterialsRequestNote_Items.Any(y => x.Id == y.Id));
-                    var addedDetails = model.MaterialsRequestNote_Items.Where(x => !dbModel.MaterialsRequestNote_Items.Any(y => y.Id == x.Id));
-                    List<string> deletedProductionOrderIds = new List<string>();
-                    List<string> newProductionOrderIds = new List<string>();
-                    foreach (var item in deletedDetails)
+                    if (item.ProductionOrderId != selectedDetail.ProductionOrderId)
                     {
-                        Updated += await DeleteItem(item);
+                        newProductionOrderIds.Add(selectedDetail.ProductionOrderId);
                         deletedProductionOrderIds.Add(item.ProductionOrderId);
                     }
 
-                    foreach (var item in updatedDetails)
-                    {
-                        var selectedDetail = model.MaterialsRequestNote_Items.FirstOrDefault(x => x.Id == item.Id);
+                    item.ProductionOrderId = selectedDetail.ProductionOrderId;
+                    item.ProductionOrderIsCompleted = selectedDetail.ProductionOrderIsCompleted;
+                    item.ProductionOrderNo = selectedDetail.ProductionOrderNo;
+                    item.ProductId = selectedDetail.ProductId;
+                    item.ProductCode = selectedDetail.ProductCode;
+                    item.ProductName = selectedDetail.ProductName;
+                    item.Grade = selectedDetail.Grade;
+                    item.Length = selectedDetail.Length;
+                    item.Remark = selectedDetail.Remark;
+                    item.DistributedLength = selectedDetail.DistributedLength;
+                    item.OrderQuantity = selectedDetail.OrderQuantity;
+                    item.OrderTypeCode = selectedDetail.OrderTypeCode;
+                    item.OrderTypeId = selectedDetail.OrderTypeId;
+                    item.OrderTypeName = selectedDetail.OrderTypeName;
 
-                        if (item.ProductionOrderId != selectedDetail.ProductionOrderId)
-                        {
-                            newProductionOrderIds.Add(selectedDetail.ProductionOrderId);
-                            deletedProductionOrderIds.Add(item.ProductionOrderId);
-                        }
+                    Updated += await UpdateItem(item);
 
-                        item.ProductionOrderId = selectedDetail.ProductionOrderId;
-                        item.ProductionOrderIsCompleted = selectedDetail.ProductionOrderIsCompleted;
-                        item.ProductionOrderNo = selectedDetail.ProductionOrderNo;
-                        item.ProductId = selectedDetail.ProductId;
-                        item.ProductCode = selectedDetail.ProductCode;
-                        item.ProductName = selectedDetail.ProductName;
-                        item.Grade = selectedDetail.Grade;
-                        item.Length = selectedDetail.Length;
-                        item.Remark = selectedDetail.Remark;
-                        item.DistributedLength = selectedDetail.DistributedLength;
-                        item.OrderQuantity = selectedDetail.OrderQuantity;
-                        item.OrderTypeCode = selectedDetail.OrderTypeCode;
-                        item.OrderTypeId = selectedDetail.OrderTypeId;
-                        item.OrderTypeName = selectedDetail.OrderTypeName;
-                        
-                        Updated += await UpdateItem(item);
-
-                    }
-
-                    foreach (var item in addedDetails)
-                    {
-                        item.MaterialsRequestNoteId = id;
-                        Updated += await CreateItem(item);
-                        newProductionOrderIds.Add(item.ProductionOrderId);
-                    }
-                    UpdateIsRequestedProductionOrder(deletedProductionOrderIds, "DELETE");
-                    UpdateIsRequestedProductionOrder(newProductionOrderIds, "CREATE");
-
-                    
-                    transaction.Commit();
                 }
-                catch (Exception e)
+
+                foreach (var item in addedDetails)
                 {
-                    transaction.Rollback();
-                    throw e;
+                    item.MaterialsRequestNoteId = id;
+                    Updated += await CreateItem(item);
+                    newProductionOrderIds.Add(item.ProductionOrderId);
                 }
+                UpdateIsRequestedProductionOrder(deletedProductionOrderIds, "DELETE");
+                UpdateIsRequestedProductionOrder(newProductionOrderIds, "CREATE");
+
+
+                if (internalTransaction)
+                    transaction.Commit();
             }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                throw e;
+            }
+
 
             return Updated;
         }
@@ -439,7 +440,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
             };
 
             IHttpService httpClient = (IHttpService)this.ServiceProvider.GetService(typeof(IHttpService));
-            var response = httpClient.PutAsync($"{APIEndpoint.Sales}{productionOrderUri}", new StringContent(JsonConvert.SerializeObject(data).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
+            var response = httpClient.PutAsync($"{APIEndpoint.Sales}{productionOrderUri}", new StringContent(JsonConvert.SerializeObject(contextAndIds).ToString(), Encoding.UTF8, General.JsonMediaType)).Result;
             response.EnsureSuccessStatusCode();
         }
 
@@ -518,7 +519,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.MaterialRequestNoteService
             item.FlagForDelete(IdentityService.Username, UserAgent);
             return await DbContext.SaveChangesAsync();
         }
-        
+
 
         private async Task<int> CreateItem(MaterialsRequestNote_Item item)
         {
