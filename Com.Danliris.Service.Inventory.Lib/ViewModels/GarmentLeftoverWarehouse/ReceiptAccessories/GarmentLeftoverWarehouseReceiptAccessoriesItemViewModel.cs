@@ -11,6 +11,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.GarmentLeftoverWarehouse
         public long ProductId { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
+        public string CustomsCategory { get; set; }
         public string ProductRemark { get; set; }
         public double Quantity { get; set; }
         public long UomUnitId { get; set; }

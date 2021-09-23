@@ -222,6 +222,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.G
                             ProductCode=item.ProductCode,
                             ProductId=item.ProductId,
                             ProductName=item.ProductName,
+                            CustomsCategory = item.CustomsCategory,
                             BasicPrice=item.BasicPrice
                         };
                         await StockService.StockIn(stock, model.ReceiptNoteNo, model.Id, item.Id);
@@ -306,6 +307,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.G
                             ProductCode = item.ProductCode,
                             ProductId = item.ProductId,
                             ProductName = item.ProductName,
+                            CustomsCategory = item.CustomsCategory,
                             BasicPrice = item.BasicPrice
                         };
                         await StockService.StockOut(stock, model.ReceiptNoteNo, model.Id, item.Id);

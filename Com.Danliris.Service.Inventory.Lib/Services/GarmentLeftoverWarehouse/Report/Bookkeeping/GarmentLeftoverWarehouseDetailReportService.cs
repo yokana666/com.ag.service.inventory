@@ -188,9 +188,9 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                                           };
                 var QueryExpenditureBalance = from a in (from data in DbContext.GarmentLeftoverWarehouseExpenditureFabrics
                                                          where data._IsDeleted == false
-                                                    && data.ExpenditureDate.AddHours(offset).Date <= DateTo.Date
-
+                                                         && data.ExpenditureDate.AddHours(offset).Date <= DateTo.Date
                                                          select new {  data.ExpenditureDate, data.Id, data.ExpenditureDestination })
+
                                               join b in (from expend in DbContext.GarmentLeftoverWarehouseExpenditureFabricItems
                                                          select new {expend.UnitCode, expend.BasicPrice, expend.UomUnit, expend.PONo, expend.Quantity, expend.UnitName, expend.ExpenditureId }) on a.Id equals b.ExpenditureId
                                               select new GarmentLeftoverWarehouseDetailReportViewModel
@@ -210,7 +210,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                                               };
                 var QueryReceipt = from a in (from data in DbContext.GarmentLeftoverWarehouseReceiptFabrics
                                               where data._IsDeleted == false
-                                         && data.ReceiptDate.AddHours(offset).Date <= DateTo.Date
+                                              && data.ReceiptDate.AddHours(offset).Date <= DateTo.Date
 
                                               select new { data.UnitFromCode, data.ReceiptDate, data.Id })
                                    join b in DbContext.GarmentLeftoverWarehouseReceiptFabricItems on a.Id equals b.GarmentLeftoverWarehouseReceiptFabricId
@@ -232,7 +232,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
 
                 var QueryExpenditure = from a in (from data in DbContext.GarmentLeftoverWarehouseExpenditureFabrics
                                                   where data._IsDeleted == false
-                                             && data.ExpenditureDate.AddHours(offset).Date <= DateTo.Date
+                                                  && data.ExpenditureDate.AddHours(offset).Date <= DateTo.Date
 
                                                   select new {  data.ExpenditureDate, data.Id, data.ExpenditureDestination })
                                        join b in (from expend in DbContext.GarmentLeftoverWarehouseExpenditureFabricItems
@@ -524,7 +524,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
 
             }
             #endregion
-            #region BArangJadi
+            #region BarangJadi
             else if (category == "BARANG JADI")
             {
 

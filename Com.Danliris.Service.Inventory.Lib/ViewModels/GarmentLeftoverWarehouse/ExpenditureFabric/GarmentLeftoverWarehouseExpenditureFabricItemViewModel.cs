@@ -6,6 +6,8 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.GarmentLeftoverWarehouse
     {
         public int StockId { get; set; }
 
+        public string CustomsCategory { get; set; }
+
         public UnitViewModel Unit { get; set; }
 
         public string PONo { get; set; }

@@ -37,6 +37,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
 
 
             List<GarmentLeftoverWarehouseRecapStockReportViewModel> GarmentLeftoverWarehouseRecapStockReportViewModel = new List<GarmentLeftoverWarehouseRecapStockReportViewModel>();
+
             #region Saldo
             var QueryBalanceFABRIC = from a in (from data in DbContext.GarmentLeftoverWarehouseBalanceStocks
                                                 where data._IsDeleted == false && data.TypeOfGoods.ToString() == "FABRIC"
@@ -194,7 +195,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                                                       };
 
             #endregion
-
             #region receipt
             var QueryReceiptHeader = from a in (from data in DbContext.GarmentLeftoverWarehouseReceiptFabrics
                                                 where data._IsDeleted == false
@@ -204,7 +204,6 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                                      select new GarmentLeftoverWarehouseRecapStockReportViewModel
                                      {
                                          Description = "PENERIMAAN"
-
                                      };
             var QueryReceiptFABRICNow = from a in (from data in DbContext.GarmentLeftoverWarehouseReceiptFabrics
                                                    where data._IsDeleted == false
@@ -317,6 +316,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                                                   };
 
             #endregion
+
             var QuerySaldo = QueryBalanceACC.Union(QueryBalanceExpenditureACC).Union(QueryBalanceReceiptACC)
                             .Union(QueryBalanceFABRIC).Union(QueryBalanceExpenditureFABRIC).Union(QueryBalanceReceiptFABRIC)
                             .Union(QueryBalanceFinishedGood).Union(QueryBalanceExpenditureFinishedGood).Union(QueryBalanceReceiptFinishedGood)

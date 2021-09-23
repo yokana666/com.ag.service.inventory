@@ -532,6 +532,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.G
             }
             return Tuple.Create(Data, TotalData);
         }
+
         public MemoryStream GenerateExcel(DateTime? dateFrom, DateTime? dateTo, int offset)
         {
             var Query = GetReportQuery(dateFrom, dateTo, offset);

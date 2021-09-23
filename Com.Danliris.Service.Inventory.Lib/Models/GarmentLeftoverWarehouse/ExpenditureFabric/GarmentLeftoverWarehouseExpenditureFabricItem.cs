@@ -13,6 +13,8 @@ namespace Com.Danliris.Service.Inventory.Lib.Models.GarmentLeftoverWarehouse.Exp
 
         public int StockId { get; set; }
 
+        public string CustomsCategory { get; set; }
+
         public long UnitId { get; set; }
         public string UnitCode { get; set; }
         public string UnitName { get; set; }

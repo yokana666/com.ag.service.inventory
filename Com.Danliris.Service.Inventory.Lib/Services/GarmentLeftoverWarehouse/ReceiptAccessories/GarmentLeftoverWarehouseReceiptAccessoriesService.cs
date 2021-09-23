@@ -39,6 +39,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
             StockService = (IGarmentLeftoverWarehouseStockService)serviceProvider.GetService(typeof(IGarmentLeftoverWarehouseStockService));
             GarmentUnitReceiptNoteUri = APIEndpoint.Purchasing + "garment-unit-expenditure-notes/";
         }
+
         public async Task<int> CreateAsync(GarmentLeftoverWarehouseReceiptAccessory model)
         {
             using (var transaction = DbContext.Database.CurrentTransaction ?? DbContext.Database.BeginTransaction())
@@ -69,6 +70,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                             UnitCode = model.RequestUnitCode,
                             UnitName = model.RequestUnitName,
                             PONo = item.POSerialNumber,
+                            CustomsCategory = item.CustomsCategory,
                             UomId = item.UomUnitId,
                             UomUnit = item.UomUnit,
                             Quantity = item.Quantity,
@@ -120,6 +122,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                             UnitCode = model.RequestUnitCode,
                             UnitName = model.RequestUnitName,
                             PONo = item.POSerialNumber,
+                            CustomsCategory = item.CustomsCategory,
                             UomId = item.UomUnitId,
                             UomUnit = item.UomUnit,
                             Quantity = item.Quantity,

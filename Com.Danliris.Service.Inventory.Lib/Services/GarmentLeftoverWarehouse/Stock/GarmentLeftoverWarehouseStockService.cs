@@ -106,7 +106,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.S
 
             List<string> SelectedFields = (select != null && select.Count > 0) ? select : new List<string>()
             {
-                "Id", "ReferenceType", "Unit", "PONo","RONo", "Product", "Uom", "Quantity","BasicPrice"
+                "Id", "ReferenceType", "Unit", "PONo", "CustomsCategory", "RONo", "Product", "Uom", "Quantity", "BasicPrice"
             };
 
             Pageable<GarmentLeftoverWarehouseStock> pageable = new Pageable<GarmentLeftoverWarehouseStock>(Query, page - 1, size);
@@ -134,7 +134,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.S
 
             List<string> SelectedFields = (select != null && select.Count > 0) ? select : new List<string>()
             {
-                "Id", "PONo"
+                "Id", "PONo", "CustomsCategory"
             };
             var SelectedQuery = Query.Select($"new({string.Join(",", SelectedFields)})");
 
@@ -165,20 +165,20 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.S
                 switch (stock.ReferenceType)
                 {
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.FABRIC:
-                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId);
+                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.FINISHED_GOOD:
-                        Query = Query.Where(w => w.RONo == stock.RONo && w.LeftoverComodityId==stock.LeftoverComodityId && w.UnitId==stock.UnitId);
+                        Query = Query.Where(w => w.RONo == stock.RONo && w.LeftoverComodityId==stock.LeftoverComodityId && w.UnitId==stock.UnitId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.AVAL_FABRIC:
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.AVAL_BAHAN_PENOLONG:
-                        Query = Query.Where(w => w.ProductId == stock.ProductId && w.UomId == stock.UomId);
+                        Query = Query.Where(w => w.ProductId == stock.ProductId && w.UomId == stock.UomId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.COMPONENT:
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.ACCESSORIES:
-                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId && w.ProductId == stock.ProductId);
+                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId && w.ProductId == stock.ProductId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                 }
 
@@ -250,20 +250,20 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.S
                 switch (stock.ReferenceType)
                 {
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.FABRIC:
-                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId);
+                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.FINISHED_GOOD:
-                        Query = Query.Where(w => w.RONo == stock.RONo && w.LeftoverComodityId == stock.LeftoverComodityId);
+                        Query = Query.Where(w => w.RONo == stock.RONo && w.LeftoverComodityId == stock.LeftoverComodityId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.AVAL_FABRIC:
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.AVAL_BAHAN_PENOLONG:
-                        Query = Query.Where(w => w.ProductId == stock.ProductId && w.UomId == stock.UomId);
+                        Query = Query.Where(w => w.ProductId == stock.ProductId && w.UomId == stock.UomId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.COMPONENT:
                         break;
                     case GarmentLeftoverWarehouseStockReferenceTypeEnum.ACCESSORIES:
-                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId && w.ProductId == stock.ProductId);
+                        Query = Query.Where(w => w.PONo == stock.PONo && w.UomId == stock.UomId && w.ProductId == stock.ProductId && w.CustomsCategory == stock.CustomsCategory);
                         break;
                 }
 

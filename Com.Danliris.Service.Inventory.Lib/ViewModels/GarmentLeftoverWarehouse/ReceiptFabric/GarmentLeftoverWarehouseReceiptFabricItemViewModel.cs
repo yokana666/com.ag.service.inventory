@@ -11,6 +11,7 @@ namespace Com.Danliris.Service.Inventory.Lib.ViewModels.GarmentLeftoverWarehouse
         public string POSerialNumber { get; set; }
 
         public ProductViewModel Product { get; set; }
+        public string CustomsCategory { get; set; }
         public string ProductRemark { get; set; }
         public string FabricRemark { get; set; }
 

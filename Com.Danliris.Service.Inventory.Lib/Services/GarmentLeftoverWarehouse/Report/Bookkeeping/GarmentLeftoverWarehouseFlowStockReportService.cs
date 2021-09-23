@@ -151,7 +151,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                                            ProductName = (from aa in _product where aa.PONo == b.PONo select aa.ProductName).FirstOrDefault() ,
                                            EndbalanceQty = 0
                                        };
-                 var Query = QueryReceipt.Union(QueryExpenditure).Union(QueryBalance);
+                var Query = QueryReceipt.Union(QueryExpenditure).Union(QueryBalance);
                 var querySum = Query.ToList()
                     .GroupBy(x => new { x.PONo, x.UnitName, x.UomUnit,x.ProductCode,x.ProductName }, (key, group) => new
                     {

@@ -383,6 +383,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.E
                 UnitCode = item.UnitCode,
                 UnitName = item.UnitName,
                 PONo = item.PONo,
+                CustomsCategory = item.CustomsCategory,
                 UomId = item.UomId,
                 UomUnit = item.UomUnit,
                 Quantity = item.Quantity,

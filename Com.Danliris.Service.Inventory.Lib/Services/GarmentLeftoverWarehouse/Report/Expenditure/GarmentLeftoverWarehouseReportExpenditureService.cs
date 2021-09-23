@@ -63,7 +63,7 @@ namespace Com.Danliris.Service.Inventory.Lib.Services.GarmentLeftoverWarehouse.R
                         {
                             c.BCNo = salesNotes["bcNo"].ToString();
                             c.BCDate = DateTimeOffset.Parse(salesNotes["bcDate"].ToString());
-                            c.BCType = "BC 25";
+                            c.BCType = "BC 24";
                         }
                     } 
                 }
